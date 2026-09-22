@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Pruebas Unitarias - ChordTransposer</title>
+  <style>
+    body { font-family: monospace; padding: 2rem; background: #0f172a; color: #f8fafc; }
+    .pass { color: #4ade80; margin: 0.25rem 0; }
+    .fail { color: #f87171; margin: 0.25rem 0; font-weight: bold; }
+    h1 { color: #60a5fa; }
+    #summary { margin-top: 1.5rem; font-size: 1.2rem; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h1>Suite de Pruebas Unitarias: ChordTransposer</h1>
+  <div id="results"></div>
+  <div id="summary"></div>
+
+  <script src="../js/chord-transposer.js"></script>
+  <script>
+    const results = document.getElementById('results');
+    let totalTests = 0;
+    let passedTests = 0;
+
+    function assert(description, actual, expected) {
+      totalTests++;
+      const isPass = actual === expected;
+      if (isPass) {
+        passedTests++;
+        const p = document.createElement('div');
+        p.className = 'pass';
+        p.textContent = `✔ [PASS] ${description}: '${actual}'`;
+        results.appendChild(p);
+      } else {
+        const p = document.createElement('div');
+        p.className = 'fail';
+        p.textContent = `✖ [FAIL] ${description} | Esperado: '${expected}', Obtenido: '${actual}'`;
+        results.appendChild(p);
+      }
+    }
+
+    console.log("Iniciando pruebas...");
+
+    // 1. Transposición de notas individuales
+    assert("C + 1 semitono (#)", ChordTransposer.transposeNote("C", 1, { preferSharps: true }), "C#");
+    assert("C + 1 semitono (b)", ChordTransposer.transposeNote("C", 1, { preferSharps: false }), "Db");
+    assert("B + 1 semitono", ChordTransposer.transposeNote("B", 1, { preferSharps: true }), "C");
+    assert("E + 1 semitono", ChordTransposer.transposeNote("E", 1, { preferSharps: true }), "F");
+    assert("C - 1 semitono", ChordTransposer.transposeNote("C", -1, { preferSharps: true }), "B");
+    assert("G + 2 semitonos", ChordTransposer.transposeNote("G", 2, { preferSharps: true }), "A");
+
+    // 2. Acordes complejos y extensiones
+    assert("Am + 2 semitonos", ChordTransposer.transposeChord("Am", 2, { preferSharps: true }), "Bm");
+    assert("Cmaj7 + 1 semitono", ChordTransposer.transposeChord("Cmaj7", 1, { preferSharps: true }), "C#maj7");
+    assert("F#m7b5 + 1 semitono", ChordTransposer.transposeChord("F#m7b5", 1, { preferSharps: true }), "Gm7b5");
+    assert("Dsus4 - 2 semitonos", ChordTransposer.transposeChord("Dsus4", -2, { preferSharps: true }), "Csus4");
+
+    // 3. Slash chords (bajos invertidos)
+    assert("G/B + 2 semitonos", ChordTransposer.transposeChord("G/B", 2, { preferSharps: true }), "A/C#");
+    assert("C/E + 1 semitono", ChordTransposer.transposeChord("C/E", 1, { preferSharps: true }), "C#/F");
+
+    // 4. Notación Latina (Do, Re, Mi)
+    assert("Do + 2 semitonos (Latino)", ChordTransposer.transposeChord("Do", 2, { targetNotation: 'latin' }), "Re");
+    assert("Lam + 2 semitonos (Latino)", ChordTransposer.transposeChord("Lam", 2, { targetNotation: 'latin' }), "Sim");
+    assert("Sol/Si + 2 semitonos (Latino)", ChordTransposer.transposeChord("Sol/Si", 2, { targetNotation: 'latin', preferSharps: true }), "La/Do#");
+
+    // 5. Conversión entre sistemas
+    assert("Convertir C a Latino", ChordTransposer.convertChordNotation("C", "latin"), "Do");
+    assert("Convertir Do a Anglosajón", ChordTransposer.convertChordNotation("Do", "english"), "C");
+    assert("Convertir Fa#m7 a Anglosajón", ChordTransposer.convertChordNotation("Fa#m7", "english"), "F#m7");
+
+    // 6. Transposición de texto completo [ChordPro]
+    const testText = "[Bm]Ella dur[G]mió al ca[D]lor de las ma[A]sas";
+    const transposedText = ChordTransposer.transposeText(testText, 2, { preferSharps: true });
+    assert("Transponer línea completa +2 semitonos", transposedText, "[C#m]Ella dur[A]mió al ca[E]lor de las ma[B]sas");
+
+    // 7. Fusión de dos líneas clásicas a ChordPro
+    const chordsLine = "C              Am";
+    const lyricsLine = "De música ligera";
+    const merged = ChordTransposer.injectChordsIntoLyrics(chordsLine, lyricsLine);
+    assert("Inyección de acordes en línea de letra", merged, "[C]De música [Am]ligera");
+
+    const summary = document.getElementById('summary');
+    summary.textContent = `Resultado: ${passedTests} de ${totalTests} pruebas pasadas con éxito.`;
+    summary.style.color = (passedTests === totalTests) ? '#4ade80' : '#f87171';
+    
+    // Indicador global para scripts automatizados
+    window.testResults = { total: totalTests, passed: passedTests, success: passedTests === totalTests };
+  </script>
+</body>
+</html>
