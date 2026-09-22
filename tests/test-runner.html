@@ -75,10 +75,47 @@
     assert("Transponer línea completa +2 semitonos", transposedText, "[C#m]Ella dur[A]mió al ca[E]lor de las ma[B]sas");
 
     // 7. Fusión de dos líneas clásicas a ChordPro
-    const chordsLine = "C              Am";
+    const chordsLine = "C         Am";
     const lyricsLine = "De música ligera";
     const merged = ChordTransposer.injectChordsIntoLyrics(chordsLine, lyricsLine);
     assert("Inyección de acordes en línea de letra", merged, "[C]De música [Am]ligera");
+
+    // 8. Fusión de líneas con corchetes existentes sin duplicar
+    const bracketChordsLine = "[C]       [Am]";
+    const mergedBrackets = ChordTransposer.injectChordsIntoLyrics(bracketChordsLine, lyricsLine);
+    assert("Inyección de acordes entre corchetes sin duplicación", mergedBrackets, "[C]De música [Am]ligera");
+
+    // 9. Detección automática de dos líneas en parseSong
+    const twoLineSong = "Bm          G\nElla durmió al calor de las masas";
+    const parsedTwoLine = ChordTransposer.parseSong(twoLineSong);
+    assert("parseSong fusiona automáticamente acordes arriba de letra", parsedTwoLine.length, 1);
+    assert("Tipo de línea fusionada es lyric-line", parsedTwoLine[0].type, "lyric-line");
+    assert("Primer acorde fusionado es Bm", parsedTwoLine[0].segments[0].chord, "Bm");
+
+    // 10. Reconocimiento de secciones ampliadas
+    const sectionTest = ChordTransposer.parseSong("[Estrofa 1]\n[Chorus]");
+    assert("Reconocimiento de sección [Estrofa 1]", sectionTest[0].type, "section");
+    assert("Reconocimiento de sección [Chorus]", sectionTest[1].type, "section");
+
+    // 11. Detección correcta de líneas de letras sin acordes (no deben convertirse a acordes)
+    const lyricLineTest = ChordTransposer.parseSong("Cuando canto esta canción de amor\ny me siento muy feliz");
+    assert("Línea 1 de letra es lyric-line", lyricLineTest[0].type, "lyric-line");
+    assert("Línea 1 no tiene acorde falso", lyricLineTest[0].segments[0].chord, null);
+    assert("Línea 1 conserva la letra exacta", lyricLineTest[0].segments[0].lyric, "Cuando canto esta canción de amor");
+    assert("Línea 2 de letra es lyric-line", lyricLineTest[1].type, "lyric-line");
+
+    // 12. isValidChord no da falsos positivos con palabras del español
+    assert("'amor' no es acorde", ChordTransposer.isValidChord("amor"), false);
+    assert("'canto' no es acorde", ChordTransposer.isValidChord("canto"), false);
+    assert("'esta' no es acorde", ChordTransposer.isValidChord("esta"), false);
+    assert("'cancion' no es acorde", ChordTransposer.isValidChord("cancion"), false);
+    assert("'De' no es acorde", ChordTransposer.isValidChord("De"), false);
+
+    // 13. isValidChord valida correctamente acordes reales
+    assert("'C#m7' es acorde válido", ChordTransposer.isValidChord("C#m7"), true);
+    assert("'Fa#m7b5' es acorde válido", ChordTransposer.isValidChord("Fa#m7b5"), true);
+    assert("'Sol/Si' es acorde válido", ChordTransposer.isValidChord("Sol/Si"), true);
+    assert("'Am7/G' es acorde válido", ChordTransposer.isValidChord("Am7/G"), true);
 
     const summary = document.getElementById('summary');
     summary.textContent = `Resultado: ${passedTests} de ${totalTests} pruebas pasadas con éxito.`;

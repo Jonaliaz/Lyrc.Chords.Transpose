@@ -48,7 +48,8 @@ El script iniciará un servidor web local y abrirá automáticamente tu navegado
 - **Auto-Scroll Manos Libres**: Desplazamiento vertical automático con control de velocidad para que leas la letra y toques tu instrumento sin necesidad de tocar la pantalla o el teclado.
 - **Modo Escenario (Pantalla Completa)**: Oculta el editor para maximizar la hoja de la canción.
 - **Control de Tamaño de Letra (A- / A+)**: Agranda o reduce el tamaño de texto para facilitar la lectura a distancia.
-- **🖨️ Impresión / Exportar a PDF**: Hoja de estilos optimizada para imprimir canciones limpias sin botones ni barras de herramientas.
+- **📥 Descarga Directa en PDF**: Botón dedicado para convertir el lienzo de la partitura (con acordes transpuestos arriba y letra) directamente en un archivo `.pdf` descargable de alta resolución.
+- **🖨️ Impresión / Vista Previa**: Hoja de estilos optimizada para imprimir canciones limpias sin botones ni barras de herramientas.
 - **Auto-Guardado**: Guarda automáticamente tu trabajo en el almacenamiento local del navegador (`localStorage`) para que nunca pierdas tus ediciones.
 - **Canciones de Ejemplo Precargadas**: Incluye canciones icónicas listas para probar (*"De Música Ligera"* de Soda Stereo, *"Flaca"* de Andrés Calamaro y *"Stand By Me"* de Ben E. King).
 
@@ -69,7 +70,9 @@ Lyrc.Chords.Transpose/
 ├── js/
 │   ├── chord-transposer.js # Motor musical de teoría, transposición y parsing de texto
 │   ├── examples.js         # Canciones de muestra precargadas
-│   └── app.js              # Controlador principal, interfaz de usuario y eventos
+│   ├── app.js              # Controlador principal, interfaz de usuario y eventos
+│   └── lib/
+│       └── html2pdf.bundle.min.js # Librería para generación y descarga de PDF
 │
 └── tests/
     └── test-runner.html    # Suite de pruebas unitarias automatizadas del motor musical

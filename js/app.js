@@ -37,6 +37,11 @@
     sheetTransposeBadge: document.getElementById('sheetTransposeBadge'),
 
     // Visor Controles
+    btnViewerTransposeDown: document.getElementById('btnViewerTransposeDown'),
+    btnViewerTransposeUp: document.getElementById('btnViewerTransposeUp'),
+    btnViewerResetTranspose: document.getElementById('btnViewerResetTranspose'),
+    viewerTransposeDisplay: document.getElementById('viewerTransposeDisplay'),
+    viewerKeyDisplay: document.getElementById('viewerKeyDisplay'),
     btnFontDec: document.getElementById('btnFontDec'),
     btnFontInc: document.getElementById('btnFontInc'),
     fontSizeDisplay: document.getElementById('fontSizeDisplay'),
@@ -48,7 +53,7 @@
     // Acciones Generales
     exampleSelector: document.getElementById('exampleSelector'),
     btnNewSong: document.getElementById('btnNewSong'),
-    btnExportTxt: document.getElementById('btnExportTxt'),
+    btnExportPdf: document.getElementById('btnExportPdf'),
     btnPrint: document.getElementById('btnPrint'),
     btnToggleTheme: document.getElementById('btnToggleTheme'),
 
@@ -258,8 +263,10 @@
       }
     });
 
-    // Exportar / Descargar
-    elements.btnExportTxt.addEventListener('click', exportSongText);
+    // Exportar / Descargar PDF de la partitura
+    if (elements.btnExportPdf) {
+      elements.btnExportPdf.addEventListener('click', downloadSheetAsPdf);
+    }
 
     // Imprimir
     elements.btnPrint.addEventListener('click', () => window.print());
@@ -267,6 +274,24 @@
     // Tema Claro / Oscuro
     elements.btnToggleTheme.addEventListener('click', () => {
       document.body.classList.toggle('light-theme');
+    });
+
+    // Botones de transposición rápida en el visor (Modo Escenario)
+    if (elements.btnViewerTransposeUp) {
+      elements.btnViewerTransposeUp.addEventListener('click', () => changeTranspose(1));
+    }
+    if (elements.btnViewerTransposeDown) {
+      elements.btnViewerTransposeDown.addEventListener('click', () => changeTranspose(-1));
+    }
+    if (elements.btnViewerResetTranspose) {
+      elements.btnViewerResetTranspose.addEventListener('click', () => resetTranspose());
+    }
+
+    // Salir de pantalla completa con tecla Escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && elements.viewerPanel.classList.contains('fullscreen-viewer')) {
+        toggleFullscreen();
+      }
     });
 
     // Modal de inserción de acordes
@@ -307,6 +332,9 @@
   /**
    * Actualiza los indicadores visuales de transposición
    */
+  /**
+   * Actualiza los indicadores visuales de transposición
+   */
   function updateTransposeUI() {
     const s = state.semitones;
     const sign = s > 0 ? `+${s}` : `${s}`;
@@ -327,6 +355,19 @@
     });
     state.currentKey = effectiveKey;
     elements.sheetKeyBadge.textContent = `Tono: ${effectiveKey}`;
+
+    // Sincronizar controles en el visor (Modo Escenario / Pantalla completa)
+    if (elements.viewerTransposeDisplay) {
+      elements.viewerTransposeDisplay.textContent = sign;
+      if (s !== 0) {
+        elements.viewerTransposeDisplay.classList.add('shifted');
+      } else {
+        elements.viewerTransposeDisplay.classList.remove('shifted');
+      }
+    }
+    if (elements.viewerKeyDisplay) {
+      elements.viewerKeyDisplay.textContent = `Tono: ${effectiveKey}`;
+    }
 
     // Sincronizar selector de tono destino si coincide
     const matchedKey = ALL_KEYS.find(k => k.eng === ChordTransposer.transposeChord(state.originalKey, state.semitones, { targetNotation: 'english' }));
@@ -356,31 +397,74 @@
     elements.fontSizeDisplay.textContent = `${state.fontSize}px`;
   }
 
+  let autoScrollAnimId = null;
+  let lastTimestamp = null;
+  let currentScrollPos = 0;
+
   /**
-   * Alterna el Auto-Scroll para tocar sin manos
+   * Alterna el Auto-Scroll fluido para tocar sin manos
    */
   function toggleAutoScroll() {
     if (state.autoScrollRunning) {
-      clearInterval(state.autoScrollInterval);
-      state.autoScrollRunning = false;
-      elements.btnAutoScroll.textContent = '▶ Auto-Scroll';
-      elements.btnAutoScroll.classList.remove('btn-success');
+      stopAutoScroll();
     } else {
-      state.autoScrollRunning = true;
-      elements.btnAutoScroll.textContent = '⏸ Pausar';
-      elements.btnAutoScroll.classList.add('btn-success');
-      
-      state.autoScrollInterval = setInterval(() => {
-        const speed = parseInt(elements.scrollSpeedRange.value, 10);
-        elements.sheetContainerWrapper.scrollTop += (speed * 0.5);
-
-        // Si llegó al final, detener
-        const atBottom = elements.sheetContainerWrapper.scrollHeight - elements.sheetContainerWrapper.scrollTop <= elements.sheetContainerWrapper.clientHeight + 10;
-        if (atBottom) {
-          toggleAutoScroll();
-        }
-      }, 50);
+      startAutoScroll();
     }
+  }
+
+  /**
+   * Inicia el desplazamiento automático a 60fps con cálculo delta-time
+   */
+  function startAutoScroll() {
+    state.autoScrollRunning = true;
+    currentScrollPos = elements.sheetContainerWrapper.scrollTop;
+    lastTimestamp = performance.now();
+
+    elements.btnAutoScroll.textContent = '⏸ Pausar';
+    elements.btnAutoScroll.classList.add('btn-success');
+
+    function scrollStep(timestamp) {
+      if (!state.autoScrollRunning) return;
+
+      const dt = Math.min((timestamp - lastTimestamp) / 1000, 0.1);
+      lastTimestamp = timestamp;
+
+      const speedVal = parseFloat(elements.scrollSpeedRange.value) || 3;
+      // Escala cómoda de velocidad: nivel 1 (~18px/s), nivel 3 (~44px/s), nivel 10 (~130px/s)
+      const pixelsPerSecond = speedVal * 12 + 8;
+
+      // Si el usuario scrolleó manualmente con mouse wheel o touch, sincronizar acumulador
+      const actualScroll = elements.sheetContainerWrapper.scrollTop;
+      if (Math.abs(actualScroll - currentScrollPos) > 20) {
+        currentScrollPos = actualScroll;
+      }
+
+      currentScrollPos += pixelsPerSecond * dt;
+      elements.sheetContainerWrapper.scrollTop = currentScrollPos;
+
+      const maxScroll = elements.sheetContainerWrapper.scrollHeight - elements.sheetContainerWrapper.clientHeight;
+      if (currentScrollPos >= maxScroll - 2) {
+        stopAutoScroll();
+        return;
+      }
+
+      autoScrollAnimId = requestAnimationFrame(scrollStep);
+    }
+
+    autoScrollAnimId = requestAnimationFrame(scrollStep);
+  }
+
+  /**
+   * Detiene el desplazamiento automático
+   */
+  function stopAutoScroll() {
+    state.autoScrollRunning = false;
+    if (autoScrollAnimId) {
+      cancelAnimationFrame(autoScrollAnimId);
+      autoScrollAnimId = null;
+    }
+    elements.btnAutoScroll.textContent = '▶ Auto-Scroll';
+    elements.btnAutoScroll.classList.remove('btn-success');
   }
 
   /**
@@ -499,14 +583,38 @@
         return;
       }
 
-      // Líneas donde solo hay acordes
+      // Líneas donde solo hay acordes (Intro, solos, etc.)
       if (item.type === 'chord-only-line') {
         const chordLineDiv = document.createElement('div');
-        chordLineDiv.className = 'chord-only-line';
-        
-        // Transponer cada acorde en la línea manteniendo los espacios
-        const transposedLine = ChordTransposer.transposeText(item.text, state.semitones, options);
-        chordLineDiv.textContent = transposedLine;
+        chordLineDiv.className = 'song-line chord-only-line';
+
+        // Procesar tokens de acordes y espacios
+        const regex = /(\S+)|\s+/g;
+        let match;
+        while ((match = regex.exec(item.text)) !== null) {
+          if (match[1]) {
+            const token = match[1];
+            if (ChordTransposer.isValidChord(token)) {
+              const transposed = ChordTransposer.transposeChord(token, state.semitones, options);
+              const badge = document.createElement('span');
+              badge.className = 'chord-badge';
+              badge.textContent = transposed;
+              badge.setAttribute('data-original-chord', token);
+              badge.title = `Acorde: ${transposed} (Original: ${token})`;
+              chordLineDiv.appendChild(badge);
+            } else {
+              const textSpan = document.createElement('span');
+              textSpan.className = 'lyric-text';
+              textSpan.textContent = token;
+              chordLineDiv.appendChild(textSpan);
+            }
+          } else {
+            const spaceSpan = document.createElement('span');
+            spaceSpan.style.whiteSpace = 'pre';
+            spaceSpan.textContent = match[0];
+            chordLineDiv.appendChild(spaceSpan);
+          }
+        }
         elements.sheetBody.appendChild(chordLineDiv);
         return;
       }
@@ -515,6 +623,15 @@
       if (item.type === 'lyric-line') {
         const lineDiv = document.createElement('div');
         lineDiv.className = 'song-line';
+
+        // Si es una línea totalmente vacía, darle altura y espacio de salto de línea
+        const isBlank = item.segments.every(s => !s.chord && (!s.lyric || s.lyric.trim().length === 0));
+        if (isBlank) {
+          lineDiv.className = 'song-line song-line-empty';
+          lineDiv.innerHTML = '&nbsp;';
+          elements.sheetBody.appendChild(lineDiv);
+          return;
+        }
 
         item.segments.forEach(seg => {
           const pairDiv = document.createElement('div');
@@ -536,7 +653,7 @@
           // Elemento para la letra (abajo)
           const lyricSpan = document.createElement('span');
           lyricSpan.className = 'lyric-text';
-          lyricSpan.textContent = seg.lyric || '';
+          lyricSpan.textContent = seg.lyric || (seg.chord ? '\u00A0' : '');
 
           pairDiv.appendChild(chordSpan);
           pairDiv.appendChild(lyricSpan);
@@ -628,6 +745,70 @@
     const chord = elements.modalChordPreview.textContent.trim();
     insertChordAtCursor(chord);
     closeChordModal();
+  }
+
+  /**
+   * Genera y descarga el PDF de la partitura renderizada (con notas y letra)
+   */
+  async function downloadSheetAsPdf() {
+    const rawText = elements.songInput.value;
+    const meta = extractMetadata(rawText);
+    const cleanTitle = (meta.title || 'Cancion').replace(/[^a-zA-Z0-9_\-\s]/g, '').trim() || 'Cancion';
+    const effectiveKey = state.currentKey || state.originalKey || 'C';
+    const filename = `${cleanTitle} - [Tono ${effectiveKey}].pdf`;
+
+    const btn = elements.btnExportPdf;
+    const originalContent = btn ? btn.innerHTML : '';
+    if (btn) {
+      btn.disabled = true;
+      btn.innerHTML = '<span>⏳ Generando PDF...</span>';
+    }
+
+    try {
+      if (typeof html2pdf === 'undefined') {
+        window.print();
+        if (btn) {
+          btn.innerHTML = originalContent;
+          btn.disabled = false;
+        }
+        return;
+      }
+
+      const element = elements.songSheet;
+      
+      const opt = {
+        margin: [12, 14, 12, 14], // mm (top, left, bottom, right)
+        filename: filename,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { 
+          scale: 2, 
+          useCORS: true, 
+          letterRendering: true,
+          scrollY: 0,
+          backgroundColor: '#ffffff'
+        },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+        pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+      };
+
+      await html2pdf().set(opt).from(element).save();
+      
+      if (btn) {
+        btn.innerHTML = '<span>✔ ¡PDF Descargado!</span>';
+        setTimeout(() => {
+          btn.innerHTML = originalContent;
+          btn.disabled = false;
+        }, 2000);
+      }
+    } catch (err) {
+      console.error('Error generando PDF:', err);
+      alert('Hubo un inconveniente al generar el PDF directamente. Se abrirá el cuadro de impresión para guardarlo como PDF.');
+      window.print();
+      if (btn) {
+        btn.innerHTML = originalContent;
+        btn.disabled = false;
+      }
+    }
   }
 
   /**

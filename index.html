@@ -11,99 +11,102 @@
 </head>
 <body>
 
-  <!-- Encabezado Principal -->
-  <header class="app-header">
-    <div class="brand">
-      <div class="brand-icon">🎸</div>
-      <div>
-        <h1 class="brand-title">LyrChords Transposer</h1>
-        <span class="brand-subtitle">Editor & Transpositor de Canciones y Acordes</span>
+  <!-- Barra Superior Fija (Header + Transposer Toolbar) -->
+  <div class="sticky-top-bar" id="stickyTopBar">
+    <!-- Encabezado Principal -->
+    <header class="app-header">
+      <div class="brand">
+        <div class="brand-icon">🎸</div>
+        <div>
+          <h1 class="brand-title">LyrChords Transposer</h1>
+          <span class="brand-subtitle">Editor & Transpositor de Canciones y Acordes</span>
+        </div>
       </div>
-    </div>
 
-    <div class="header-actions">
-      <!-- Selector de ejemplos -->
-      <select id="exampleSelector" class="select-styled" title="Cargar canción de ejemplo">
-        <option value="" disabled selected>📂 Cargar ejemplo...</option>
-        <option value="musica-ligera">Soda Stereo - De Música Ligera</option>
-        <option value="flaca">Andrés Calamaro - Flaca</option>
-        <option value="stand-by-me">Ben E. King - Stand By Me</option>
-        <option value="plantilla-vacia">✨ Nueva Canción en Blanco</option>
-      </select>
+      <div class="header-actions">
+        <!-- Selector de ejemplos -->
+        <select id="exampleSelector" class="select-styled" title="Cargar canción de ejemplo">
+          <option value="" disabled selected>📂 Cargar ejemplo...</option>
+          <option value="musica-ligera">Soda Stereo - De Música Ligera</option>
+          <option value="flaca">Andrés Calamaro - Flaca</option>
+          <option value="stand-by-me">Ben E. King - Stand By Me</option>
+          <option value="plantilla-vacia">✨ Nueva Canción en Blanco</option>
+        </select>
 
-      <button id="btnNewSong" class="btn" title="Empezar una canción en blanco">
-        <span>📄 Nuevo</span>
-      </button>
-
-      <button id="btnExportTxt" class="btn" title="Descargar como archivo .txt o ChordPro">
-        <span>💾 Descargar</span>
-      </button>
-
-      <button id="btnPrint" class="btn btn-primary" title="Imprimir o guardar como PDF">
-        <span>🖨️ Imprimir / PDF</span>
-      </button>
-
-      <button id="btnToggleTheme" class="btn btn-icon-only" title="Cambiar tema Claro / Oscuro">
-        🌓
-      </button>
-    </div>
-  </header>
-
-  <!-- Barra de Herramientas de Transposición -->
-  <section class="transposer-toolbar" aria-label="Herramientas de transposición de acordes">
-    <!-- Grupo 1: Transposición por Semitonos (+1 / -1) -->
-    <div class="toolbar-group">
-      <span class="toolbar-label">Transponer:</span>
-      <div class="btn-transpose-pill">
-        <button id="btnTransposeDown" class="btn-transpose" title="Bajar 1 semitono (-1)">
-          <span>▼</span> -1
+        <button id="btnNewSong" class="btn" title="Empezar una canción en blanco">
+          <span>📄 Nuevo</span>
         </button>
-        <span id="transposeDisplay" class="transpose-badge">0</span>
-        <button id="btnTransposeUp" class="btn-transpose" title="Subir 1 semitono (+1)">
-          +1 <span>▲</span>
+
+        <button id="btnExportPdf" class="btn btn-primary" title="Descargar la partitura con acordes y letra en formato PDF">
+          <span>📥 Descargar PDF</span>
+        </button>
+
+        <button id="btnPrint" class="btn" title="Imprimir o vista previa de impresión">
+          <span>🖨️ Imprimir</span>
+        </button>
+
+        <button id="btnToggleTheme" class="btn btn-icon-only" title="Cambiar tema Claro / Oscuro">
+          🌓
         </button>
       </div>
-      <button id="btnResetTranspose" class="btn btn-sm" title="Volver al tono original (0)">
-        ↺ Restablecer
-      </button>
-    </div>
+    </header>
 
-    <!-- Grupo 2: Tonalidad Directa -->
-    <div class="toolbar-group">
-      <span class="toolbar-label">Tono Destino:</span>
-      <select id="targetKeySelect" class="select-styled" title="Seleccionar tonalidad directa">
-        <!-- Opciones generadas por JS -->
-      </select>
-    </div>
-
-    <!-- Grupo 3: Cejilla / Capo -->
-    <div class="toolbar-group">
-      <span class="toolbar-label">Cejilla (Capo):</span>
-      <select id="capoSelect" class="select-styled" title="Posición del capo / cejilla">
-        <option value="0">Sin cejilla (0)</option>
-        <option value="1">Traste 1 (+1 semitono)</option>
-        <option value="2">Traste 2 (+2 semitonos)</option>
-        <option value="3">Traste 3 (+3 semitonos)</option>
-        <option value="4">Traste 4 (+4 semitonos)</option>
-        <option value="5">Traste 5 (+5 semitonos)</option>
-        <option value="6">Traste 6 (+6 semitonos)</option>
-        <option value="7">Traste 7 (+7 semitonos)</option>
-      </select>
-    </div>
-
-    <!-- Grupo 4: Notación (Inglés vs Latino) y Alteración (# vs b) -->
-    <div class="toolbar-group">
-      <div class="toggle-chip" title="Cambiar sistema de notación musical">
-        <button id="btnNotationEnglish" class="active">C D E</button>
-        <button id="btnNotationLatin">Do Re Mi</button>
+    <!-- Barra de Herramientas de Transposición -->
+    <section class="transposer-toolbar" aria-label="Herramientas de transposición de acordes">
+      <!-- Grupo 1: Transposición por Semitonos (+1 / -1) -->
+      <div class="toolbar-group">
+        <span class="toolbar-label">Transponer:</span>
+        <div class="btn-transpose-pill">
+          <button id="btnTransposeDown" class="btn-transpose" title="Bajar 1 semitono (-1)">
+            <span>▼</span> -1
+          </button>
+          <span id="transposeDisplay" class="transpose-badge">0</span>
+          <button id="btnTransposeUp" class="btn-transpose" title="Subir 1 semitono (+1)">
+            +1 <span>▲</span>
+          </button>
+        </div>
+        <button id="btnResetTranspose" class="btn btn-sm" title="Volver al tono original (0)">
+          ↺ Restablecer
+        </button>
       </div>
 
-      <div class="toggle-chip" title="Preferencia de alteración">
-        <button id="btnAccidentalSharp" class="active">♯ Sostenidos</button>
-        <button id="btnAccidentalFlat">♭ Bemoles</button>
+      <!-- Grupo 2: Tonalidad Directa -->
+      <div class="toolbar-group">
+        <span class="toolbar-label">Tono Destino:</span>
+        <select id="targetKeySelect" class="select-styled" title="Seleccionar tonalidad directa">
+          <!-- Opciones generadas por JS -->
+        </select>
       </div>
-    </div>
-  </section>
+
+      <!-- Grupo 3: Cejilla / Capo -->
+      <div class="toolbar-group">
+        <span class="toolbar-label">Cejilla (Capo):</span>
+        <select id="capoSelect" class="select-styled" title="Posición del capo / cejilla">
+          <option value="0">Sin cejilla (0)</option>
+          <option value="1">Traste 1 (+1 semitono)</option>
+          <option value="2">Traste 2 (+2 semitonos)</option>
+          <option value="3">Traste 3 (+3 semitonos)</option>
+          <option value="4">Traste 4 (+4 semitonos)</option>
+          <option value="5">Traste 5 (+5 semitonos)</option>
+          <option value="6">Traste 6 (+6 semitonos)</option>
+          <option value="7">Traste 7 (+7 semitonos)</option>
+        </select>
+      </div>
+
+      <!-- Grupo 4: Notación (Inglés vs Latino) y Alteración (# vs b) -->
+      <div class="toolbar-group">
+        <div class="toggle-chip" title="Cambiar sistema de notación musical">
+          <button id="btnNotationEnglish" class="active">C D E</button>
+          <button id="btnNotationLatin">Do Re Mi</button>
+        </div>
+
+        <div class="toggle-chip" title="Preferencia de alteración">
+          <button id="btnAccidentalSharp" class="active">♯ Sostenidos</button>
+          <button id="btnAccidentalFlat">♭ Bemoles</button>
+        </div>
+      </div>
+    </section>
+  </div>
 
   <!-- Espacio de Trabajo Principal (Editor / Hoja de Canción) -->
   <main class="workspace-container">
@@ -153,6 +156,24 @@ O si pegas una línea con acordes y abajo la línea con letra, pulsa el botón '
     <!-- Panel Derecho: Hoja de Música (Renderizado de Acordes sobre Letra) -->
     <section class="viewer-panel" id="viewerPanel">
       <div class="viewer-controls">
+        <!-- Control Rápido de Transposición en el Visor / Modo Escenario -->
+        <div class="toolbar-group viewer-transpose-ctrl">
+          <span class="toolbar-label">Tono:</span>
+          <div class="btn-transpose-pill btn-transpose-pill-sm">
+            <button id="btnViewerTransposeDown" class="btn-transpose btn-transpose-sm" title="Bajar 1 semitono (-1)">
+              <span>▼</span> -1
+            </button>
+            <span id="viewerTransposeDisplay" class="transpose-badge transpose-badge-sm">0</span>
+            <button id="btnViewerTransposeUp" class="btn-transpose btn-transpose-sm" title="Subir 1 semitono (+1)">
+              +1 <span>▲</span>
+            </button>
+          </div>
+          <button id="btnViewerResetTranspose" class="btn btn-sm" title="Restablecer tono original (0)">
+            ↺
+          </button>
+          <span id="viewerKeyDisplay" class="meta-chip key-chip">Tono: C</span>
+        </div>
+
         <!-- Control de Tamaño de Letra -->
         <div class="toolbar-group">
           <span class="toolbar-label">Tamaño:</span>
@@ -283,6 +304,7 @@ O si pegas una línea con acordes y abajo la línea con letra, pulsa el botón '
   </div>
 
   <!-- Scripts -->
+  <script src="js/lib/html2pdf.bundle.min.js"></script>
   <script src="js/chord-transposer.js"></script>
   <script src="js/examples.js"></script>
   <script src="js/app.js"></script>
