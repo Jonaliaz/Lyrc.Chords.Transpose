@@ -1,0 +1,840 @@
+/* ==========================================================================
+   LyrChords Transposer - Estilos Principales
+   ========================================================================== */
+
+:root {
+  --bg-primary: #0f172a;
+  --bg-secondary: #1e293b;
+  --bg-tertiary: #334155;
+  --bg-card: #1e293b;
+  --bg-sheet: #ffffff;
+  --text-sheet: #0f172a;
+  --text-sheet-muted: #64748b;
+  --chord-color: #2563eb;
+  --chord-bg: #eff6ff;
+  --chord-border: #bfdbfe;
+  
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  
+  --primary: #3b82f6;
+  --primary-hover: #2563eb;
+  --primary-glow: rgba(59, 130, 246, 0.35);
+  
+  --accent: #10b981;
+  --accent-hover: #059669;
+  --danger: #ef4444;
+  --warning: #f59e0b;
+  
+  --border-color: #334155;
+  --border-light: #e2e8f0;
+  
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+  --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.4), 0 2px 4px -2px rgba(0,0,0,0.3);
+  --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.5), 0 4px 6px -4px rgba(0,0,0,0.4);
+  
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', Consolas, 'Courier New', monospace;
+  --font-sheet: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Modo claro opcional para la interfaz */
+body.light-theme {
+  --bg-primary: #f8fafc;
+  --bg-secondary: #f1f5f9;
+  --bg-tertiary: #e2e8f0;
+  --bg-card: #ffffff;
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --border-color: #cbd5e1;
+  --primary-glow: rgba(59, 130, 246, 0.15);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.5;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* --------------------------------------------------------------------------
+   Barra Superior Fija (Header + Transposer Toolbar)
+   -------------------------------------------------------------------------- */
+.sticky-top-bar {
+  position: sticky;
+  top: 0;
+  z-index: 60;
+  background: var(--bg-secondary);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.35);
+  flex-shrink: 0;
+}
+
+/* --------------------------------------------------------------------------
+   Encabezado Principal
+   -------------------------------------------------------------------------- */
+.app-header {
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-color);
+  padding: 0.65rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  backdrop-filter: blur(8px);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.brand-icon {
+  width: 36px;
+  height: 36px;
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  box-shadow: 0 2px 10px rgba(59, 130, 246, 0.4);
+}
+
+.brand-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  background: linear-gradient(90deg, #60a5fa, #c084fc);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.brand-subtitle {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  display: block;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* --------------------------------------------------------------------------
+   Barra de Herramientas de Transposición (El Núcleo del programa)
+   -------------------------------------------------------------------------- */
+.transposer-toolbar {
+  background: linear-gradient(180deg, var(--bg-secondary), var(--bg-primary));
+  border-bottom: 1px solid var(--border-color);
+  padding: 0.85rem 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.toolbar-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.toolbar-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+  margin-right: 0.25rem;
+}
+
+/* Botones de Transposición Grandes */
+.btn-transpose-pill {
+  display: flex;
+  align-items: center;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  border-radius: 9999px;
+  padding: 0.2rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-transpose {
+  background: transparent;
+  color: var(--text-primary);
+  border: none;
+  font-size: 1rem;
+  font-weight: 700;
+  padding: 0.45rem 0.9rem;
+  border-radius: 9999px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  transition: all 0.15s ease;
+}
+
+.btn-transpose:hover {
+  background: var(--primary);
+  color: #ffffff;
+  box-shadow: 0 0 12px var(--primary-glow);
+}
+
+.btn-transpose:active {
+  transform: scale(0.95);
+}
+
+.transpose-badge {
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 0.4rem 0.75rem;
+  color: #60a5fa;
+  min-width: 60px;
+  text-align: center;
+  font-family: var(--font-mono);
+}
+
+.transpose-badge.shifted {
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.15);
+  border-radius: 9999px;
+}
+
+/* Selectores y controles */
+.select-styled {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 0.45rem 0.75rem;
+  font-size: 0.875rem;
+  font-family: inherit;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.select-styled:focus {
+  border-color: var(--primary);
+}
+
+/* Botones Estándar */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.45rem 0.85rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-color);
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: #64748b;
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn-primary {
+  background: var(--primary);
+  border-color: var(--primary-hover);
+  color: white;
+}
+
+.btn-primary:hover {
+  background: var(--primary-hover);
+  box-shadow: 0 0 12px var(--primary-glow);
+}
+
+.btn-success {
+  background: var(--accent);
+  border-color: var(--accent-hover);
+  color: white;
+}
+
+.btn-sm {
+  padding: 0.3rem 0.6rem;
+  font-size: 0.8rem;
+}
+
+.btn-icon-only {
+  padding: 0.45rem;
+  width: 36px;
+  height: 36px;
+}
+
+/* Toggle Switches */
+.toggle-chip {
+  display: inline-flex;
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-sm);
+  padding: 0.2rem;
+  border: 1px solid var(--border-color);
+}
+
+.toggle-chip button {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.25rem 0.6rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.toggle-chip button.active {
+  background: var(--primary);
+  color: white;
+}
+
+/* --------------------------------------------------------------------------
+   Contenedor Principal: Doble Vista (Editor / Visualizador)
+   -------------------------------------------------------------------------- */
+.workspace-container {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* Columna Izquierda: Editor */
+.editor-panel {
+  flex: 1;
+  min-width: 380px;
+  max-width: 50%;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-secondary);
+  border-right: 1px solid var(--border-color);
+  transition: all 0.25s ease;
+}
+
+.panel-header {
+  padding: 0.75rem 1rem;
+  background: rgba(0, 0, 0, 0.15);
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.panel-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+/* Barra de Inserción Rápida de Acordes */
+.chord-palette {
+  padding: 0.6rem 1rem;
+  background: rgba(15, 23, 42, 0.4);
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  overflow-x: auto;
+}
+
+.palette-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.palette-chords {
+  display: flex;
+  gap: 0.35rem;
+  flex-wrap: nowrap;
+}
+
+.btn-palette-chord {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  color: #38bdf8;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 0.25rem 0.55rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.btn-palette-chord:hover {
+  background: var(--primary);
+  color: white;
+  transform: translateY(-1px);
+}
+
+.editor-textarea-wrapper {
+  flex: 1;
+  display: flex;
+  position: relative;
+  overflow: hidden;
+}
+
+.song-editor {
+  width: 100%;
+  height: 100%;
+  padding: 1.25rem;
+  background: transparent;
+  color: var(--text-primary);
+  border: none;
+  outline: none;
+  resize: none;
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  line-height: 1.7;
+  tab-size: 4;
+  overflow-y: auto;
+}
+
+.song-editor::selection {
+  background: rgba(59, 130, 246, 0.3);
+}
+
+/* Pie del editor con atajos y ayuda */
+.editor-footer {
+  padding: 0.5rem 1rem;
+  background: rgba(0, 0, 0, 0.2);
+  border-top: 1px solid var(--border-color);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Columna Derecha: Hoja de Canción Renderizada */
+.viewer-panel {
+  flex: 1.2;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-primary);
+  position: relative;
+  overflow: hidden;
+}
+
+.viewer-controls {
+  padding: 0.75rem 1.5rem;
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+/* Control de transposición compacto en el visor */
+.viewer-transpose-ctrl {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.btn-transpose-pill-sm {
+  padding: 0.15rem;
+}
+
+.btn-transpose-sm {
+  padding: 0.25rem 0.55rem;
+  font-size: 0.8rem;
+}
+
+.transpose-badge-sm {
+  font-size: 0.8rem;
+  padding: 0.25rem 0.45rem;
+  min-width: 36px;
+}
+
+/* Controles de Auto-Scroll */
+.autoscroll-control {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--bg-tertiary);
+  padding: 0.25rem 0.6rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-color);
+}
+
+.autoscroll-control input[type="range"] {
+  width: 90px;
+  cursor: pointer;
+  accent-color: var(--accent);
+}
+
+.sheet-container-wrapper {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 2rem 1.5rem 4rem 1.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 0;
+}
+
+/* La Hoja de Música / Partitura (Estilo Cancionero Profesional) */
+.song-sheet {
+  width: 100%;
+  max-width: 840px;
+  min-height: 600px;
+  box-sizing: border-box;
+  background: var(--bg-sheet);
+  color: var(--text-sheet);
+  border-radius: var(--radius-md);
+  padding: 2.5rem 3rem 3.5rem;
+  box-shadow: var(--shadow-lg);
+  font-family: var(--font-sheet);
+  font-size: 1.05rem;
+  line-height: 2.2;
+  position: relative;
+  transition: font-size 0.15s ease;
+  margin-bottom: 2rem;
+}
+
+/* Encabezado de la canción */
+.song-sheet-header {
+  border-bottom: 2px solid var(--border-light);
+  padding-bottom: 1.25rem;
+  margin-bottom: 2rem;
+}
+
+.sheet-title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1.2;
+}
+
+.sheet-artist {
+  font-size: 1.15rem;
+  color: var(--text-sheet-muted);
+  font-weight: 500;
+  margin-top: 0.25rem;
+}
+
+.sheet-meta-badges {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.meta-chip {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  background: #f1f5f9;
+  color: #475569;
+  padding: 0.2rem 0.55rem;
+  border-radius: 4px;
+  border: 1px solid #e2e8f0;
+}
+
+.meta-chip.key-chip {
+  background: #eff6ff;
+  color: #1d4ed8;
+  border-color: #bfdbfe;
+}
+
+/* Renderizado de Secciones ([Intro], [Coro], etc.) */
+.song-section-title {
+  font-size: 0.85rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #475569;
+  background: #f8fafc;
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+  display: inline-block;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+  border-left: 3px solid #2563eb;
+}
+
+/* Estructura de Acordes sobre Letra */
+.song-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  margin-bottom: 0.75rem;
+  min-height: 2.2em;
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+.song-line.song-line-empty {
+  min-height: 1.5em;
+  height: 1.5em;
+  margin-bottom: 0.5rem;
+}
+
+.song-section-title {
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+.chord-lyric-pair {
+  display: inline-flex;
+  flex-direction: column;
+  vertical-align: bottom;
+  position: relative;
+  min-width: 0.5ch;
+}
+
+/* El Acorde arriba */
+.chord-badge {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 0.88em;
+  color: var(--chord-color);
+  background: var(--chord-bg);
+  border: 1px solid var(--chord-border);
+  padding: 0.05rem 0.35rem;
+  border-radius: 4px;
+  line-height: 1.1;
+  white-space: pre;
+  width: fit-content;
+  user-select: none;
+  cursor: pointer;
+  transition: all 0.1s ease;
+  margin-bottom: 2px;
+}
+
+.chord-badge:hover {
+  background: #2563eb;
+  color: white;
+  border-color: #1d4ed8;
+  transform: scale(1.08);
+}
+
+.chord-badge.empty-chord {
+  visibility: hidden;
+  height: 0;
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+/* La Letra abajo */
+.lyric-text {
+  font-size: 1em;
+  line-height: 1.3;
+  color: var(--text-sheet);
+  white-space: pre-wrap;
+  word-break: normal;
+  overflow-wrap: break-word;
+}
+
+/* Línea de solo acordes */
+.chord-only-line {
+  font-family: var(--font-mono);
+  color: var(--chord-color);
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-break: normal;
+}
+
+/* Modal de inserción / edición de acordes */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  backdrop-filter: blur(4px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.modal-backdrop.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-dialog {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 1.75rem;
+  width: 90%;
+  max-width: 480px;
+  box-shadow: var(--shadow-lg);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.25rem;
+}
+
+.modal-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.btn-close {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 1.25rem;
+  cursor: pointer;
+}
+
+/* Responsive: Vista en una columna si la pantalla es estrecha */
+@media (max-width: 900px) {
+  body {
+    height: auto;
+    overflow-y: auto;
+  }
+
+  .sticky-top-bar {
+    position: sticky;
+    top: 0;
+    z-index: 60;
+  }
+  
+  .workspace-container {
+    flex-direction: column;
+    height: auto;
+    overflow: visible;
+  }
+  
+  .editor-panel {
+    max-width: 100%;
+    min-height: 380px;
+  }
+  
+  .viewer-panel {
+    min-height: 500px;
+    overflow: visible;
+  }
+  
+  .sheet-container-wrapper {
+    padding: 1.5rem 1rem 4rem;
+    overflow: visible;
+  }
+
+  .song-sheet {
+    padding: 2rem 1.5rem 3rem;
+  }
+}
+
+/* Modo pantalla completa para el visor (Modo Escenario) */
+.viewer-panel.fullscreen-viewer {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-primary);
+}
+
+.viewer-panel.fullscreen-viewer .viewer-controls {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  padding: 0.75rem 2rem;
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-color);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+.viewer-panel.fullscreen-viewer .sheet-container-wrapper {
+  padding: 1.5rem 2rem 0;
+}
+
+.viewer-panel.fullscreen-viewer .song-sheet {
+  max-width: 920px;
+  min-height: 100%;
+  padding: 3rem 4rem 75vh;
+}
+
+/* --------------------------------------------------------------------------
+   Estilos de Impresión / Exportar a PDF
+   -------------------------------------------------------------------------- */
+@media print {
+  body {
+    background: white !important;
+    color: black !important;
+  }
+
+  .app-header,
+  .transposer-toolbar,
+  .editor-panel,
+  .viewer-controls,
+  .modal-backdrop {
+    display: none !important;
+  }
+
+  .workspace-container {
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  .viewer-panel {
+    overflow: visible !important;
+  }
+
+  .sheet-container-wrapper {
+    padding: 0 !important;
+    overflow: visible !important;
+  }
+
+  .song-sheet {
+    box-shadow: none !important;
+    padding: 0 !important;
+    max-width: 100% !important;
+    border: none !important;
+  }
+
+  .chord-badge {
+    background: transparent !important;
+    border: none !important;
+    color: #000000 !important;
+    font-weight: 900 !important;
+  }
+}

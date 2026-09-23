@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LyrChords Transposer - Editor y Transpositor de Acordes y Letras</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- Barra Superior Fija (Header + Transposer Toolbar) -->
+  <div class="sticky-top-bar" id="stickyTopBar">
+    <!-- Encabezado Principal -->
+    <header class="app-header">
+      <div class="brand">
+        <div class="brand-icon">🎸</div>
+        <div>
+          <h1 class="brand-title">LyrChords Transposer</h1>
+          <span class="brand-subtitle">Editor & Transpositor de Canciones y Acordes</span>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <!-- Selector de ejemplos -->
+        <select id="exampleSelector" class="select-styled" title="Cargar canción de ejemplo">
+          <option value="" disabled selected>📂 Cargar ejemplo...</option>
+          <option value="musica-ligera">Soda Stereo - De Música Ligera</option>
+          <option value="flaca">Andrés Calamaro - Flaca</option>
+          <option value="stand-by-me">Ben E. King - Stand By Me</option>
+          <option value="plantilla-vacia">✨ Nueva Canción en Blanco</option>
+        </select>
+
+        <button id="btnNewSong" class="btn" title="Empezar una canción en blanco">
+          <span>📄 Nuevo</span>
+        </button>
+
+        <button id="btnExportPdf" class="btn btn-primary" title="Descargar la partitura con acordes y letra en formato PDF">
+          <span>📥 Descargar PDF</span>
+        </button>
+
+        <button id="btnPrint" class="btn" title="Imprimir o vista previa de impresión">
+          <span>🖨️ Imprimir</span>
+        </button>
+
+        <button id="btnToggleTheme" class="btn btn-icon-only" title="Cambiar tema Claro / Oscuro">
+          🌓
+        </button>
+      </div>
+    </header>
+
+    <!-- Barra de Herramientas de Transposición -->
+    <section class="transposer-toolbar" aria-label="Herramientas de transposición de acordes">
+      <!-- Grupo 1: Transposición por Semitonos (+1 / -1) -->
+      <div class="toolbar-group">
+        <span class="toolbar-label">Transponer:</span>
+        <div class="btn-transpose-pill">
+          <button id="btnTransposeDown" class="btn-transpose" title="Bajar 1 semitono (-1)">
+            <span>▼</span> -1
+          </button>
+          <span id="transposeDisplay" class="transpose-badge">0</span>
+          <button id="btnTransposeUp" class="btn-transpose" title="Subir 1 semitono (+1)">
+            +1 <span>▲</span>
+          </button>
+        </div>
+        <button id="btnResetTranspose" class="btn btn-sm" title="Volver al tono original (0)">
+          ↺ Restablecer
+        </button>
+      </div>
+
+      <!-- Grupo 2: Tonalidad Directa -->
+      <div class="toolbar-group">
+        <span class="toolbar-label">Tono Destino:</span>
+        <select id="targetKeySelect" class="select-styled" title="Seleccionar tonalidad directa">
+          <!-- Opciones generadas por JS -->
+        </select>
+      </div>
+
+      <!-- Grupo 3: Cejilla / Capo -->
+      <div class="toolbar-group">
+        <span class="toolbar-label">Cejilla (Capo):</span>
+        <select id="capoSelect" class="select-styled" title="Posición del capo / cejilla">
+          <option value="0">Sin cejilla (0)</option>
+          <option value="1">Traste 1 (+1 semitono)</option>
+          <option value="2">Traste 2 (+2 semitonos)</option>
+          <option value="3">Traste 3 (+3 semitonos)</option>
+          <option value="4">Traste 4 (+4 semitonos)</option>
+          <option value="5">Traste 5 (+5 semitonos)</option>
+          <option value="6">Traste 6 (+6 semitonos)</option>
+          <option value="7">Traste 7 (+7 semitonos)</option>
+        </select>
+      </div>
+
+      <!-- Grupo 4: Notación (Inglés vs Latino) y Alteración (# vs b) -->
+      <div class="toolbar-group">
+        <div class="toggle-chip" title="Cambiar sistema de notación musical">
+          <button id="btnNotationEnglish" class="active">C D E</button>
+          <button id="btnNotationLatin">Do Re Mi</button>
+        </div>
+
+        <div class="toggle-chip" title="Preferencia de alteración">
+          <button id="btnAccidentalSharp" class="active">♯ Sostenidos</button>
+          <button id="btnAccidentalFlat">♭ Bemoles</button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Espacio de Trabajo Principal (Editor / Hoja de Canción) -->
+  <main class="workspace-container">
+    <!-- Panel Izquierdo: Editor -->
+    <aside class="editor-panel" id="editorPanel">
+      <div class="panel-header">
+        <span class="panel-title">
+          <span>✏️</span> Editor de Letra y Acordes
+        </span>
+        <div style="display: flex; gap: 0.35rem;">
+          <button id="btnFormatTwoLines" class="btn btn-sm" title="Convierte texto donde los acordes están en una línea separada arriba de la letra al formato alineado [Acorde]">
+            🪄 Detectar acordes arriba
+          </button>
+          <button id="btnOpenInsertModal" class="btn btn-sm btn-primary" title="Abrir asistente para agregar un acorde">
+            + Insertar Acorde
+          </button>
+        </div>
+      </div>
+
+      <!-- Paleta Rápida de Acordes -->
+      <div class="chord-palette">
+        <span class="palette-label">Acordes rápidos:</span>
+        <div id="quickChordContainer" class="palette-chords">
+          <!-- Botones de acordes dinámicos generados por JS según la tonalidad -->
+        </div>
+      </div>
+
+      <!-- Área de Edición de Texto -->
+      <div class="editor-textarea-wrapper">
+        <textarea 
+          id="songInput" 
+          class="song-editor" 
+          placeholder="Escribe aquí la letra de tu canción. Puedes agregar acordes entre corchetes, por ejemplo:
+[C]De música [Am]ligera nada más [F]queda [G]
+
+O si pegas una línea con acordes y abajo la línea con letra, pulsa el botón 'Detectar acordes arriba'!"
+          spellcheck="false"
+        ></textarea>
+      </div>
+
+      <div class="editor-footer">
+        <span id="charCountDisplay">0 versos | 0 palabras</span>
+        <span>Tip: Escribe <code>[Acorde]</code> directamente antes de la sílaba</span>
+      </div>
+    </aside>
+
+    <!-- Panel Derecho: Hoja de Música (Renderizado de Acordes sobre Letra) -->
+    <section class="viewer-panel" id="viewerPanel">
+      <div class="viewer-controls">
+        <!-- Control Rápido de Transposición en el Visor / Modo Escenario -->
+        <div class="toolbar-group viewer-transpose-ctrl">
+          <span class="toolbar-label">Tono:</span>
+          <div class="btn-transpose-pill btn-transpose-pill-sm">
+            <button id="btnViewerTransposeDown" class="btn-transpose btn-transpose-sm" title="Bajar 1 semitono (-1)">
+              <span>▼</span> -1
+            </button>
+            <span id="viewerTransposeDisplay" class="transpose-badge transpose-badge-sm">0</span>
+            <button id="btnViewerTransposeUp" class="btn-transpose btn-transpose-sm" title="Subir 1 semitono (+1)">
+              +1 <span>▲</span>
+            </button>
+          </div>
+          <button id="btnViewerResetTranspose" class="btn btn-sm" title="Restablecer tono original (0)">
+            ↺
+          </button>
+          <span id="viewerKeyDisplay" class="meta-chip key-chip">Tono: C</span>
+        </div>
+
+        <!-- Control de Tamaño de Letra -->
+        <div class="toolbar-group">
+          <span class="toolbar-label">Tamaño:</span>
+          <button id="btnFontDec" class="btn btn-sm" title="Reducir fuente">A-</button>
+          <span id="fontSizeDisplay" style="font-size:0.8rem; font-weight:700; color:var(--text-secondary); min-width:32px; text-align:center;">17px</span>
+          <button id="btnFontInc" class="btn btn-sm" title="Aumentar fuente">A+</button>
+        </div>
+
+        <!-- Controles de Auto-Scroll para Músicos -->
+        <div class="autoscroll-control">
+          <button id="btnAutoScroll" class="btn btn-sm" title="Iniciar o pausar desplazamiento automático">
+            ▶ Auto-Scroll
+          </button>
+          <input type="range" id="scrollSpeedRange" min="1" max="10" value="3" title="Velocidad de desplazamiento">
+        </div>
+
+        <!-- Botón Modo Pantalla Completa / Tocar en Vivo -->
+        <button id="btnToggleFullscreen" class="btn btn-sm" title="Expandir para ver solo la canción en vivo">
+          ⛶ Modo Escenario
+        </button>
+      </div>
+
+      <!-- Contenedor con Scroll de la Partitura -->
+      <div class="sheet-container-wrapper" id="sheetContainerWrapper">
+        <article class="song-sheet" id="songSheet">
+          <div class="song-sheet-header">
+            <h2 id="sheetSongTitle" class="sheet-title">De Música Ligera</h2>
+            <div id="sheetSongArtist" class="sheet-artist">Soda Stereo</div>
+            <div class="sheet-meta-badges">
+              <span id="sheetKeyBadge" class="meta-chip key-chip">Tono: Bm</span>
+              <span id="sheetCapoBadge" class="meta-chip">Sin Cejilla</span>
+              <span id="sheetTransposeBadge" class="meta-chip">Original (0)</span>
+            </div>
+          </div>
+
+          <!-- Cuerpo dinámico de la canción con acordes arriba y letra abajo -->
+          <div id="sheetBody" class="song-sheet-body">
+            <!-- Renderizado dinámico por JS -->
+          </div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <!-- Modal para Construir e Insertar Acorde -->
+  <div id="chordModal" class="modal-backdrop">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title">🎵 Insertar Acorde</h3>
+        <button id="btnCloseModal" class="btn-close">&times;</button>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 1rem;">
+        <div>
+          <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); display: block; margin-bottom: 0.35rem;">
+            Nota Raíz:
+          </label>
+          <select id="modalRootNote" class="select-styled" style="width: 100%;">
+            <option value="C">C / Do</option>
+            <option value="C#">C# / Do#</option>
+            <option value="D">D / Re</option>
+            <option value="D#">D# / Re#</option>
+            <option value="E">E / Mi</option>
+            <option value="F">F / Fa</option>
+            <option value="F#">F# / Fa#</option>
+            <option value="G">G / Sol</option>
+            <option value="G#">G# / Sol#</option>
+            <option value="A">A / La</option>
+            <option value="A#">A# / La#</option>
+            <option value="B">B / Si</option>
+          </select>
+        </div>
+
+        <div>
+          <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); display: block; margin-bottom: 0.35rem;">
+            Tipo / Calidad:
+          </label>
+          <select id="modalChordQuality" class="select-styled" style="width: 100%;">
+            <option value="">Mayor (ej: C)</option>
+            <option value="m">Menor (m, ej: Cm)</option>
+            <option value="7">Dominante 7 (ej: C7)</option>
+            <option value="maj7">Mayor 7 (maj7, ej: Cmaj7)</option>
+            <option value="m7">Menor 7 (m7, ej: Cm7)</option>
+            <option value="sus4">Suspendido 4 (sus4)</option>
+            <option value="sus2">Suspendido 2 (sus2)</option>
+            <option value="dim">Disminuido (dim)</option>
+            <option value="aug">Aumentado (aug)</option>
+            <option value="add9">Añadida 9 (add9)</option>
+            <option value="6">Sexta (6)</option>
+            <option value="m7b5">Semidisminuido (m7b5)</option>
+          </select>
+        </div>
+
+        <div>
+          <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); display: block; margin-bottom: 0.35rem;">
+            Bajo Alternativo / Inversión (Opcional):
+          </label>
+          <select id="modalBassNote" class="select-styled" style="width: 100%;">
+            <option value="">Ninguno (Normal)</option>
+            <option value="/C">/C (/Do)</option>
+            <option value="/C#">/C# (/Do#)</option>
+            <option value="/D">/D (/Re)</option>
+            <option value="/D#">/D# (/Re#)</option>
+            <option value="/E">/E (/Mi)</option>
+            <option value="/F">/F (/Fa)</option>
+            <option value="/F#">/F# (/Fa#)</option>
+            <option value="/G">/G (/Sol)</option>
+            <option value="/G#">/G# (/Sol#)</option>
+            <option value="/A">/A (/La)</option>
+            <option value="/A#">/A# (/La#)</option>
+            <option value="/B">/B (/Si)</option>
+          </select>
+        </div>
+
+        <div style="background: rgba(0,0,0,0.25); padding: 0.75rem; border-radius: var(--radius-sm); text-align: center;">
+          <span style="font-size: 0.8rem; color: var(--text-secondary);">Vista previa del acorde:</span>
+          <div id="modalChordPreview" style="font-size: 1.5rem; font-family: var(--font-mono); font-weight: 700; color: #38bdf8; margin-top: 0.25rem;">
+            [C]
+          </div>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 0.5rem;">
+          <button id="btnCancelModal" class="btn">Cancelar</button>
+          <button id="btnConfirmInsertChord" class="btn btn-primary">Insertar en el Texto</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/lib/html2pdf.bundle.min.js"></script>
+  <script src="js/chord-transposer.js"></script>
+  <script src="js/examples.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+{
+  "name": "lyrc.chords.transpose",
+  "version": "1.0.0",
+  "description": "**LyrChords Transposer** es una aplicación moderna e interactiva diseñada para músicos, cantantes y compositores. Permite escribir y editar la letra de cualquier canción, posicionar los acordes de forma exacta **en la parte superior de cada sílaba**, y **transponerlos instantáneamente** (+1, -1 semitono o a cualquier tonalidad) para ajustar la canción a tu rango vocal o instrumento.",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "tauri": "tauri",
+    "build": "tauri build",
+    "dev": "tauri dev",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jonaliaz/Lyrc.Chords.Transpose.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Jonaliaz/Lyrc.Chords.Transpose/issues"
+  },
+  "homepage": "https://github.com/Jonaliaz/Lyrc.Chords.Transpose#readme",
+  "devDependencies": {
+    "@tauri-apps/cli": "^2.11.5"
+  }
+}
