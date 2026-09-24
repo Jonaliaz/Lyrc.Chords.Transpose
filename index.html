@@ -24,16 +24,30 @@
       </div>
 
       <div class="header-actions">
-        <!-- Selector de ejemplos -->
-        <select id="exampleSelector" class="select-styled" title="Cargar canción de ejemplo">
-          <option value="" disabled selected>📂 Cargar ejemplo...</option>
-          <option value="musica-ligera">Soda Stereo - De Música Ligera</option>
-          <option value="flaca">Andrés Calamaro - Flaca</option>
-          <option value="stand-by-me">Ben E. King - Stand By Me</option>
-          <option value="plantilla-vacia">✨ Nueva Canción en Blanco</option>
+        <!-- Selector de proyectos y ejemplos -->
+        <select id="projectSelector" class="select-styled" title="Seleccionar o cargar proyecto / canción">
+          <option value="" disabled selected>📂 Cargar Proyecto / Ejemplo...</option>
+          <option value="__open_manager__">📁 Abrir Gestor de Proyectos...</option>
+          <optgroup label="⭐ Mis Proyectos Guardados" id="groupUserProjects"></optgroup>
+          <optgroup label="🎵 Canciones de Ejemplo" id="groupExamples"></optgroup>
+          <optgroup label="Acciones">
+            <option value="plantilla-vacia">✨ Nueva Canción en Blanco</option>
+          </optgroup>
         </select>
 
-        <button id="btnNewSong" class="btn" title="Empezar una canción en blanco">
+        <button id="btnOpenProjects" class="btn" title="Abrir gestor de proyectos y biblioteca (Ctrl+O)">
+          <span>📁 Proyectos</span>
+        </button>
+
+        <button id="btnSaveProject" class="btn btn-save" title="Guardar cambios en el proyecto (Ctrl+S)">
+          <span>💾 Guardar</span>
+        </button>
+
+        <button id="btnSaveAsProject" class="btn" title="Guardar como una nueva canción / copia">
+          <span>💾 Guardar como...</span>
+        </button>
+
+        <button id="btnNewSong" class="btn" title="Empezar una canción en blanco (Ctrl+N)">
           <span>📄 Nuevo</span>
         </button>
 
@@ -113,10 +127,16 @@
     <!-- Panel Izquierdo: Editor -->
     <aside class="editor-panel" id="editorPanel">
       <div class="panel-header">
-        <span class="panel-title">
-          <span>✏️</span> Editor de Letra y Acordes
-        </span>
-        <div style="display: flex; gap: 0.35rem;">
+        <div class="panel-title-group">
+          <span class="panel-title">
+            <span>✏️</span> Editor de Letra y Acordes
+          </span>
+          <div class="project-indicator" id="projectIndicator">
+            <span id="activeProjectBadge" class="project-badge">Sin Guardar</span>
+            <span id="unsavedChangesBadge" class="unsaved-dot" style="display:none;" title="Tienes cambios sin guardar">● Sin guardar</span>
+          </div>
+        </div>
+        <div style="display: flex; gap: 0.35rem; align-items: center;">
           <button id="btnFormatTwoLines" class="btn btn-sm" title="Convierte texto donde los acordes están en una línea separada arriba de la letra al formato alineado [Acorde]">
             🪄 Detectar acordes arriba
           </button>
@@ -303,9 +323,174 @@ O si pegas una línea con acordes y abajo la línea con letra, pulsa el botón '
     </div>
   </div>
 
+  <!-- Modal: Gestor de Proyectos y Biblioteca -->
+  <div id="projectsModal" class="modal-backdrop">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-header">
+        <div style="display: flex; align-items: center; gap: 0.65rem;">
+          <span style="font-size: 1.6rem;">📁</span>
+          <div>
+            <h3 class="modal-title">Gestor de Proyectos y Biblioteca</h3>
+            <p style="font-size: 0.8rem; color: var(--text-secondary); margin: 0;">Organiza, guarda y carga tus canciones con letras y acordes</p>
+          </div>
+        </div>
+        <button id="btnCloseProjectsModal" class="btn-close">&times;</button>
+      </div>
+
+      <!-- Buscador y Tabs -->
+      <div class="projects-modal-toolbar">
+        <div class="search-input-wrapper">
+          <input type="text" id="projectSearchInput" class="input-styled search-input" placeholder="🔍 Buscar proyecto por título o artista...">
+        </div>
+        <div class="modal-tabs">
+          <button class="tab-btn active" data-tab="tab-user-projects">Mis Proyectos (<span id="userProjectsCountBadge">0</span>)</button>
+          <button class="tab-btn" data-tab="tab-examples">🎵 Canciones de Ejemplo</button>
+          <button class="tab-btn" data-tab="tab-backup">⚙️ Respaldo & Ajustes</button>
+        </div>
+      </div>
+
+      <div class="modal-body projects-modal-body">
+        <!-- Pestaña 1: Mis Proyectos -->
+        <div id="tab-user-projects" class="tab-content active">
+          <div id="userProjectsList" class="projects-grid">
+            <!-- Renderizado dinámico -->
+          </div>
+          <div id="emptyProjectsView" class="empty-state" style="display: none;">
+            <div class="empty-state-icon">📂</div>
+            <h4>Aún no has guardado proyectos</h4>
+            <p>Guarda la canción que estás editando o crea un nuevo proyecto para tener tu repertorio disponible en cualquier momento.</p>
+            <button id="btnEmptyNewProject" class="btn btn-primary" style="margin-top: 1rem;">➕ Nueva Canción en Blanco</button>
+          </div>
+        </div>
+
+        <!-- Pestaña 2: Ejemplos -->
+        <div id="tab-examples" class="tab-content">
+          <div id="examplesList" class="projects-grid">
+            <!-- Renderizado dinámico de ejemplos -->
+          </div>
+        </div>
+
+        <!-- Pestaña 3: Respaldo y Opciones -->
+        <div id="tab-backup" class="tab-content">
+          <div class="backup-settings-section">
+            <h4 style="margin-bottom: 0.5rem; color: var(--text-primary);">📥 Importar y Exportar Repertorio</h4>
+            <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1rem;">
+              Puedes respaldar todo tu repertorio de canciones en un único archivo JSON o importar archivos individuales (.pro / .txt / .chordpro) y copias de seguridad previas.
+            </p>
+            <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1.5rem;">
+              <button id="btnExportAllBackup" class="btn">
+                <span>💾 Descargar Copia de Seguridad (.json)</span>
+              </button>
+              <button id="btnTriggerImportFile" class="btn btn-primary">
+                <span>📥 Importar Archivo (.json, .pro, .txt)</span>
+              </button>
+              <input type="file" id="importFileInput" accept=".json,.pro,.txt,.chordpro" style="display: none;">
+            </div>
+
+            <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 1.5rem 0;">
+
+            <h4 style="margin-bottom: 0.5rem; color: var(--text-primary);">🚀 Inicio de la Aplicación</h4>
+            <label class="checkbox-label" style="display: flex; align-items: center; gap: 0.6rem; cursor: pointer;">
+              <input type="checkbox" id="chkStartupModal" checked>
+              <span style="font-size: 0.9rem; color: var(--text-primary);">Mostrar este selector de proyectos al iniciar la aplicación</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer" style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 1rem; margin-top: 1rem;">
+        <button id="btnModalNewSong" class="btn">
+          ➕ Nueva Canción en Blanco
+        </button>
+        <div style="display: flex; gap: 0.5rem;">
+          <button id="btnModalCloseOnly" class="btn btn-primary">
+            🚀 Continuar Editando
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Guardar / Guardar Como Proyecto -->
+  <div id="saveProjectModal" class="modal-backdrop">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title" id="saveProjectModalTitle">💾 Guardar Proyecto</h3>
+        <button id="btnCloseSaveModal" class="btn-close">&times;</button>
+      </div>
+      <form id="saveProjectForm">
+        <div style="display: flex; flex-direction: column; gap: 1rem;">
+          <div>
+            <label class="form-label">Título de la Canción: *</label>
+            <input type="text" id="saveProjTitle" class="input-styled" style="width: 100%;" required placeholder="Ej: De Música Ligera">
+          </div>
+          <div>
+            <label class="form-label">Artista / Autor:</label>
+            <input type="text" id="saveProjArtist" class="input-styled" style="width: 100%;" placeholder="Ej: Soda Stereo">
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+            <div>
+              <label class="form-label">Tono Original:</label>
+              <select id="saveProjKey" class="select-styled" style="width: 100%;">
+                <!-- Dinámico -->
+              </select>
+            </div>
+            <div>
+              <label class="form-label">Cejilla (Capo):</label>
+              <select id="saveProjCapo" class="select-styled" style="width: 100%;">
+                <option value="0">Sin cejilla (0)</option>
+                <option value="1">Traste 1</option>
+                <option value="2">Traste 2</option>
+                <option value="3">Traste 3</option>
+                <option value="4">Traste 4</option>
+                <option value="5">Traste 5</option>
+                <option value="6">Traste 6</option>
+                <option value="7">Traste 7</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div style="display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 1.5rem;">
+          <button type="button" id="btnCancelSaveModal" class="btn">Cancelar</button>
+          <button type="submit" id="btnConfirmSaveProject" class="btn btn-save">💾 Guardar Canción</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Confirmación de Cambios Sin Guardar -->
+  <div id="confirmUnsavedModal" class="modal-backdrop">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <span style="font-size: 1.4rem;">⚠️</span>
+          <h3 class="modal-title">Cambios sin guardar</h3>
+        </div>
+        <button id="btnCloseUnsavedModal" class="btn-close">&times;</button>
+      </div>
+      <div style="margin: 1rem 0;">
+        <p style="color: var(--text-primary); font-size: 0.95rem; margin-bottom: 0.5rem;">
+          Tienes cambios sin guardar en <strong id="unsavedProjectTitle" style="color: #60a5fa;">"Mi Canción"</strong>.
+        </p>
+        <p style="color: var(--text-secondary); font-size: 0.85rem;">
+          ¿Deseas guardar los cambios antes de salir o cambiar de canción? Si decides descartar, los cambios se perderán.
+        </p>
+      </div>
+      <div style="display: flex; justify-content: flex-end; gap: 0.5rem; flex-wrap: wrap;">
+        <button id="btnCancelUnsavedAction" class="btn">Cancelar</button>
+        <button id="btnDiscardUnsavedAction" class="btn btn-danger">🗑️ No Guardar (Descartar)</button>
+        <button id="btnSaveUnsavedAction" class="btn btn-save">💾 Guardar Cambios</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notificación Toast Flotante -->
+  <div id="toastNotification" class="toast-notification"></div>
+
   <!-- Scripts -->
   <script src="js/lib/html2pdf.bundle.min.js"></script>
   <script src="js/chord-transposer.js"></script>
+  <script src="js/projects.js"></script>
   <script src="js/examples.js"></script>
   <script src="js/app.js"></script>
 </body>

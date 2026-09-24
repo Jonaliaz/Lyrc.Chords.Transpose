@@ -17,6 +17,7 @@
   <div id="summary"></div>
 
   <script src="../js/chord-transposer.js"></script>
+  <script src="../js/projects.js"></script>
   <script>
     const results = document.getElementById('results');
     let totalTests = 0;
@@ -116,6 +117,60 @@
     assert("'Fa#m7b5' es acorde válido", ChordTransposer.isValidChord("Fa#m7b5"), true);
     assert("'Sol/Si' es acorde válido", ChordTransposer.isValidChord("Sol/Si"), true);
     assert("'Am7/G' es acorde válido", ChordTransposer.isValidChord("Am7/G"), true);
+
+    // 14. Pruebas Unitarias de ProjectsManager
+    if (typeof ProjectsManager !== 'undefined') {
+      localStorage.clear();
+      assert("ProjectsManager inicializa lista vacía", ProjectsManager.getAll().length, 0);
+
+      // Guardar nuevo proyecto
+      const p1 = ProjectsManager.save({
+        title: "Canción Test 1",
+        artist: "Artista Test",
+        key: "G",
+        capo: 2,
+        semitones: 0,
+        content: "{title: Canción Test 1}\n[G]Hola [C]Mundo"
+      });
+
+      assert("Proyecto guardado tiene ID", typeof p1.id, "string");
+      assert("Proyecto guardado tiene título correcto", p1.title, "Canción Test 1");
+      assert("getAll devuelve 1 proyecto", ProjectsManager.getAll().length, 1);
+      assert("getById encuentra el proyecto", ProjectsManager.getById(p1.id).title, "Canción Test 1");
+
+      // Actualizar proyecto
+      const p1Updated = ProjectsManager.save({
+        id: p1.id,
+        title: "Canción Test 1 Modificada",
+        content: "{title: Canción Test 1 Modificada}\n[G]Hola [C]Mundo [D]Fin"
+      });
+      assert("Proyecto actualizado conserva ID", p1Updated.id, p1.id);
+      assert("Proyecto actualizado tiene nuevo título", ProjectsManager.getById(p1.id).title, "Canción Test 1 Modificada");
+      assert("Total de proyectos sigue siendo 1", ProjectsManager.getAll().length, 1);
+
+      // Duplicar proyecto
+      const copy = ProjectsManager.duplicate(p1.id);
+      assert("Proyecto duplicado existe", copy !== null, true);
+      assert("Proyecto duplicado tiene título con (Copia)", copy.title, "Canción Test 1 Modificada (Copia)");
+      assert("Total de proyectos ahora es 2", ProjectsManager.getAll().length, 2);
+
+      // Eliminar proyecto
+      const deleted = ProjectsManager.deleteProject(p1.id);
+      assert("Eliminar proyecto devuelve true", deleted, true);
+      assert("Total de proyectos tras eliminar es 1", ProjectsManager.getAll().length, 1);
+      assert("Proyecto eliminado ya no se encuentra", ProjectsManager.getById(p1.id), null);
+
+      // Importar JSON
+      const backupJson = JSON.stringify({
+        projects: [
+          { title: "Importada 1", artist: "Banda", key: "A", content: "[A]Letra" },
+          { title: "Importada 2", artist: "Solista", key: "D", content: "[D]Letra" }
+        ]
+      });
+      const importRes = ProjectsManager.importFromJson(backupJson);
+      assert("Importación reporta 2 proyectos importados", importRes.imported, 2);
+      assert("Total de proyectos tras importar es 3", ProjectsManager.getAll().length, 3);
+    }
 
     const summary = document.getElementById('summary');
     summary.textContent = `Resultado: ${passedTests} de ${totalTests} pruebas pasadas con éxito.`;
