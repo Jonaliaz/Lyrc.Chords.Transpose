@@ -109,6 +109,15 @@
     btnSaveUnsavedAction: document.getElementById('btnSaveUnsavedAction'),
     unsavedProjectTitle: document.getElementById('unsavedProjectTitle'),
 
+    // Workspace & Vista
+    workspaceContainer: document.getElementById('workspaceContainer'),
+    workspaceResizer: document.getElementById('workspaceResizer'),
+    btnToggleEditor: document.getElementById('btnToggleEditor'),
+    btnHideEditor: document.getElementById('btnHideEditor'),
+    btnShowEditor: document.getElementById('btnShowEditor'),
+    toggleEditorIcon: document.getElementById('toggleEditorIcon'),
+    toggleEditorText: document.getElementById('toggleEditorText'),
+
     // Toast
     toastNotification: document.getElementById('toastNotification')
   };
@@ -218,6 +227,7 @@
     populateProjectSelector();
     bindEvents();
     bindProjectEvents();
+    initWorkspaceResizer();
 
     // Cargar opciones guardadas
     const settings = ProjectsManager.getSettings();
@@ -444,6 +454,17 @@
     elements.btnToggleTheme.addEventListener('click', () => {
       document.body.classList.toggle('light-theme');
     });
+
+    // Alternar vista del editor / maximizar letra
+    if (elements.btnToggleEditor) {
+      elements.btnToggleEditor.addEventListener('click', () => toggleEditorView());
+    }
+    if (elements.btnHideEditor) {
+      elements.btnHideEditor.addEventListener('click', () => toggleEditorView(true));
+    }
+    if (elements.btnShowEditor) {
+      elements.btnShowEditor.addEventListener('click', () => toggleEditorView(false));
+    }
 
     // Botones de transposición rápida en el visor
     if (elements.btnViewerTransposeUp) {
@@ -1220,7 +1241,105 @@
   function toggleFullscreen() {
     elements.viewerPanel.classList.toggle('fullscreen-viewer');
     const isFull = elements.viewerPanel.classList.contains('fullscreen-viewer');
-    elements.btnToggleFullscreen.textContent = isFull ? '✕ Salir de Escenario' : '⛶ Modo Escenario';
+    elements.btnToggleFullscreen.textContent = isFull ? '✕ Salir de Escenario' : '⛶ Escenario';
+  }
+
+  /**
+   * Alterna entre vista dividida (editor + partitura) y vista amplia de solo letra
+   */
+  function toggleEditorView(forceState) {
+    const ws = elements.workspaceContainer;
+    if (!ws) return;
+    const isCurrentlyCollapsed = ws.classList.contains('editor-collapsed');
+    const willCollapse = typeof forceState === 'boolean' ? forceState : !isCurrentlyCollapsed;
+
+    if (willCollapse) {
+      ws.classList.add('editor-collapsed');
+      if (elements.toggleEditorIcon) elements.toggleEditorIcon.textContent = '✏️';
+      if (elements.toggleEditorText) elements.toggleEditorText.textContent = 'Dividido';
+      if (elements.btnToggleEditor) elements.btnToggleEditor.title = 'Mostrar editor y letra lado a lado';
+      showToast('👁️ Vista amplia de letra activada', 'info', 1800);
+    } else {
+      ws.classList.remove('editor-collapsed');
+      if (elements.toggleEditorIcon) elements.toggleEditorIcon.textContent = '👁️';
+      if (elements.toggleEditorText) elements.toggleEditorText.textContent = 'Solo Letra';
+      if (elements.btnToggleEditor) elements.btnToggleEditor.title = 'Ver solo la letra a pantalla ancha';
+    }
+  }
+
+  /**
+   * Inicializa el divisor arrastrable para ajustar libremente el ancho entre editor y partitura
+   */
+  function initWorkspaceResizer() {
+    const resizer = elements.workspaceResizer;
+    const ws = elements.workspaceContainer;
+    if (!resizer || !ws) return;
+
+    const STORAGE_KEY = 'lyrchords_editor_split_pct';
+
+    // Cargar ancho guardado
+    const savedPct = localStorage.getItem(STORAGE_KEY);
+    if (savedPct) {
+      const num = parseFloat(savedPct);
+      if (!isNaN(num) && num >= 15 && num <= 80) {
+        ws.style.setProperty('--editor-width', `${num}%`);
+      }
+    }
+
+    let isDragging = false;
+
+    function onMouseDown(e) {
+      if (e.button !== 0 && e.type !== 'touchstart') return;
+      isDragging = true;
+      document.body.classList.add('is-resizing');
+      resizer.classList.add('active');
+
+      document.addEventListener('mousemove', onMouseMove);
+      document.addEventListener('mouseup', onMouseUp);
+      document.addEventListener('touchmove', onMouseMove, { passive: false });
+      document.addEventListener('touchend', onMouseUp);
+    }
+
+    function onMouseMove(e) {
+      if (!isDragging) return;
+      if (e.type === 'touchmove') e.preventDefault();
+
+      const rect = ws.getBoundingClientRect();
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const offset = clientX - rect.left;
+      let pct = (offset / rect.width) * 100;
+
+      // Limitar entre 18% y 78%
+      pct = Math.max(18, Math.min(78, pct));
+      ws.style.setProperty('--editor-width', `${pct}%`);
+    }
+
+    function onMouseUp(e) {
+      if (!isDragging) return;
+      isDragging = false;
+      document.body.classList.remove('is-resizing');
+      resizer.classList.remove('active');
+
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+      document.removeEventListener('touchmove', onMouseMove);
+      document.removeEventListener('touchend', onMouseUp);
+
+      const currentWidth = ws.style.getPropertyValue('--editor-width');
+      if (currentWidth) {
+        localStorage.setItem(STORAGE_KEY, parseFloat(currentWidth).toFixed(1));
+      }
+    }
+
+    resizer.addEventListener('mousedown', onMouseDown);
+    resizer.addEventListener('touchstart', onMouseDown, { passive: true });
+
+    // Doble clic para restablecer la proporción por defecto (40% / 60%)
+    resizer.addEventListener('dblclick', () => {
+      ws.style.setProperty('--editor-width', '40%');
+      localStorage.removeItem(STORAGE_KEY);
+      showToast('División restablecida (40% / 60%)', 'info', 1800);
+    });
   }
 
   /**
