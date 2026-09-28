@@ -1,16 +1,16 @@
 /* ==========================================================================
-   LyrChords Transposer - Estilos Principales
+   LyrChords Transposer - Estilos Principales (Diseño Minimalista & Amplio)
    ========================================================================== */
 
 :root {
-  --bg-primary: #0f172a;
-  --bg-secondary: #1e293b;
-  --bg-tertiary: #334155;
-  --bg-card: #1e293b;
+  --bg-primary: #0b1120;
+  --bg-secondary: #131d31;
+  --bg-tertiary: #1e293b;
+  --bg-card: #162032;
   --bg-sheet: #ffffff;
   --text-sheet: #0f172a;
   --text-sheet-muted: #64748b;
-  --chord-color: #2563eb;
+  --chord-color: #1d4ed8;
   --chord-bg: #eff6ff;
   --chord-border: #bfdbfe;
   
@@ -20,22 +20,23 @@
   
   --primary: #3b82f6;
   --primary-hover: #2563eb;
-  --primary-glow: rgba(59, 130, 246, 0.35);
+  --primary-glow: rgba(59, 130, 246, 0.25);
   
   --accent: #10b981;
   --accent-hover: #059669;
   --danger: #ef4444;
   --warning: #f59e0b;
   
-  --border-color: #334155;
+  --border-color: #243247;
   --border-light: #e2e8f0;
   
+  --radius-xs: 4px;
   --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 16px;
-  --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
-  --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.4), 0 2px 4px -2px rgba(0,0,0,0.3);
-  --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.5), 0 4px 6px -4px rgba(0,0,0,0.4);
+  --radius-md: 8px;
+  --radius-lg: 14px;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.25);
+  --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.3);
+  --shadow-lg: 0 10px 25px -5px rgba(0,0,0,0.4);
   
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-mono: 'JetBrains Mono', 'Fira Code', Consolas, 'Courier New', monospace;
@@ -45,13 +46,13 @@
 /* Modo claro opcional para la interfaz */
 body.light-theme {
   --bg-primary: #f8fafc;
-  --bg-secondary: #f1f5f9;
-  --bg-tertiary: #e2e8f0;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #f1f5f9;
   --bg-card: #ffffff;
   --text-primary: #0f172a;
   --text-secondary: #475569;
-  --border-color: #cbd5e1;
-  --primary-glow: rgba(59, 130, 246, 0.15);
+  --border-color: #e2e8f0;
+  --primary-glow: rgba(59, 130, 246, 0.12);
 }
 
 * {
@@ -69,53 +70,80 @@ body {
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  -webkit-font-smoothing: antialiased;
 }
 
 /* --------------------------------------------------------------------------
-   Barra Superior Fija (Header + Transposer Toolbar)
+   Barra Superior Unificada y Minimalista
    -------------------------------------------------------------------------- */
-.sticky-top-bar {
+.app-topbar {
   position: sticky;
   top: 0;
   z-index: 60;
   background: var(--bg-secondary);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.35);
+  border-bottom: 1px solid var(--border-color);
+  padding: 0.4rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
+  flex-shrink: 0;
+  min-height: 48px;
+}
+
+.topbar-section {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.topbar-left {
   flex-shrink: 0;
 }
 
-/* --------------------------------------------------------------------------
-   Encabezado Principal
-   -------------------------------------------------------------------------- */
-.app-header {
-  background: var(--bg-secondary);
-  border-bottom: 1px solid var(--border-color);
-  padding: 0.65rem 1.5rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  backdrop-filter: blur(8px);
+.topbar-center {
+  flex: 1;
+  justify-content: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
 }
 
+.topbar-right {
+  flex-shrink: 0;
+  justify-content: flex-end;
+}
+
+.divider-v {
+  width: 1px;
+  height: 22px;
+  background: var(--border-color);
+  margin: 0 0.25rem;
+}
+
+/* Marca compacta */
 .brand {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.45rem;
+  user-select: none;
 }
 
 .brand-icon {
-  width: 36px;
-  height: 36px;
+  width: 28px;
+  height: 28px;
   background: linear-gradient(135deg, #3b82f6, #8b5cf6);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.25rem;
-  box-shadow: 0 2px 10px rgba(59, 130, 246, 0.4);
+  font-size: 1rem;
+  box-shadow: 0 2px 6px rgba(59, 130, 246, 0.35);
 }
 
 .brand-title {
-  font-size: 1.25rem;
+  font-size: 1.05rem;
   font-weight: 700;
   letter-spacing: -0.02em;
   background: linear-gradient(90deg, #60a5fa, #c084fc);
@@ -123,90 +151,99 @@ body {
   -webkit-text-fill-color: transparent;
 }
 
-.brand-subtitle {
+/* Grupos de botones integrados */
+.btn-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.btn-group-segmented {
+  display: inline-flex;
+  align-items: center;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 0.15rem;
+}
+
+/* Selectores compactos */
+.select-styled {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 0.35rem 0.6rem;
+  font-size: 0.82rem;
+  font-family: inherit;
+  font-weight: 500;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.select-styled:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px var(--primary-glow);
+}
+
+.select-compact {
+  max-width: 175px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.label-inline {
   font-size: 0.75rem;
-  color: var(--text-secondary);
-  display: block;
-}
-
-.header-actions {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-/* --------------------------------------------------------------------------
-   Barra de Herramientas de Transposición (El Núcleo del programa)
-   -------------------------------------------------------------------------- */
-.transposer-toolbar {
-  background: linear-gradient(180deg, var(--bg-secondary), var(--bg-primary));
-  border-bottom: 1px solid var(--border-color);
-  padding: 0.85rem 1.5rem;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-}
-
-.toolbar-group {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-}
-
-.toolbar-label {
-  font-size: 0.8rem;
   font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
   color: var(--text-secondary);
-  margin-right: 0.25rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  margin-right: 0.15rem;
 }
 
-/* Botones de Transposición Grandes */
+/* Botones de Transposición Minimalistas */
 .btn-transpose-pill {
   display: flex;
   align-items: center;
   background: var(--bg-tertiary);
   border: 1px solid var(--border-color);
   border-radius: 9999px;
-  padding: 0.2rem;
-  box-shadow: var(--shadow-sm);
+  padding: 0.15rem 0.25rem;
 }
 
 .btn-transpose {
   background: transparent;
   color: var(--text-primary);
   border: none;
-  font-size: 1rem;
+  font-size: 0.85rem;
   font-weight: 700;
-  padding: 0.45rem 0.9rem;
+  padding: 0.25rem 0.65rem;
   border-radius: 9999px;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
+  gap: 0.25rem;
   transition: all 0.15s ease;
 }
 
 .btn-transpose:hover {
   background: var(--primary);
   color: #ffffff;
-  box-shadow: 0 0 12px var(--primary-glow);
+  box-shadow: 0 0 8px var(--primary-glow);
 }
 
 .btn-transpose:active {
-  transform: scale(0.95);
+  transform: scale(0.96);
 }
 
 .transpose-badge {
   font-size: 0.85rem;
   font-weight: 700;
-  padding: 0.4rem 0.75rem;
+  padding: 0.2rem 0.5rem;
   color: #60a5fa;
-  min-width: 60px;
+  min-width: 44px;
   text-align: center;
   font-family: var(--font-mono);
 }
@@ -217,32 +254,14 @@ body {
   border-radius: 9999px;
 }
 
-/* Selectores y controles */
-.select-styled {
-  background: var(--bg-secondary);
-  color: var(--text-primary);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-sm);
-  padding: 0.45rem 0.75rem;
-  font-size: 0.875rem;
-  font-family: inherit;
-  cursor: pointer;
-  outline: none;
-  transition: border-color 0.2s;
-}
-
-.select-styled:focus {
-  border-color: var(--primary);
-}
-
 /* Botones Estándar */
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.4rem;
-  padding: 0.45rem 0.85rem;
-  font-size: 0.875rem;
+  gap: 0.35rem;
+  padding: 0.35rem 0.7rem;
+  font-size: 0.82rem;
   font-weight: 600;
   border-radius: var(--radius-sm);
   border: 1px solid var(--border-color);
@@ -270,24 +289,48 @@ body {
 
 .btn-primary:hover {
   background: var(--primary-hover);
-  box-shadow: 0 0 12px var(--primary-glow);
+  box-shadow: 0 0 10px var(--primary-glow);
 }
 
-.btn-success {
-  background: var(--accent);
-  border-color: var(--accent-hover);
+.btn-highlight {
+  background: rgba(59, 130, 246, 0.18);
+  border-color: rgba(59, 130, 246, 0.4);
+  color: #60a5fa;
+}
+
+.btn-highlight:hover {
+  background: var(--primary);
   color: white;
 }
 
 .btn-sm {
-  padding: 0.3rem 0.6rem;
-  font-size: 0.8rem;
+  padding: 0.25rem 0.55rem;
+  font-size: 0.78rem;
 }
 
-.btn-icon-only {
-  padding: 0.45rem;
-  width: 36px;
-  height: 36px;
+.btn-icon {
+  padding: 0.3rem 0.5rem;
+  font-size: 0.85rem;
+  min-width: 30px;
+}
+
+.btn-segmented {
+  background: transparent;
+  border: none;
+  padding: 0.2rem 0.45rem;
+  font-size: 0.75rem;
+}
+
+.btn-segmented:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.font-size-badge {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  min-width: 34px;
+  text-align: center;
 }
 
 /* Toggle Switches */
@@ -295,7 +338,7 @@ body {
   display: inline-flex;
   background: var(--bg-tertiary);
   border-radius: var(--radius-sm);
-  padding: 0.2rem;
+  padding: 0.15rem;
   border: 1px solid var(--border-color);
 }
 
@@ -303,10 +346,10 @@ body {
   background: transparent;
   border: none;
   color: var(--text-secondary);
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   font-weight: 600;
-  padding: 0.25rem 0.6rem;
-  border-radius: 4px;
+  padding: 0.2rem 0.5rem;
+  border-radius: var(--radius-xs);
   cursor: pointer;
   transition: all 0.15s;
 }
@@ -316,66 +359,110 @@ body {
   color: white;
 }
 
+.toolbar-group {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.toolbar-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-secondary);
+}
+
 /* --------------------------------------------------------------------------
-   Contenedor Principal: Doble Vista (Editor / Visualizador)
+   Espacio de Trabajo Principal (Editor / Hoja de Canción)
    -------------------------------------------------------------------------- */
 .workspace-container {
   display: flex;
   flex: 1;
   min-height: 0;
   overflow: hidden;
+  position: relative;
+  transition: all 0.2s ease-in-out;
+}
+
+/* Colapsar editor para vista amplia de letra */
+.workspace-container.editor-collapsed .editor-panel {
+  display: none !important;
+}
+
+.workspace-container.editor-collapsed .viewer-panel {
+  flex: 1 !important;
+  max-width: 100% !important;
+}
+
+.workspace-container.editor-collapsed .btn-show-editor {
+  display: inline-flex !important;
 }
 
 /* Columna Izquierda: Editor */
 .editor-panel {
-  flex: 1;
-  min-width: 380px;
-  max-width: 50%;
+  flex: 0 0 40%;
+  min-width: 320px;
+  max-width: 48%;
   display: flex;
   flex-direction: column;
   background: var(--bg-secondary);
   border-right: 1px solid var(--border-color);
-  transition: all 0.25s ease;
+  transition: flex 0.2s ease, width 0.2s ease;
 }
 
 .panel-header {
-  padding: 0.75rem 1rem;
-  background: rgba(0, 0, 0, 0.15);
+  padding: 0.5rem 0.85rem;
+  background: rgba(0, 0, 0, 0.12);
   border-bottom: 1px solid var(--border-color);
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 0.5rem;
+}
+
+.panel-title-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
 }
 
 .panel-title {
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: var(--text-secondary);
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-primary);
   display: flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: 0.3rem;
+}
+
+.panel-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
 }
 
 /* Barra de Inserción Rápida de Acordes */
 .chord-palette {
-  padding: 0.6rem 1rem;
-  background: rgba(15, 23, 42, 0.4);
+  padding: 0.4rem 0.85rem;
+  background: rgba(11, 17, 32, 0.5);
   border-bottom: 1px solid var(--border-color);
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.45rem;
   overflow-x: auto;
 }
 
 .palette-label {
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   color: var(--text-muted);
   white-space: nowrap;
 }
 
 .palette-chords {
   display: flex;
-  gap: 0.35rem;
+  gap: 0.3rem;
   flex-wrap: nowrap;
 }
 
@@ -384,10 +471,10 @@ body {
   border: 1px solid var(--border-color);
   color: #38bdf8;
   font-family: var(--font-mono);
-  font-size: 0.8rem;
+  font-size: 0.76rem;
   font-weight: 700;
-  padding: 0.25rem 0.55rem;
-  border-radius: var(--radius-sm);
+  padding: 0.18rem 0.45rem;
+  border-radius: var(--radius-xs);
   cursor: pointer;
   transition: all 0.15s;
   white-space: nowrap;
@@ -409,29 +496,28 @@ body {
 .song-editor {
   width: 100%;
   height: 100%;
-  padding: 1.25rem;
+  padding: 1rem;
   background: transparent;
   color: var(--text-primary);
   border: none;
   outline: none;
   resize: none;
   font-family: var(--font-mono);
-  font-size: 0.95rem;
-  line-height: 1.7;
+  font-size: 0.92rem;
+  line-height: 1.65;
   tab-size: 4;
   overflow-y: auto;
 }
 
 .song-editor::selection {
-  background: rgba(59, 130, 246, 0.3);
+  background: rgba(59, 130, 246, 0.35);
 }
 
-/* Pie del editor con atajos y ayuda */
 .editor-footer {
-  padding: 0.5rem 1rem;
-  background: rgba(0, 0, 0, 0.2);
+  padding: 0.35rem 0.85rem;
+  background: rgba(0, 0, 0, 0.18);
   border-top: 1px solid var(--border-color);
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   color: var(--text-muted);
   display: flex;
   justify-content: space-between;
@@ -440,130 +526,164 @@ body {
 
 /* Columna Derecha: Hoja de Canción Renderizada */
 .viewer-panel {
-  flex: 1.2;
+  flex: 1;
   display: flex;
   flex-direction: column;
   background: var(--bg-primary);
   position: relative;
   overflow: hidden;
+  min-width: 0;
 }
 
 .viewer-controls {
-  padding: 0.75rem 1.5rem;
+  padding: 0.4rem 1.25rem;
   background: var(--bg-secondary);
   border-bottom: 1px solid var(--border-color);
   display: flex;
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
-  gap: 0.75rem;
+  gap: 0.5rem;
+  min-height: 38px;
 }
 
-/* Control de transposición compacto en el visor */
-.viewer-transpose-ctrl {
+.viewer-right-controls {
   display: flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: 0.6rem;
+  margin-left: auto;
+}
+
+.btn-show-editor {
+  background: rgba(59, 130, 246, 0.15);
+  color: #60a5fa;
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+/* Ocultar transpositor duplicado en modo normal (ya está en topbar), pero mostrar en fullscreen */
+.viewer-transpose-ctrl {
+  display: none;
+}
+
+.fullscreen-viewer .viewer-transpose-ctrl {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
 }
 
 .btn-transpose-pill-sm {
-  padding: 0.15rem;
+  padding: 0.1rem;
 }
 
 .btn-transpose-sm {
-  padding: 0.25rem 0.55rem;
-  font-size: 0.8rem;
+  padding: 0.2rem 0.45rem;
+  font-size: 0.75rem;
 }
 
 .transpose-badge-sm {
-  font-size: 0.8rem;
-  padding: 0.25rem 0.45rem;
-  min-width: 36px;
+  font-size: 0.75rem;
+  padding: 0.2rem 0.35rem;
+  min-width: 32px;
 }
 
 /* Controles de Auto-Scroll */
 .autoscroll-control {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.4rem;
   background: var(--bg-tertiary);
-  padding: 0.25rem 0.6rem;
+  padding: 0.15rem 0.5rem;
   border-radius: var(--radius-sm);
   border: 1px solid var(--border-color);
 }
 
 .autoscroll-control input[type="range"] {
-  width: 90px;
+  width: 75px;
   cursor: pointer;
   accent-color: var(--accent);
 }
 
+.btn-scenario {
+  background: rgba(139, 92, 246, 0.15);
+  color: #c084fc;
+  border-color: rgba(139, 92, 246, 0.35);
+}
+
+.btn-scenario:hover {
+  background: #8b5cf6;
+  color: white;
+}
+
+/* --------------------------------------------------------------------------
+   Hoja de Música y Acordes (Máxima Visualización y Legibilidad)
+   -------------------------------------------------------------------------- */
 .sheet-container-wrapper {
   flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
-  padding: 2rem 1.5rem 4rem 1.5rem;
+  padding: 1.5rem 1.5rem 3.5rem 1.5rem;
   display: flex;
   justify-content: center;
   align-items: flex-start;
   min-height: 0;
+  scroll-behavior: smooth;
 }
 
-/* La Hoja de Música / Partitura (Estilo Cancionero Profesional) */
 .song-sheet {
   width: 100%;
-  max-width: 840px;
-  min-height: 600px;
+  max-width: 980px;
+  min-height: calc(100vh - 180px);
   box-sizing: border-box;
   background: var(--bg-sheet);
   color: var(--text-sheet);
   border-radius: var(--radius-md);
-  padding: 2.5rem 3rem 3.5rem;
+  padding: 2rem 2.75rem 3.5rem;
   box-shadow: var(--shadow-lg);
   font-family: var(--font-sheet);
   font-size: 1.05rem;
-  line-height: 2.2;
+  line-height: 2.1;
   position: relative;
-  transition: font-size 0.15s ease;
+  transition: font-size 0.15s ease, max-width 0.2s ease;
   margin-bottom: 2rem;
 }
 
 /* Encabezado de la canción */
 .song-sheet-header {
   border-bottom: 2px solid var(--border-light);
-  padding-bottom: 1.25rem;
-  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  margin-bottom: 1.5rem;
 }
 
 .sheet-title {
-  font-size: 2rem;
+  font-size: 1.85rem;
   font-weight: 800;
   color: #0f172a;
   line-height: 1.2;
+  letter-spacing: -0.02em;
 }
 
 .sheet-artist {
-  font-size: 1.15rem;
+  font-size: 1.1rem;
   color: var(--text-sheet-muted);
   font-weight: 500;
-  margin-top: 0.25rem;
+  margin-top: 0.2rem;
 }
 
 .sheet-meta-badges {
   display: flex;
-  gap: 0.5rem;
-  margin-top: 0.75rem;
+  gap: 0.4rem;
+  margin-top: 0.65rem;
   flex-wrap: wrap;
 }
 
 .meta-chip {
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   font-weight: 700;
   text-transform: uppercase;
   background: #f1f5f9;
   color: #475569;
-  padding: 0.2rem 0.55rem;
-  border-radius: 4px;
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--radius-xs);
   border: 1px solid #e2e8f0;
 }
 
@@ -575,18 +695,20 @@ body {
 
 /* Renderizado de Secciones ([Intro], [Coro], etc.) */
 .song-section-title {
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: #475569;
+  letter-spacing: 0.06em;
+  color: #334155;
   background: #f8fafc;
-  padding: 0.2rem 0.6rem;
-  border-radius: 4px;
+  padding: 0.2rem 0.55rem;
+  border-radius: var(--radius-xs);
   display: inline-block;
-  margin-top: 1.5rem;
-  margin-bottom: 0.5rem;
+  margin-top: 1.25rem;
+  margin-bottom: 0.4rem;
   border-left: 3px solid #2563eb;
+  break-inside: avoid;
+  page-break-inside: avoid;
 }
 
 /* Estructura de Acordes sobre Letra */
@@ -594,21 +716,16 @@ body {
   display: flex;
   flex-wrap: wrap;
   align-items: flex-end;
-  margin-bottom: 0.75rem;
-  min-height: 2.2em;
+  margin-bottom: 0.65rem;
+  min-height: 2.1em;
   break-inside: avoid;
   page-break-inside: avoid;
 }
 
 .song-line.song-line-empty {
-  min-height: 1.5em;
-  height: 1.5em;
-  margin-bottom: 0.5rem;
-}
-
-.song-section-title {
-  break-inside: avoid;
-  page-break-inside: avoid;
+  min-height: 1.2em;
+  height: 1.2em;
+  margin-bottom: 0.4rem;
 }
 
 .chord-lyric-pair {
@@ -642,7 +759,7 @@ body {
   background: #2563eb;
   color: white;
   border-color: #1d4ed8;
-  transform: scale(1.08);
+  transform: scale(1.06);
 }
 
 .chord-badge.empty-chord {
@@ -656,7 +773,7 @@ body {
 /* La Letra abajo */
 .lyric-text {
   font-size: 1em;
-  line-height: 1.3;
+  line-height: 1.35;
   color: var(--text-sheet);
   white-space: pre-wrap;
   word-break: normal;
@@ -668,8 +785,8 @@ body {
   font-family: var(--font-mono);
   color: var(--chord-color);
   font-weight: 700;
-  margin-bottom: 0.5rem;
-  line-height: 1.6;
+  margin-bottom: 0.45rem;
+  line-height: 1.5;
   white-space: pre-wrap;
   word-break: normal;
 }
@@ -724,14 +841,14 @@ body {
   cursor: pointer;
 }
 
-/* Responsive: Vista en una columna si la pantalla es estrecha */
-@media (max-width: 900px) {
+/* Responsive */
+@media (max-width: 960px) {
   body {
     height: auto;
     overflow-y: auto;
   }
 
-  .sticky-top-bar {
+  .app-topbar {
     position: sticky;
     top: 0;
     z-index: 60;
@@ -745,7 +862,7 @@ body {
   
   .editor-panel {
     max-width: 100%;
-    min-height: 380px;
+    min-height: 340px;
   }
   
   .viewer-panel {
@@ -754,12 +871,12 @@ body {
   }
   
   .sheet-container-wrapper {
-    padding: 1.5rem 1rem 4rem;
+    padding: 1rem 0.75rem 3rem;
     overflow: visible;
   }
 
   .song-sheet {
-    padding: 2rem 1.5rem 3rem;
+    padding: 1.75rem 1.25rem 2.5rem;
   }
 }
 
@@ -777,7 +894,7 @@ body {
   position: sticky;
   top: 0;
   z-index: 100;
-  padding: 0.75rem 2rem;
+  padding: 0.6rem 2rem;
   background: var(--bg-secondary);
   border-bottom: 1px solid var(--border-color);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
@@ -788,7 +905,7 @@ body {
 }
 
 .viewer-panel.fullscreen-viewer .song-sheet {
-  max-width: 920px;
+  max-width: 1050px;
   min-height: 100%;
   padding: 3rem 4rem 75vh;
 }
@@ -802,8 +919,7 @@ body {
     color: black !important;
   }
 
-  .app-header,
-  .transposer-toolbar,
+  .app-topbar,
   .editor-panel,
   .viewer-controls,
   .modal-backdrop {

@@ -109,6 +109,14 @@
     btnSaveUnsavedAction: document.getElementById('btnSaveUnsavedAction'),
     unsavedProjectTitle: document.getElementById('unsavedProjectTitle'),
 
+    // Workspace & Vista
+    workspaceContainer: document.getElementById('workspaceContainer'),
+    btnToggleEditor: document.getElementById('btnToggleEditor'),
+    btnHideEditor: document.getElementById('btnHideEditor'),
+    btnShowEditor: document.getElementById('btnShowEditor'),
+    toggleEditorIcon: document.getElementById('toggleEditorIcon'),
+    toggleEditorText: document.getElementById('toggleEditorText'),
+
     // Toast
     toastNotification: document.getElementById('toastNotification')
   };
@@ -444,6 +452,17 @@
     elements.btnToggleTheme.addEventListener('click', () => {
       document.body.classList.toggle('light-theme');
     });
+
+    // Alternar vista del editor / maximizar letra
+    if (elements.btnToggleEditor) {
+      elements.btnToggleEditor.addEventListener('click', () => toggleEditorView());
+    }
+    if (elements.btnHideEditor) {
+      elements.btnHideEditor.addEventListener('click', () => toggleEditorView(true));
+    }
+    if (elements.btnShowEditor) {
+      elements.btnShowEditor.addEventListener('click', () => toggleEditorView(false));
+    }
 
     // Botones de transposición rápida en el visor
     if (elements.btnViewerTransposeUp) {
@@ -1220,7 +1239,30 @@
   function toggleFullscreen() {
     elements.viewerPanel.classList.toggle('fullscreen-viewer');
     const isFull = elements.viewerPanel.classList.contains('fullscreen-viewer');
-    elements.btnToggleFullscreen.textContent = isFull ? '✕ Salir de Escenario' : '⛶ Modo Escenario';
+    elements.btnToggleFullscreen.textContent = isFull ? '✕ Salir de Escenario' : '⛶ Escenario';
+  }
+
+  /**
+   * Alterna entre vista dividida (editor + partitura) y vista amplia de solo letra
+   */
+  function toggleEditorView(forceState) {
+    const ws = elements.workspaceContainer;
+    if (!ws) return;
+    const isCurrentlyCollapsed = ws.classList.contains('editor-collapsed');
+    const willCollapse = typeof forceState === 'boolean' ? forceState : !isCurrentlyCollapsed;
+
+    if (willCollapse) {
+      ws.classList.add('editor-collapsed');
+      if (elements.toggleEditorIcon) elements.toggleEditorIcon.textContent = '✏️';
+      if (elements.toggleEditorText) elements.toggleEditorText.textContent = 'Dividido';
+      if (elements.btnToggleEditor) elements.btnToggleEditor.title = 'Mostrar editor y letra lado a lado';
+      showToast('👁️ Vista amplia de letra activada', 'info', 1800);
+    } else {
+      ws.classList.remove('editor-collapsed');
+      if (elements.toggleEditorIcon) elements.toggleEditorIcon.textContent = '👁️';
+      if (elements.toggleEditorText) elements.toggleEditorText.textContent = 'Solo Letra';
+      if (elements.btnToggleEditor) elements.btnToggleEditor.title = 'Ver solo la letra a pantalla ancha';
+    }
   }
 
   /**

@@ -11,65 +11,49 @@
 </head>
 <body>
 
-  <!-- Barra Superior Fija (Header + Transposer Toolbar) -->
-  <div class="sticky-top-bar" id="stickyTopBar">
-    <!-- Encabezado Principal -->
-    <header class="app-header">
-      <div class="brand">
+  <!-- Barra Superior Unificada y Minimalista -->
+  <header class="app-topbar" id="stickyTopBar">
+    <!-- Sección Izquierda: Marca y Proyectos -->
+    <div class="topbar-section topbar-left">
+      <div class="brand" title="LyrChords Transposer">
         <div class="brand-icon">🎸</div>
-        <div>
-          <h1 class="brand-title">LyrChords Transposer</h1>
-          <span class="brand-subtitle">Editor & Transpositor de Canciones y Acordes</span>
+        <div class="brand-text">
+          <span class="brand-title">LyrChords</span>
         </div>
       </div>
 
-      <div class="header-actions">
-        <!-- Selector de proyectos y ejemplos -->
-        <select id="projectSelector" class="select-styled" title="Seleccionar o cargar proyecto / canción">
-          <option value="" disabled selected>📂 Cargar Proyecto / Ejemplo...</option>
-          <option value="__open_manager__">📁 Abrir Gestor de Proyectos...</option>
-          <optgroup label="⭐ Mis Proyectos Guardados" id="groupUserProjects"></optgroup>
-          <optgroup label="🎵 Canciones de Ejemplo" id="groupExamples"></optgroup>
-          <optgroup label="Acciones">
-            <option value="plantilla-vacia">✨ Nueva Canción en Blanco</option>
-          </optgroup>
-        </select>
+      <div class="divider-v"></div>
 
-        <button id="btnOpenProjects" class="btn" title="Abrir gestor de proyectos y biblioteca (Ctrl+O)">
-          <span>📁 Proyectos</span>
-        </button>
+      <!-- Selector de Proyectos -->
+      <select id="projectSelector" class="select-styled select-compact" title="Cargar proyecto o canción de ejemplo">
+        <option value="" disabled selected>📂 Canciones...</option>
+        <option value="__open_manager__">📁 Gestor de Proyectos...</option>
+        <optgroup label="⭐ Mis Canciones Guardadas" id="groupUserProjects"></optgroup>
+        <optgroup label="🎵 Canciones de Ejemplo" id="groupExamples"></optgroup>
+        <optgroup label="Acciones">
+          <option value="plantilla-vacia">✨ Nueva Canción en Blanco</option>
+        </optgroup>
+      </select>
 
-        <button id="btnSaveProject" class="btn btn-save" title="Guardar cambios en el proyecto (Ctrl+S)">
+      <div class="btn-group">
+        <button id="btnSaveProject" class="btn btn-sm btn-save" title="Guardar cambios (Ctrl+S)">
           <span>💾 Guardar</span>
         </button>
-
-        <button id="btnSaveAsProject" class="btn" title="Guardar como una nueva canción / copia">
-          <span>💾 Guardar como...</span>
+        <button id="btnOpenProjects" class="btn btn-sm" title="Biblioteca de proyectos (Ctrl+O)">
+          <span>📁 Proyectos</span>
         </button>
-
-        <button id="btnNewSong" class="btn" title="Empezar una canción en blanco (Ctrl+N)">
+        <button id="btnNewSong" class="btn btn-sm" title="Nueva canción en blanco (Ctrl+N)">
           <span>📄 Nuevo</span>
         </button>
-
-        <button id="btnExportPdf" class="btn btn-primary" title="Descargar la partitura con acordes y letra en formato PDF">
-          <span>📥 Descargar PDF</span>
-        </button>
-
-        <button id="btnPrint" class="btn" title="Imprimir o vista previa de impresión">
-          <span>🖨️ Imprimir</span>
-        </button>
-
-        <button id="btnToggleTheme" class="btn btn-icon-only" title="Cambiar tema Claro / Oscuro">
-          🌓
+        <button id="btnSaveAsProject" class="btn btn-sm" title="Guardar como nueva copia">
+          <span>💾 Copia</span>
         </button>
       </div>
-    </header>
+    </div>
 
-    <!-- Barra de Herramientas de Transposición -->
-    <section class="transposer-toolbar" aria-label="Herramientas de transposición de acordes">
-      <!-- Grupo 1: Transposición por Semitonos (+1 / -1) -->
+    <!-- Sección Central: Herramientas de Transposición y Armonía -->
+    <div class="topbar-section topbar-center">
       <div class="toolbar-group">
-        <span class="toolbar-label">Transponer:</span>
         <div class="btn-transpose-pill">
           <button id="btnTransposeDown" class="btn-transpose" title="Bajar 1 semitono (-1)">
             <span>▼</span> -1
@@ -79,78 +63,97 @@
             +1 <span>▲</span>
           </button>
         </div>
-        <button id="btnResetTranspose" class="btn btn-sm" title="Volver al tono original (0)">
-          ↺ Restablecer
+        <button id="btnResetTranspose" class="btn btn-sm btn-icon" title="Volver al tono original (0)">
+          ↺
         </button>
       </div>
 
-      <!-- Grupo 2: Tonalidad Directa -->
       <div class="toolbar-group">
-        <span class="toolbar-label">Tono Destino:</span>
-        <select id="targetKeySelect" class="select-styled" title="Seleccionar tonalidad directa">
-          <!-- Opciones generadas por JS -->
+        <label for="targetKeySelect" class="label-inline">Tono:</label>
+        <select id="targetKeySelect" class="select-styled select-compact" title="Tono directo">
+          <!-- Dinámico -->
         </select>
       </div>
 
-      <!-- Grupo 3: Cejilla / Capo -->
       <div class="toolbar-group">
-        <span class="toolbar-label">Cejilla (Capo):</span>
-        <select id="capoSelect" class="select-styled" title="Posición del capo / cejilla">
-          <option value="0">Sin cejilla (0)</option>
-          <option value="1">Traste 1 (+1 semitono)</option>
-          <option value="2">Traste 2 (+2 semitonos)</option>
-          <option value="3">Traste 3 (+3 semitonos)</option>
-          <option value="4">Traste 4 (+4 semitonos)</option>
-          <option value="5">Traste 5 (+5 semitonos)</option>
-          <option value="6">Traste 6 (+6 semitonos)</option>
-          <option value="7">Traste 7 (+7 semitonos)</option>
+        <label for="capoSelect" class="label-inline">Capo:</label>
+        <select id="capoSelect" class="select-styled select-compact" title="Posición del capo">
+          <option value="0">0 (Sin Capo)</option>
+          <option value="1">Traste 1</option>
+          <option value="2">Traste 2</option>
+          <option value="3">Traste 3</option>
+          <option value="4">Traste 4</option>
+          <option value="5">Traste 5</option>
+          <option value="6">Traste 6</option>
+          <option value="7">Traste 7</option>
         </select>
       </div>
 
-      <!-- Grupo 4: Notación (Inglés vs Latino) y Alteración (# vs b) -->
       <div class="toolbar-group">
-        <div class="toggle-chip" title="Cambiar sistema de notación musical">
+        <div class="toggle-chip" title="Sistema de notación">
           <button id="btnNotationEnglish" class="active">C D E</button>
           <button id="btnNotationLatin">Do Re Mi</button>
         </div>
 
-        <div class="toggle-chip" title="Preferencia de alteración">
-          <button id="btnAccidentalSharp" class="active">♯ Sostenidos</button>
-          <button id="btnAccidentalFlat">♭ Bemoles</button>
+        <div class="toggle-chip" title="Alteración preferida">
+          <button id="btnAccidentalSharp" class="active">♯</button>
+          <button id="btnAccidentalFlat">♭</button>
         </div>
       </div>
-    </section>
-  </div>
+    </div>
+
+    <!-- Sección Derecha: Vista, Exportación y Tema -->
+    <div class="topbar-section topbar-right">
+      <button id="btnToggleEditor" class="btn btn-sm btn-highlight" title="Alternar entre ver solo la letra o ver editor y letra lado a lado">
+        <span id="toggleEditorIcon">👁️</span> <span id="toggleEditorText">Solo Letra</span>
+      </button>
+
+      <div class="divider-v"></div>
+
+      <button id="btnExportPdf" class="btn btn-sm btn-primary" title="Descargar como PDF">
+        <span>📥 PDF</span>
+      </button>
+
+      <button id="btnPrint" class="btn btn-sm btn-icon" title="Imprimir canción">
+        🖨️
+      </button>
+
+      <button id="btnToggleTheme" class="btn btn-sm btn-icon" title="Cambiar tema Claro / Oscuro">
+        🌓
+      </button>
+    </div>
+  </header>
 
   <!-- Espacio de Trabajo Principal (Editor / Hoja de Canción) -->
-  <main class="workspace-container">
+  <main class="workspace-container" id="workspaceContainer">
     <!-- Panel Izquierdo: Editor -->
     <aside class="editor-panel" id="editorPanel">
       <div class="panel-header">
         <div class="panel-title-group">
-          <span class="panel-title">
-            <span>✏️</span> Editor de Letra y Acordes
-          </span>
+          <span class="panel-title">✏️ Editor</span>
           <div class="project-indicator" id="projectIndicator">
             <span id="activeProjectBadge" class="project-badge">Sin Guardar</span>
             <span id="unsavedChangesBadge" class="unsaved-dot" style="display:none;" title="Tienes cambios sin guardar">● Sin guardar</span>
           </div>
         </div>
-        <div style="display: flex; gap: 0.35rem; align-items: center;">
-          <button id="btnFormatTwoLines" class="btn btn-sm" title="Convierte texto donde los acordes están en una línea separada arriba de la letra al formato alineado [Acorde]">
-            🪄 Detectar acordes arriba
+        <div class="panel-actions">
+          <button id="btnFormatTwoLines" class="btn btn-sm" title="Detectar y alinear acordes que están en la línea de arriba">
+            🪄 Detectar arriba
           </button>
-          <button id="btnOpenInsertModal" class="btn btn-sm btn-primary" title="Abrir asistente para agregar un acorde">
-            + Insertar Acorde
+          <button id="btnOpenInsertModal" class="btn btn-sm btn-primary" title="Construir e insertar acorde">
+            + Acorde
+          </button>
+          <button id="btnHideEditor" class="btn btn-sm btn-icon" title="Ocultar editor para maximizar la letra">
+            ◀
           </button>
         </div>
       </div>
 
       <!-- Paleta Rápida de Acordes -->
       <div class="chord-palette">
-        <span class="palette-label">Acordes rápidos:</span>
+        <span class="palette-label">Acordes clave:</span>
         <div id="quickChordContainer" class="palette-chords">
-          <!-- Botones de acordes dinámicos generados por JS según la tonalidad -->
+          <!-- Botones dinámicos -->
         </div>
       </div>
 
@@ -159,25 +162,23 @@
         <textarea 
           id="songInput" 
           class="song-editor" 
-          placeholder="Escribe aquí la letra de tu canción. Puedes agregar acordes entre corchetes, por ejemplo:
-[C]De música [Am]ligera nada más [F]queda [G]
-
-O si pegas una línea con acordes y abajo la línea con letra, pulsa el botón 'Detectar acordes arriba'!"
+          placeholder="Escribe o pega aquí la letra con acordes [C] [Am] [F] [G]..."
           spellcheck="false"
         ></textarea>
       </div>
 
       <div class="editor-footer">
         <span id="charCountDisplay">0 versos | 0 palabras</span>
-        <span>Tip: Escribe <code>[Acorde]</code> directamente antes de la sílaba</span>
+        <span>Tip: <code>[Acorde]</code> antes de la sílaba</span>
       </div>
     </aside>
 
-    <!-- Panel Derecho: Hoja de Música (Renderizado de Acordes sobre Letra) -->
+    <!-- Panel Derecho: Hoja de Canción (Máxima visualización de letra y acordes) -->
     <section class="viewer-panel" id="viewerPanel">
+      <!-- Barra de Herramientas del Visor -->
       <div class="viewer-controls">
-        <!-- Control Rápido de Transposición en el Visor / Modo Escenario -->
-        <div class="toolbar-group viewer-transpose-ctrl">
+        <!-- Control de Transposición (visible prioritariamente en Modo Escenario / Fullscreen) -->
+        <div class="toolbar-group viewer-transpose-ctrl" id="viewerTransposeGroup">
           <span class="toolbar-label">Tono:</span>
           <div class="btn-transpose-pill btn-transpose-pill-sm">
             <button id="btnViewerTransposeDown" class="btn-transpose btn-transpose-sm" title="Bajar 1 semitono (-1)">
@@ -188,32 +189,39 @@ O si pegas una línea con acordes y abajo la línea con letra, pulsa el botón '
               +1 <span>▲</span>
             </button>
           </div>
-          <button id="btnViewerResetTranspose" class="btn btn-sm" title="Restablecer tono original (0)">
+          <button id="btnViewerResetTranspose" class="btn btn-sm btn-icon" title="Restablecer tono original (0)">
             ↺
           </button>
           <span id="viewerKeyDisplay" class="meta-chip key-chip">Tono: C</span>
         </div>
 
-        <!-- Control de Tamaño de Letra -->
-        <div class="toolbar-group">
-          <span class="toolbar-label">Tamaño:</span>
-          <button id="btnFontDec" class="btn btn-sm" title="Reducir fuente">A-</button>
-          <span id="fontSizeDisplay" style="font-size:0.8rem; font-weight:700; color:var(--text-secondary); min-width:32px; text-align:center;">17px</span>
-          <button id="btnFontInc" class="btn btn-sm" title="Aumentar fuente">A+</button>
-        </div>
-
-        <!-- Controles de Auto-Scroll para Músicos -->
-        <div class="autoscroll-control">
-          <button id="btnAutoScroll" class="btn btn-sm" title="Iniciar o pausar desplazamiento automático">
-            ▶ Auto-Scroll
-          </button>
-          <input type="range" id="scrollSpeedRange" min="1" max="10" value="3" title="Velocidad de desplazamiento">
-        </div>
-
-        <!-- Botón Modo Pantalla Completa / Tocar en Vivo -->
-        <button id="btnToggleFullscreen" class="btn btn-sm" title="Expandir para ver solo la canción en vivo">
-          ⛶ Modo Escenario
+        <!-- Botón para mostrar el editor cuando está oculto -->
+        <button id="btnShowEditor" class="btn btn-sm btn-show-editor" style="display:none;" title="Mostrar editor lateral">
+          ✏️ Mostrar Editor
         </button>
+
+        <!-- Controles de Lectura: Fuente y Auto-Scroll -->
+        <div class="viewer-right-controls">
+          <div class="toolbar-group">
+            <span class="toolbar-label">Tamaño:</span>
+            <div class="btn-group-segmented">
+              <button id="btnFontDec" class="btn btn-sm btn-segmented" title="Reducir fuente">A-</button>
+              <span id="fontSizeDisplay" class="font-size-badge">17px</span>
+              <button id="btnFontInc" class="btn btn-sm btn-segmented" title="Aumentar fuente">A+</button>
+            </div>
+          </div>
+
+          <div class="autoscroll-control">
+            <button id="btnAutoScroll" class="btn btn-sm" title="Iniciar o pausar desplazamiento automático">
+              ▶ Auto-Scroll
+            </button>
+            <input type="range" id="scrollSpeedRange" min="1" max="10" value="3" title="Velocidad de desplazamiento">
+          </div>
+
+          <button id="btnToggleFullscreen" class="btn btn-sm btn-scenario" title="Expandir para ver solo la canción en vivo">
+            ⛶ Escenario
+          </button>
+        </div>
       </div>
 
       <!-- Contenedor con Scroll de la Partitura -->
@@ -235,7 +243,6 @@ O si pegas una línea con acordes y abajo la línea con letra, pulsa el botón '
           </div>
         </article>
       </div>
-    </section>
   </main>
 
   <!-- Modal para Construir e Insertar Acorde -->
