@@ -382,11 +382,18 @@ body {
   min-height: 0;
   overflow: hidden;
   position: relative;
-  transition: all 0.2s ease-in-out;
+  transition: all 0.15s ease-in-out;
+}
+
+body.is-resizing,
+body.is-resizing * {
+  cursor: col-resize !important;
+  user-select: none !important;
 }
 
 /* Colapsar editor para vista amplia de letra */
-.workspace-container.editor-collapsed .editor-panel {
+.workspace-container.editor-collapsed .editor-panel,
+.workspace-container.editor-collapsed .workspace-resizer {
   display: none !important;
 }
 
@@ -401,14 +408,53 @@ body {
 
 /* Columna Izquierda: Editor */
 .editor-panel {
-  flex: 0 0 40%;
-  min-width: 320px;
-  max-width: 48%;
+  flex: 0 0 var(--editor-width, 40%);
+  width: var(--editor-width, 40%);
+  min-width: 260px;
+  max-width: 75%;
   display: flex;
   flex-direction: column;
   background: var(--bg-secondary);
   border-right: 1px solid var(--border-color);
-  transition: flex 0.2s ease, width 0.2s ease;
+  position: relative;
+}
+
+/* Divisor interactivo / Resizer */
+.workspace-resizer {
+  width: 9px;
+  background: transparent;
+  cursor: col-resize;
+  position: relative;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  margin: 0 -4px;
+  transition: background 0.15s ease;
+  flex-shrink: 0;
+}
+
+.workspace-resizer:hover,
+.workspace-resizer.active,
+body.is-resizing .workspace-resizer {
+  background: rgba(59, 130, 246, 0.35);
+}
+
+.resizer-handle {
+  width: 3px;
+  height: 36px;
+  background: var(--border-color);
+  border-radius: 999px;
+  transition: all 0.15s ease;
+}
+
+.workspace-resizer:hover .resizer-handle,
+.workspace-resizer.active .resizer-handle,
+body.is-resizing .resizer-handle {
+  background: var(--primary);
+  height: 54px;
+  box-shadow: 0 0 8px var(--primary-glow);
 }
 
 .panel-header {
