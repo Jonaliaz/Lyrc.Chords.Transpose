@@ -45,8 +45,17 @@ El script iniciará un servidor web local y abrirá automáticamente tu navegado
 - **Asistente "+ Insertar Acorde"**: Modal visual para armar cualquier acorde eligiendo la nota raíz, el tipo/calidad y el bajo alternativo.
 
 ### 3. 🎤 Herramientas para Tocar en Vivo
-- **Auto-Scroll Manos Libres**: Desplazamiento vertical automático con control de velocidad para que leas la letra y toques tu instrumento sin necesidad de tocar la pantalla o el teclado.
-- **Modo Escenario (Pantalla Completa)**: Oculta el editor para maximizar la hoja de la canción.
+- **⏱️ Modo Acompañamiento por Tempo & Metrónomo (Opción Avanzada)**:
+  - **Avance Progresivo Sincronizado**: Resalta en tiempo real la línea activa, el acorde actual y las sílabas correspondientes al compás de la música.
+  - **Metrónomo Sintético Web Audio**: Clic rítmico percusivo de alta precisión con acento en el pulso 1 (con opción de silencio/solo visual).
+  - **LEDs Visuales de Compás**: Indicadores luminosos en tiempo real (`[ 1 ] [ 2 ] [ 3 ] [ 4 ]`) que marcan los tiempos del compás.
+  - **Control de BPM & Tap Tempo**: Ajuste preciso de tempo (30 a 300 BPM), deslizador, botones rápidos (+/-) y botón **Tap Tempo** para medir el ritmo con tus pulsaciones.
+  - **Compases y Duración**: Selector de compás (4/4, 3/4 vals, 2/4, 6/8) y duración de acorde (1 compás, 1/2 compás, auto).
+  - **Conteo Previo (Pre-roll 1-2-3-4)**: Preparación de 1 compás antes de comenzar la canción.
+  - **Auto-Scroll Inteligente por Tempo**: Mantiene siempre la línea en reproducción en la zona óptima de lectura sin necesidad de manos.
+  - **Navegación Interactiva (Click-to-Seek)**: Haz clic sobre cualquier línea o acorde de la hoja para saltar la reproducción instantáneamente a esa posición.
+- **▶ Auto-Scroll Tradicional Continuo**: Desplazamiento vertical automático a velocidad constante regulable.
+- **Modo Escenario (Pantalla Completa)**: Oculta el editor para maximizar la hoja de la canción con controles accesibles.
 - **Control de Tamaño de Letra (A- / A+)**: Agranda o reduce el tamaño de texto para facilitar la lectura a distancia.
 - **📥 Descarga Directa en PDF**: Botón dedicado para convertir el lienzo de la partitura (con acordes transpuestos arriba y letra) directamente en un archivo `.pdf` descargable de alta resolución.
 - **🖨️ Impresión / Vista Previa**: Hoja de estilos optimizada para imprimir canciones limpias sin botones ni barras de herramientas.
@@ -69,6 +78,7 @@ Lyrc.Chords.Transpose/
 │
 ├── js/
 │   ├── chord-transposer.js # Motor musical de teoría, transposición y parsing de texto
+│   ├── tempo-companion.js  # Motor de metrónomo, sincronización de tempo y resaltado progresivo
 │   ├── projects.js         # Sistema de guardado y gestión de proyectos locales
 │   ├── examples.js         # Canciones de muestra precargadas
 │   ├── app.js              # Controlador principal, interfaz de usuario y eventos

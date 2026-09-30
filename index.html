@@ -223,6 +223,11 @@
             </div>
           </div>
 
+          <!-- Opción APARTE: Acompañamiento con Tempo y Metrónomo -->
+          <button id="btnToggleTempoCompanion" class="btn btn-sm btn-tempo" title="Acompañamiento con metrónomo y avance progresivo de acordes y letra">
+            ⏱️ Modo Tempo
+          </button>
+
           <div class="autoscroll-control">
             <button id="btnAutoScroll" class="btn btn-sm" title="Iniciar o pausar desplazamiento automático">
               ▶ Auto-Scroll
@@ -232,6 +237,77 @@
 
           <button id="btnToggleFullscreen" class="btn btn-sm btn-scenario" title="Expandir para ver solo la canción en vivo">
             ⛶ Escenario
+          </button>
+        </div>
+      </div>
+
+      <!-- Barra HUD de Acompañamiento por Tempo & Metrónomo -->
+      <div class="tempo-companion-bar" id="tempoCompanionBar">
+        <div class="tempo-bar-section tempo-bar-playback">
+          <button id="btnTempoPlayPause" class="btn btn-sm btn-tempo-play" title="Iniciar/Pausar acompañamiento (Espacio)">
+            <span>▶</span> <span>Acompañar</span>
+          </button>
+          <button id="btnTempoStop" class="btn btn-sm btn-icon" title="Detener y volver al inicio">
+            ⏹
+          </button>
+          <div class="divider-v"></div>
+          <button id="btnTempoPrev" class="btn btn-sm btn-icon" title="Línea anterior">
+            ⏮
+          </button>
+          <button id="btnTempoNext" class="btn btn-sm btn-icon" title="Línea siguiente">
+            ⏭
+          </button>
+        </div>
+
+        <div class="tempo-bar-section tempo-bar-meter">
+          <!-- LEDs de pulsos del compás -->
+          <div class="beat-leds-container" id="beatLedsContainer" title="Pulsos del compás">
+            <!-- Dinámico: 1, 2, 3, 4 -->
+          </div>
+          <span id="tempoCountInIndicator" class="tempo-count-in-badge" style="display:none;">¡1!</span>
+        </div>
+
+        <div class="tempo-bar-section tempo-bar-bpm">
+          <button id="btnBpmDec" class="btn btn-sm btn-icon" title="Bajar 2 BPM">-</button>
+          <span id="bpmDisplay" class="bpm-badge" title="Pulsaciones por minuto (Tempo)">100 BPM</span>
+          <button id="btnBpmInc" class="btn btn-sm btn-icon" title="Subir 2 BPM">+</button>
+          <input type="range" id="bpmSlider" min="40" max="220" value="100" class="tempo-slider" title="Ajustar velocidad del tempo">
+          <button id="btnTapTempo" class="btn btn-sm btn-tap" title="Toca rítmicamente para ajustar el tempo al instante">
+            Tap
+          </button>
+        </div>
+
+        <div class="tempo-bar-section tempo-bar-config">
+          <div class="toolbar-group">
+            <label for="timeSignatureSelect" class="label-inline">Compás:</label>
+            <select id="timeSignatureSelect" class="select-styled select-compact" title="Tipo de compás">
+              <option value="4/4" selected>4/4</option>
+              <option value="3/4">3/4 (Vals)</option>
+              <option value="2/4">2/4</option>
+              <option value="6/8">6/8</option>
+            </select>
+          </div>
+
+          <div class="toolbar-group">
+            <label for="beatsPerChordSelect" class="label-inline">Paso:</label>
+            <select id="beatsPerChordSelect" class="select-styled select-compact" title="Duración por acorde">
+              <option value="auto" selected>Auto</option>
+              <option value="4">4 pulsos (1 compás)</option>
+              <option value="2">2 pulsos (1/2 compás)</option>
+              <option value="8">8 pulsos (2 compases)</option>
+            </select>
+          </div>
+
+          <button id="btnToggleSound" class="btn btn-sm toggle-sound-btn active" title="Sonido del metrónomo (On/Off)">
+            <span>🔊</span> Sonido
+          </button>
+
+          <button id="btnToggleCountIn" class="btn btn-sm toggle-countin-btn active" title="Conteo previo 1-2-3-4 antes de empezar">
+            1-2-3-4
+          </button>
+
+          <button id="btnCloseTempoBar" class="btn btn-sm btn-icon btn-close-tempo" title="Cerrar barra de tempo">
+            ✕
           </button>
         </div>
       </div>
@@ -510,6 +586,7 @@
   <script src="js/lib/html2pdf.bundle.min.js"></script>
   <script src="js/chord-transposer.js"></script>
   <script src="js/projects.js"></script>
+  <script src="js/tempo-companion.js"></script>
   <script src="js/examples.js"></script>
   <script src="js/app.js"></script>
 </body>

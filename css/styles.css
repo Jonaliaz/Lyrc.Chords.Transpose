@@ -1572,3 +1572,295 @@ body.is-resizing .workspace-resizer {
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.45);
 }
+
+/* ==========================================================================
+   Modo Acompañamiento por Tempo & Metrónomo (HUD Galáctico & Resaltado Progresivo)
+   ========================================================================== */
+
+/* Botón disparador en los controles del visor */
+.btn-tempo {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.25);
+  color: #f8fafc;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  transition: all 0.15s ease;
+}
+
+.btn-tempo:hover,
+.btn-tempo.active {
+  background: #ffffff;
+  color: #07080c;
+  border-color: #ffffff;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+}
+
+/* Barra HUD de Acompañamiento */
+.tempo-companion-bar {
+  display: none;
+  background: rgba(14, 16, 24, 0.96);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--border-color);
+  padding: 0.35rem 1rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  z-index: 60;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  animation: slideDownTempo 0.18s ease-out;
+}
+
+.tempo-companion-bar.open {
+  display: flex;
+}
+
+@keyframes slideDownTempo {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.tempo-bar-section {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-wrap: nowrap;
+}
+
+/* Botón de reproducción del tempo */
+.btn-tempo-play {
+  background: #ffffff;
+  color: #07080c;
+  border-color: #ffffff;
+  font-weight: 700;
+  min-width: 96px;
+  justify-content: center;
+}
+
+.btn-tempo-play:hover {
+  background: #e2e8f0;
+  border-color: #e2e8f0;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+}
+
+.btn-tempo-play.btn-playing {
+  background: #22c55e;
+  border-color: #22c55e;
+  color: #07080c;
+  box-shadow: 0 0 14px rgba(34, 197, 94, 0.5);
+  font-weight: 800;
+}
+
+/* LEDs visuales del compás del metrónomo */
+.beat-leds-container {
+  display: inline-flex;
+  gap: 4px;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.45);
+  padding: 2px 6px;
+  border-radius: var(--radius-xs);
+  border: 1px solid var(--border-color);
+  height: 28px;
+  box-sizing: border-box;
+}
+
+.beat-led {
+  width: 20px;
+  height: 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  border-radius: 3px;
+  color: var(--text-muted);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: all 0.06s ease;
+  user-select: none;
+}
+
+.beat-led.flash {
+  background: #ffffff;
+  color: #07080c;
+  border-color: #ffffff;
+  box-shadow: 0 0 12px #ffffff;
+  transform: scale(1.18);
+}
+
+.beat-led.accent {
+  border-color: rgba(255, 255, 255, 0.25);
+  color: var(--silver-accent);
+}
+
+.beat-led.accent.flash {
+  background: #38bdf8;
+  color: #07080c;
+  border-color: #38bdf8;
+  box-shadow: 0 0 16px #38bdf8;
+  transform: scale(1.25);
+}
+
+/* Badge de BPM y Slider */
+.bpm-badge {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 0.78rem;
+  min-width: 72px;
+  text-align: center;
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.08);
+  padding: 0.18rem 0.5rem;
+  border-radius: var(--radius-xs);
+  border: 1px solid var(--border-color);
+}
+
+.tempo-slider {
+  width: 75px;
+  accent-color: #ffffff;
+  cursor: pointer;
+}
+
+.btn-tap {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.12);
+  color: #f8fafc;
+}
+
+.btn-tap:active {
+  background: #ffffff;
+  color: #07080c;
+  transform: scale(0.94);
+}
+
+/* Conteo previo (Count-in) */
+.tempo-count-in-badge {
+  font-family: var(--font-mono);
+  font-weight: 800;
+  font-size: 0.88rem;
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.15);
+  border: 1px solid #38bdf8;
+  padding: 0.1rem 0.55rem;
+  border-radius: var(--radius-xs);
+  animation: pulseCount 0.15s ease-out;
+}
+
+@keyframes pulseCount {
+  0% { transform: scale(0.9); opacity: 0.5; }
+  50% { transform: scale(1.2); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.toggle-sound-btn.active,
+.toggle-countin-btn.active {
+  background: rgba(255, 255, 255, 0.18);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.btn-close-tempo {
+  color: var(--text-muted);
+}
+.btn-close-tempo:hover {
+  color: #ef4444;
+  border-color: rgba(239, 68, 68, 0.4);
+}
+
+/* ==========================================================================
+   Resaltado Progresivo en la Hoja de Canción (.song-sheet)
+   ========================================================================== */
+
+/* Línea actualmente activa en el tempo */
+.song-line.tempo-active-line {
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.09) 0%, rgba(255, 255, 255, 0.02) 80%, transparent 100%);
+  border-left: 3px solid #ffffff;
+  padding-left: 0.65rem;
+  border-radius: var(--radius-xs);
+  box-shadow: inset 0 0 14px rgba(255, 255, 255, 0.03);
+  transition: all 0.15s ease-in-out;
+}
+
+body.light-theme .song-line.tempo-active-line {
+  background: linear-gradient(90deg, rgba(15, 23, 42, 0.09) 0%, rgba(15, 23, 42, 0.02) 80%, transparent 100%);
+  border-left: 3px solid #0f172a;
+  box-shadow: inset 0 0 10px rgba(15, 23, 42, 0.03);
+}
+
+/* Acorde activo resaltado con brillo de alta visibilidad */
+.chord-badge.tempo-active-chord,
+.chord-only-line .chord-badge.tempo-active-chord {
+  background: #ffffff !important;
+  color: #07080c !important;
+  border-color: #ffffff !important;
+  box-shadow: 0 0 16px rgba(255, 255, 255, 0.9), 0 0 4px #ffffff !important;
+  transform: scale(1.15);
+  font-weight: 800;
+  z-index: 10;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+body.light-theme .chord-badge.tempo-active-chord,
+body.light-theme .chord-only-line .chord-badge.tempo-active-chord {
+  background: #0f172a !important;
+  color: #ffffff !important;
+  border-color: #0f172a !important;
+  box-shadow: 0 0 16px rgba(15, 23, 42, 0.45) !important;
+}
+
+/* Letra activa resaltada progresivamente */
+.lyric-text.tempo-active-lyric {
+  color: #ffffff !important;
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 3px;
+  padding: 0.05rem 0.25rem;
+  text-shadow: 0 0 12px rgba(255, 255, 255, 0.7);
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.12);
+  transition: all 0.12s ease;
+}
+
+body.light-theme .lyric-text.tempo-active-lyric {
+  color: #000000 !important;
+  background: rgba(15, 23, 42, 0.14);
+  text-shadow: none;
+  font-weight: 700;
+}
+
+/* Elementos ya leídos en la misma línea */
+.tempo-passed-segment .chord-badge:not(.tempo-active-chord),
+.tempo-passed-segment .lyric-text:not(.tempo-active-lyric),
+.chord-badge.tempo-passed-chord,
+.lyric-text.tempo-passed-lyric {
+  opacity: 0.65;
+  transition: opacity 0.2s ease;
+}
+
+/* Título de sección activo */
+.song-section-title.tempo-active-line {
+  background: #ffffff !important;
+  color: #07080c !important;
+  font-weight: 800;
+  box-shadow: 0 0 16px rgba(255, 255, 255, 0.7);
+  border-left-color: #38bdf8;
+  transform: scale(1.03);
+  transition: all 0.15s ease;
+}
+
+body.light-theme .song-section-title.tempo-active-line {
+  background: #0f172a !important;
+  color: #ffffff !important;
+  border-left-color: #0f172a;
+}
+

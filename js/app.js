@@ -52,6 +52,26 @@
     btnToggleFullscreen: document.getElementById('btnToggleFullscreen'),
     viewerPanel: document.getElementById('viewerPanel'),
 
+    // Acompañamiento por Tempo & Metrónomo
+    btnToggleTempoCompanion: document.getElementById('btnToggleTempoCompanion'),
+    tempoCompanionBar: document.getElementById('tempoCompanionBar'),
+    btnTempoPlayPause: document.getElementById('btnTempoPlayPause'),
+    btnTempoStop: document.getElementById('btnTempoStop'),
+    btnTempoPrev: document.getElementById('btnTempoPrev'),
+    btnTempoNext: document.getElementById('btnTempoNext'),
+    bpmDisplay: document.getElementById('bpmDisplay'),
+    bpmSlider: document.getElementById('bpmSlider'),
+    btnBpmDec: document.getElementById('btnBpmDec'),
+    btnBpmInc: document.getElementById('btnBpmInc'),
+    btnTapTempo: document.getElementById('btnTapTempo'),
+    timeSignatureSelect: document.getElementById('timeSignatureSelect'),
+    beatsPerChordSelect: document.getElementById('beatsPerChordSelect'),
+    btnToggleSound: document.getElementById('btnToggleSound'),
+    btnToggleCountIn: document.getElementById('btnToggleCountIn'),
+    beatLedsContainer: document.getElementById('beatLedsContainer'),
+    tempoCountInIndicator: document.getElementById('tempoCountInIndicator'),
+    btnCloseTempoBar: document.getElementById('btnCloseTempoBar'),
+
     // Acciones Generales & Proyectos
     btnProjectMenu: document.getElementById('btnProjectMenu'),
     projectDropdownMenu: document.getElementById('projectDropdownMenu'),
@@ -230,6 +250,7 @@
     bindEvents();
     bindProjectEvents();
     initWorkspaceResizer();
+    initTempoCompanion();
 
     // Cargar opciones guardadas
     const settings = ProjectsManager.getSettings();
@@ -1365,12 +1386,49 @@
   }
 
   /**
+   * Inicializa el módulo de Acompañamiento por Tempo & Metrónomo
+   */
+  function initTempoCompanion() {
+    if (typeof TempoCompanion !== 'undefined') {
+      TempoCompanion.init({
+        companionBar: elements.tempoCompanionBar,
+        btnToggleCompanion: elements.btnToggleTempoCompanion,
+        btnPlayPause: elements.btnTempoPlayPause,
+        btnStop: elements.btnTempoStop,
+        btnPrevLine: elements.btnTempoPrev,
+        btnNextLine: elements.btnTempoNext,
+        bpmDisplay: elements.bpmDisplay,
+        bpmSlider: elements.bpmSlider,
+        btnBpmDec: elements.btnBpmDec,
+        btnBpmInc: elements.btnBpmInc,
+        btnTapTempo: elements.btnTapTempo,
+        timeSignatureSelect: elements.timeSignatureSelect,
+        beatsPerChordSelect: elements.beatsPerChordSelect,
+        btnToggleSound: elements.btnToggleSound,
+        btnToggleCountIn: elements.btnToggleCountIn,
+        beatLedsContainer: elements.beatLedsContainer,
+        countInIndicator: elements.tempoCountInIndicator,
+        sheetWrapper: elements.sheetContainerWrapper,
+        sheetBody: elements.sheetBody
+      });
+
+      if (elements.btnCloseTempoBar) {
+        elements.btnCloseTempoBar.addEventListener('click', () => {
+          TempoCompanion.toggleCompanionBar(false);
+        });
+      }
+    }
+  }
+
+  /**
    * Detecta metadatos y primera tonalidad de la canción
    */
   function extractMetadata(text) {
     let title = 'Canción Sin Título';
     let artist = '';
     let key = '';
+    let tempo = null;
+    let timeSignature = '';
 
     const lines = (text || '').split('\n');
     for (const line of lines) {
@@ -1382,6 +1440,12 @@
 
       const keyMatch = line.match(/^\{\s*key:\s*(.*?)\s*\}$/i);
       if (keyMatch) key = keyMatch[1];
+
+      const tempoMatch = line.match(/^\{\s*(?:tempo|bpm):\s*(\d+)\s*\}$/i);
+      if (tempoMatch) tempo = parseInt(tempoMatch[1], 10);
+
+      const timeMatch = line.match(/^\{\s*(?:time|timesignature|compas):\s*([0-9\/]+)\s*\}$/i);
+      if (timeMatch) timeSignature = timeMatch[1];
     }
 
     if (!key) {
@@ -1391,7 +1455,7 @@
       }
     }
 
-    return { title, artist, key };
+    return { title, artist, key, tempo, timeSignature };
   }
 
   /**
@@ -1424,6 +1488,17 @@
 
     const parsedLines = ChordTransposer.parseSong(rawText);
     renderSheetLines(parsedLines);
+
+    // Sincronizar metadatos de tempo y reconstruir línea de tiempo del reproductor
+    if (typeof TempoCompanion !== 'undefined') {
+      if (meta.tempo) {
+        TempoCompanion.setBpm(meta.tempo);
+      }
+      if (meta.timeSignature) {
+        TempoCompanion.setTimeSignature(meta.timeSignature);
+      }
+      TempoCompanion.buildTimeline();
+    }
   }
 
   /**

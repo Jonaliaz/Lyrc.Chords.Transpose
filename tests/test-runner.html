@@ -18,6 +18,7 @@
 
   <script src="../js/chord-transposer.js"></script>
   <script src="../js/projects.js"></script>
+  <script src="../js/tempo-companion.js"></script>
   <script>
     const results = document.getElementById('results');
     let totalTests = 0;
@@ -170,6 +171,44 @@
       const importRes = ProjectsManager.importFromJson(backupJson);
       assert("Importación reporta 2 proyectos importados", importRes.imported, 2);
       assert("Total de proyectos tras importar es 3", ProjectsManager.getAll().length, 3);
+    }
+
+    // 15. Pruebas Unitarias de TempoCompanion (Acompañamiento y Metrónomo)
+    if (typeof TempoCompanion !== 'undefined') {
+      assert("TempoCompanion está definido", typeof TempoCompanion, "object");
+      assert("TempoCompanion tiene método init", typeof TempoCompanion.init, "function");
+      assert("TempoCompanion tiene método start", typeof TempoCompanion.start, "function");
+      assert("TempoCompanion tiene método pause", typeof TempoCompanion.pause, "function");
+      assert("TempoCompanion tiene método stop", typeof TempoCompanion.stop, "function");
+
+      // Ajustes de BPM
+      TempoCompanion.setBpm(120);
+      assert("Ajuste de BPM a 120", TempoCompanion.getState().bpm, 120);
+
+      TempoCompanion.setBpm(15); // límite inferior 30
+      assert("BPM mínimo limitado a 30", TempoCompanion.getState().bpm, 30);
+
+      TempoCompanion.setBpm(450); // límite superior 300
+      assert("BPM máximo limitado a 300", TempoCompanion.getState().bpm, 300);
+
+      // Compás
+      TempoCompanion.setTimeSignature('3/4');
+      assert("Compás 3/4 asigna 3 pulsos por compás", TempoCompanion.getState().timeSignature, 3);
+
+      TempoCompanion.setTimeSignature('4/4');
+      assert("Compás 4/4 asigna 4 pulsos por compás", TempoCompanion.getState().timeSignature, 4);
+
+      // Paso por acorde
+      TempoCompanion.setBeatsPerChord('2');
+      assert("Paso por acorde ajustado a 2", TempoCompanion.getState().beatsPerChord, 2);
+
+      TempoCompanion.setBeatsPerChord('auto');
+      assert("Paso por acorde ajustado a 'auto'", TempoCompanion.getState().beatsPerChord, 'auto');
+
+      // Estado de parada
+      TempoCompanion.stop();
+      assert("TempoCompanion en estado detenido tiene isPlaying false", TempoCompanion.getState().isPlaying, false);
+      assert("TempoCompanion en estado detenido tiene currentLineIndex -1", TempoCompanion.getState().currentLineIndex, -1);
     }
 
     const summary = document.getElementById('summary');

@@ -11,6 +11,8 @@ const SONG_EXAMPLES = [
     content: `{title: De Música Ligera}
 {artist: Soda Stereo}
 {key: Bm}
+{tempo: 125}
+{time: 4/4}
 
 [Intro]
 [Bm]   [G]   [D]   [A]
@@ -69,6 +71,8 @@ a sen[D]tirse las mis[A]mas.
     content: `{title: Flaca}
 {artist: Andrés Calamaro}
 {key: G}
+{tempo: 108}
+{time: 4/4}
 
 [Intro]
 [G]   [B7]   [Em]   [C]   [G]   [D]   [G]   [D7]
@@ -108,6 +112,8 @@ no me d[G]uelen, no me h[D]acen más da[G]ño.
     content: `{title: Stand By Me}
 {artist: Ben E. King}
 {key: A}
+{tempo: 118}
+{time: 4/4}
 
 [Intro]
 [A]   [F#m]   [D]   [E7]   [A]
@@ -146,6 +152,8 @@ Just as [D]long as you [E7]stand, stand by [A]me.
     content: `{title: Nueva Canción}
 {artist: Mi Artista}
 {key: C}
+{tempo: 100}
+{time: 4/4}
 
 [Intro]
 [C]   [G]   [Am]   [F]
