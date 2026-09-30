@@ -1,4 +1,7 @@
-node_modules/
-src-tauri/target/
-release/
+# Archivos temporales y de sistema
+.DS_Store
+Thumbs.db
 *.log
+*.tmp
+.vscode/
+.idea/

@@ -53,6 +53,8 @@
     viewerPanel: document.getElementById('viewerPanel'),
 
     // Acciones Generales & Proyectos
+    btnProjectMenu: document.getElementById('btnProjectMenu'),
+    projectDropdownMenu: document.getElementById('projectDropdownMenu'),
     projectSelector: document.getElementById('projectSelector'),
     groupUserProjects: document.getElementById('groupUserProjects'),
     groupExamples: document.getElementById('groupExamples'),
@@ -528,7 +530,27 @@
       e.target.value = '';
     });
 
-    // Botones de la barra superior
+    // Menú desplegable unificado de opciones / hamburguesa
+    if (elements.btnProjectMenu && elements.projectDropdownMenu) {
+      elements.btnProjectMenu.addEventListener('click', (e) => {
+        e.stopPropagation();
+        elements.projectDropdownMenu.classList.toggle('open');
+      });
+
+      document.addEventListener('click', (e) => {
+        if (!elements.projectDropdownMenu.contains(e.target) && e.target !== elements.btnProjectMenu) {
+          elements.projectDropdownMenu.classList.remove('open');
+        }
+      });
+
+      elements.projectDropdownMenu.querySelectorAll('.dropdown-item').forEach(item => {
+        item.addEventListener('click', () => {
+          elements.projectDropdownMenu.classList.remove('open');
+        });
+      });
+    }
+
+    // Botones de la barra superior / menú de acciones
     elements.btnOpenProjects.addEventListener('click', () => openProjectsModal('tab-user-projects'));
     elements.btnSaveProject.addEventListener('click', () => quickSaveProject());
     elements.btnSaveAsProject.addEventListener('click', () => openSaveModal('saveAs'));

@@ -69,6 +69,7 @@ Lyrc.Chords.Transpose/
 │
 ├── js/
 │   ├── chord-transposer.js # Motor musical de teoría, transposición y parsing de texto
+│   ├── projects.js         # Sistema de guardado y gestión de proyectos locales
 │   ├── examples.js         # Canciones de muestra precargadas
 │   ├── app.js              # Controlador principal, interfaz de usuario y eventos
 │   └── lib/

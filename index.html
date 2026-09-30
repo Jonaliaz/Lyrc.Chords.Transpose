@@ -13,7 +13,7 @@
 
   <!-- Barra Superior Unificada y Minimalista -->
   <header class="app-topbar" id="stickyTopBar">
-    <!-- Sección Izquierda: Marca y Proyectos -->
+    <!-- Sección Izquierda: Marca, Menú Unificado y Selector de Proyectos -->
     <div class="topbar-section topbar-left">
       <div class="brand" title="LyrChords Transposer">
         <div class="brand-icon">🎸</div>
@@ -23,6 +23,36 @@
       </div>
 
       <div class="divider-v"></div>
+
+      <!-- Menú de Acciones y Proyectos (Hamburguesa) -->
+      <div class="dropdown-menu-wrapper" id="projectMenuWrapper">
+        <button id="btnProjectMenu" class="btn btn-sm btn-menu" title="Menú de opciones (Guardar, Proyectos, Copia, PDF...)">
+          <span class="menu-icon">☰</span> <span>Menú</span>
+        </button>
+        <div class="dropdown-menu" id="projectDropdownMenu">
+          <div class="dropdown-header">Proyectos y Archivo</div>
+          <button id="btnSaveProject" class="dropdown-item" title="Guardar cambios (Ctrl+S)">
+            <span class="item-icon">💾</span> <span class="item-label">Guardar</span> <kbd class="item-shortcut">Ctrl+S</kbd>
+          </button>
+          <button id="btnSaveAsProject" class="dropdown-item" title="Guardar como nueva copia">
+            <span class="item-icon">💾</span> <span class="item-label">Guardar Copia...</span>
+          </button>
+          <button id="btnOpenProjects" class="dropdown-item" title="Biblioteca de proyectos (Ctrl+O)">
+            <span class="item-icon">📁</span> <span class="item-label">Gestor de Proyectos</span> <kbd class="item-shortcut">Ctrl+O</kbd>
+          </button>
+          <button id="btnNewSong" class="dropdown-item" title="Nueva canción en blanco (Ctrl+N)">
+            <span class="item-icon">📄</span> <span class="item-label">Nueva Canción</span> <kbd class="item-shortcut">Ctrl+N</kbd>
+          </button>
+          <div class="dropdown-divider"></div>
+          <div class="dropdown-header">Exportar & Imprimir</div>
+          <button id="btnExportPdf" class="dropdown-item" title="Descargar como PDF">
+            <span class="item-icon">📥</span> <span class="item-label">Descargar PDF</span>
+          </button>
+          <button id="btnPrint" class="dropdown-item" title="Imprimir canción">
+            <span class="item-icon">🖨️</span> <span class="item-label">Imprimir</span>
+          </button>
+        </div>
+      </div>
 
       <!-- Selector de Proyectos -->
       <select id="projectSelector" class="select-styled select-compact" title="Cargar proyecto o canción de ejemplo">
@@ -34,21 +64,6 @@
           <option value="plantilla-vacia">✨ Nueva Canción en Blanco</option>
         </optgroup>
       </select>
-
-      <div class="btn-group">
-        <button id="btnSaveProject" class="btn btn-sm btn-save" title="Guardar cambios (Ctrl+S)">
-          <span>💾 Guardar</span>
-        </button>
-        <button id="btnOpenProjects" class="btn btn-sm" title="Biblioteca de proyectos (Ctrl+O)">
-          <span>📁 Proyectos</span>
-        </button>
-        <button id="btnNewSong" class="btn btn-sm" title="Nueva canción en blanco (Ctrl+N)">
-          <span>📄 Nuevo</span>
-        </button>
-        <button id="btnSaveAsProject" class="btn btn-sm" title="Guardar como nueva copia">
-          <span>💾 Copia</span>
-        </button>
-      </div>
     </div>
 
     <!-- Sección Central: Herramientas de Transposición y Armonía -->
@@ -102,21 +117,13 @@
       </div>
     </div>
 
-    <!-- Sección Derecha: Vista, Exportación y Tema -->
+    <!-- Sección Derecha: Vista y Tema -->
     <div class="topbar-section topbar-right">
       <button id="btnToggleEditor" class="btn btn-sm btn-highlight" title="Alternar entre ver solo la letra o ver editor y letra lado a lado">
         <span id="toggleEditorIcon">👁️</span> <span id="toggleEditorText">Solo Letra</span>
       </button>
 
       <div class="divider-v"></div>
-
-      <button id="btnExportPdf" class="btn btn-sm btn-primary" title="Descargar como PDF">
-        <span>📥 PDF</span>
-      </button>
-
-      <button id="btnPrint" class="btn btn-sm btn-icon" title="Imprimir canción">
-        🖨️
-      </button>
 
       <button id="btnToggleTheme" class="btn btn-sm btn-icon" title="Cambiar tema Claro / Oscuro">
         🌓
@@ -220,7 +227,7 @@
             <button id="btnAutoScroll" class="btn btn-sm" title="Iniciar o pausar desplazamiento automático">
               ▶ Auto-Scroll
             </button>
-            <input type="range" id="scrollSpeedRange" min="0.0001" max="20" value="3" title="Velocidad de desplazamiento">
+            <input type="range" id="scrollSpeedRange" min="0.00001" max="10" value="3" title="Velocidad de desplazamiento">
           </div>
 
           <button id="btnToggleFullscreen" class="btn btn-sm btn-scenario" title="Expandir para ver solo la canción en vivo">
