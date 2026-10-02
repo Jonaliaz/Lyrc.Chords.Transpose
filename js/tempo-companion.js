@@ -109,128 +109,144 @@ const TempoCompanion = (function () {
 
   /**
    * Analiza la hoja de canción actual en el DOM y construye la línea de tiempo de reproducción
+   * Guiada exclusivamente por los acordes y de forma continua entre líneas.
+   * Omite por completo encabezados de sección ([Verso], [Coro], etc.) para no detener el ritmo.
    */
   function buildTimeline() {
     if (!ui.sheetBody) return [];
 
-    const lines = Array.from(ui.sheetBody.querySelectorAll('.song-section-title, .chord-only-line, .song-line'));
-    const timeline = [];
+    // Ignorar por completo los títulos de sección ([Verso], [Coro], [Intro], etc.)
+    const lineElements = Array.from(
+      ui.sheetBody.querySelectorAll('.chord-only-line, .song-line:not(.song-line-empty)')
+    );
 
-    lines.forEach((lineEl, lineIdx) => {
+    // 1. Recolectar todos los elementos y acordes en orden secuencial
+    const allItems = [];
+
+    lineElements.forEach((lineEl, lineIdx) => {
       lineEl.setAttribute('data-tempo-line-idx', lineIdx);
 
-      // Caso 1: Título de sección ([Intro], [Coro], etc.)
-      if (lineEl.classList.contains('song-section-title')) {
-        timeline.push({
-          lineEl,
-          type: 'section',
-          text: lineEl.textContent.trim(),
-          steps: [
-            {
-              targetEl: lineEl,
-              type: 'section',
-              chord: null,
-              lyric: lineEl.textContent.trim(),
-              beats: state.timeSignature // 1 compás completo para la sección
-            }
-          ]
-        });
-        return;
-      }
-
-      // Caso 2: Línea solo de acordes
       if (lineEl.classList.contains('chord-only-line')) {
         const chordBadges = Array.from(lineEl.querySelectorAll('.chord-badge'));
-        if (chordBadges.length === 0) return;
-
-        const beatsPerChord = calculateBeatsForChordCount(chordBadges.length);
-        const steps = chordBadges.map((badge, segIdx) => {
-          badge.setAttribute('data-tempo-line-idx', lineIdx);
-          badge.setAttribute('data-tempo-step-idx', segIdx);
-          return {
-            targetEl: badge,
-            type: 'chord-only',
-            chord: badge.textContent.trim(),
-            lyric: '',
-            beats: beatsPerChord
-          };
+        chordBadges.forEach((badge, segIdx) => {
+          const chordText = badge.textContent.trim();
+          if (chordText.length > 0) {
+            allItems.push({
+              type: 'chord-badge',
+              el: badge,
+              lineEl,
+              lineIdx,
+              segIdx,
+              hasChord: true,
+              chordText,
+              chordBadgeEl: badge,
+              lyricSpanEl: null
+            });
+          }
         });
-
-        timeline.push({
-          lineEl,
-          type: 'chord-only-line',
-          steps
-        });
-        return;
-      }
-
-      // Caso 3: Línea con letra y acordes
-      if (lineEl.classList.contains('song-line')) {
-        if (lineEl.classList.contains('song-line-empty')) return;
-
+      } else if (lineEl.classList.contains('song-line')) {
         const pairs = Array.from(lineEl.querySelectorAll('.chord-lyric-pair'));
-        if (pairs.length === 0) return;
+        pairs.forEach((pair, segIdx) => {
+          const chordBadge = pair.querySelector('.chord-badge');
+          const hasChord = chordBadge && !chordBadge.classList.contains('empty-chord') && chordBadge.textContent.trim().length > 0;
+          const lyricSpan = pair.querySelector('.lyric-text');
 
-        // Contar acordes activos en esta línea
-        const chordPairs = pairs.filter(p => {
-          const c = p.querySelector('.chord-badge:not(.empty-chord)');
-          return c && c.textContent.trim().length > 0;
-        });
-
-        const steps = [];
-
-        if (chordPairs.length > 0) {
-          // Si hay acordes, cada grupo o par con acorde marca un hito musical
-          const beatsPerGroup = calculateBeatsForChordCount(chordPairs.length);
-
-          pairs.forEach((pair, segIdx) => {
-            const chordBadge = pair.querySelector('.chord-badge');
-            const lyricSpan = pair.querySelector('.lyric-text');
-            const hasChord = chordBadge && !chordBadge.classList.contains('empty-chord') && chordBadge.textContent.trim().length > 0;
-
-            pair.setAttribute('data-tempo-line-idx', lineIdx);
-            pair.setAttribute('data-tempo-step-idx', segIdx);
-
-            steps.push({
-              targetEl: pair,
-              chordEl: chordBadge,
-              lyricEl: lyricSpan,
-              type: 'pair',
-              hasChord,
-              chord: hasChord ? chordBadge.textContent.trim() : null,
-              lyric: lyricSpan ? lyricSpan.textContent : '',
-              beats: hasChord ? beatsPerGroup : Math.max(1, Math.round(beatsPerGroup / 2))
-            });
+          allItems.push({
+            type: 'pair',
+            el: pair,
+            lineEl,
+            lineIdx,
+            segIdx,
+            hasChord,
+            chordText: hasChord ? chordBadge.textContent.trim() : null,
+            chordBadgeEl: hasChord ? chordBadge : null,
+            lyricSpanEl: lyricSpan
           });
-        } else {
-          // Línea sin acordes: se divide uniformemente en 1 compás (4 tiempos)
-          pairs.forEach((pair, segIdx) => {
-            const lyricSpan = pair.querySelector('.lyric-text');
-            pair.setAttribute('data-tempo-line-idx', lineIdx);
-            pair.setAttribute('data-tempo-step-idx', segIdx);
-
-            steps.push({
-              targetEl: pair,
-              chordEl: null,
-              lyricEl: lyricSpan,
-              type: 'pair',
-              hasChord: false,
-              chord: null,
-              lyric: lyricSpan ? lyricSpan.textContent : '',
-              beats: Math.max(1, Math.floor(state.timeSignature / pairs.length) || 1)
-            });
-          });
-        }
-
-        timeline.push({
-          lineEl,
-          type: 'lyric-line',
-          steps
         });
       }
     });
 
+    // 2. Localizar las posiciones de todos los acordes en allItems
+    const chordIndices = [];
+    allItems.forEach((item, idx) => {
+      if (item.hasChord) {
+        chordIndices.push(idx);
+      }
+    });
+
+    const timeline = [];
+    let introPairs = [];
+
+    if (chordIndices.length > 0) {
+      // Elementos previos al primer acorde (anacrusa / letra introductoria)
+      if (chordIndices[0] > 0) {
+        introPairs = allItems.slice(0, chordIndices[0]).map(it => it.el);
+        introPairs.forEach(el => {
+          el.setAttribute('data-tempo-step-idx', -1);
+        });
+      }
+
+      const beatsPerChord = calculateBeatsForChordCount(chordIndices.length);
+
+      chordIndices.forEach((itemIdx, stepIdx) => {
+        const chordItem = allItems[itemIdx];
+        const isLastChord = stepIdx === chordIndices.length - 1;
+        const nextChordIdx = isLastChord ? allItems.length : chordIndices[stepIdx + 1];
+
+        // Rango continuo desde el acorde actual hasta antes del siguiente acorde
+        // (cubre desde la posición del acorde actual hasta la palabra antecesora del siguiente acorde,
+        // incluso si abarca la mitad de una línea y la mitad de la siguiente)
+        const stepItems = allItems.slice(itemIdx, nextChordIdx);
+
+        const pairEls = stepItems.map(it => it.el);
+        const lyricEls = stepItems.map(it => it.lyricSpanEl).filter(Boolean);
+        const lineEls = Array.from(new Set(stepItems.map(it => it.lineEl)));
+
+        pairEls.forEach(el => {
+          el.setAttribute('data-tempo-step-idx', stepIdx);
+        });
+
+        timeline.push({
+          stepIdx,
+          type: chordItem.type === 'chord-badge' ? 'chord-only' : 'chord-group',
+          chord: chordItem.chordText,
+          chordEl: chordItem.chordBadgeEl,
+          pairEls,
+          lyricEls,
+          lineEls,
+          primaryLineEl: chordItem.lineEl,
+          lyric: lyricEls.map(l => l.textContent).join(''),
+          beats: beatsPerChord
+        });
+      });
+    } else if (lineElements.length > 0) {
+      // Si la canción no tiene ningún acorde, cada línea es 1 paso de 1 compás
+      lineElements.forEach((lineEl, lineIdx) => {
+        const pairs = Array.from(lineEl.querySelectorAll('.chord-lyric-pair'));
+        const pairEls = pairs.length > 0 ? pairs : [lineEl];
+        const lyricEls = pairs.map(p => p.querySelector('.lyric-text')).filter(Boolean);
+
+        pairEls.forEach(el => {
+          el.setAttribute('data-tempo-step-idx', lineIdx);
+        });
+
+        timeline.push({
+          stepIdx: lineIdx,
+          type: 'lyric-only-line',
+          chord: null,
+          chordEl: null,
+          pairEls,
+          lyricEls,
+          lineEls: [lineEl],
+          primaryLineEl: lineEl,
+          lyric: lyricEls.map(l => l.textContent).join(''),
+          beats: state.timeSignature
+        });
+      });
+    }
+
     state.timeline = timeline;
+    state.introPairs = introPairs;
     return timeline;
   }
 
@@ -243,16 +259,9 @@ const TempoCompanion = (function () {
     }
 
     // Modo automático inteligente:
-    // Si hay 1 acorde en la línea -> 1 compás entero (ej: 4 tiempos)
-    // Si hay 2 acordes -> 2 compases (4 tiempos c/u) o 2 tiempos c/u
-    // Si hay 4 acordes -> 4 tiempos c/u (4 compases) o 2 tiempos
-    if (chordCount <= 2) {
-      return state.timeSignature; // 1 compás por acorde
-    } else if (chordCount === 3) {
-      return state.timeSignature === 3 ? 3 : 2;
-    } else {
-      return Math.max(2, Math.floor(state.timeSignature));
-    }
+    // Cada acorde dura 1 compás completo (ej. 4 tiempos en 4/4)
+    // El cambio de acorde se produce en el pulso 1 del siguiente compás
+    return state.timeSignature;
   }
 
   /**
@@ -270,12 +279,11 @@ const TempoCompanion = (function () {
     state.isPaused = false;
 
     // Si estábamos detenidos, empezar desde el principio
-    if (state.currentLineIndex === -1) {
+    if (state.currentStepIndex === -1) {
       if (state.countInEnabled) {
         startCountIn();
         return;
       } else {
-        state.currentLineIndex = 0;
         state.currentStepIndex = 0;
         state.currentBeatInStep = 0;
         state.currentMeasureBeat = 1;
@@ -283,8 +291,8 @@ const TempoCompanion = (function () {
     }
 
     updatePlayPauseUI();
-    scheduleNextBeat();
     highlightCurrentStep();
+    scheduleNextBeat();
   }
 
   /**
@@ -293,7 +301,6 @@ const TempoCompanion = (function () {
   function startCountIn() {
     state.isCountingIn = true;
     state.countInBeat = 0;
-    state.currentLineIndex = 0;
     state.currentStepIndex = 0;
     state.currentBeatInStep = 0;
     state.currentMeasureBeat = 1;
@@ -324,7 +331,6 @@ const TempoCompanion = (function () {
     clearTimeout(state.timerId);
     state.timerId = null;
 
-    state.currentLineIndex = -1;
     state.currentStepIndex = -1;
     state.currentBeatInStep = 0;
     state.currentMeasureBeat = 1;
@@ -359,7 +365,7 @@ const TempoCompanion = (function () {
 
     const intervalMs = (60 / state.bpm) * 1000;
 
-    // Manejar conteo previo
+    // 1. Manejar conteo previo
     if (state.isCountingIn) {
       state.countInBeat++;
       const isAccented = state.countInBeat === 1;
@@ -368,42 +374,43 @@ const TempoCompanion = (function () {
       updateCountInDisplay(state.countInBeat);
 
       if (state.countInBeat >= state.timeSignature) {
-        // Conteo finalizado -> iniciar canción en el siguiente pulso
+        // Conteo finalizado -> iniciar primer compás en el siguiente pulso
         state.isCountingIn = false;
         showCountInIndicator(false);
-        state.currentLineIndex = 0;
         state.currentStepIndex = 0;
         state.currentBeatInStep = 0;
         state.currentMeasureBeat = 1;
-        highlightCurrentStep();
       }
 
       state.timerId = setTimeout(scheduleNextBeat, intervalMs);
       return;
     }
 
-    // Ejecución regular de compases de la canción
-    const isAccented = state.currentMeasureBeat === 1;
-    playClickSound(isAccented);
-    updateBeatLeds(state.currentMeasureBeat);
-
-    // Incrementar pulso del compás actual
-    state.currentMeasureBeat++;
-    if (state.currentMeasureBeat > state.timeSignature) {
-      state.currentMeasureBeat = 1;
-    }
-
-    // Incrementar pulso del acorde/paso actual
-    state.currentBeatInStep++;
-
-    const currentLine = state.timeline[state.currentLineIndex];
-    if (currentLine) {
-      const currentStep = currentLine.steps[state.currentStepIndex];
-      const stepDurationBeats = currentStep ? currentStep.beats : state.timeSignature;
+    // 2. Verificar si el paso/acorde actual completó su duración antes de este pulso
+    // Esto asegura que el cambio al segundo acorde ocurra exactamente en el pulso 1 del siguiente compás
+    const currentStep = state.timeline[state.currentStepIndex];
+    if (currentStep) {
+      const stepDurationBeats = currentStep.beats || state.timeSignature;
 
       if (state.currentBeatInStep >= stepDurationBeats) {
         advanceToNextStep();
       }
+    }
+
+    if (!state.isPlaying) return;
+
+    // 3. Ejecución del pulso actual
+    const isAccented = state.currentMeasureBeat === 1;
+    playClickSound(isAccented);
+    updateBeatLeds(state.currentMeasureBeat);
+    highlightCurrentStep();
+
+    // 4. Incrementar contadores para el pulso
+    state.currentBeatInStep++;
+
+    state.currentMeasureBeat++;
+    if (state.currentMeasureBeat > state.timeSignature) {
+      state.currentMeasureBeat = 1;
     }
 
     // Programar el siguiente pulso
@@ -411,29 +418,13 @@ const TempoCompanion = (function () {
   }
 
   /**
-   * Avanza al siguiente paso (acorde o palabra) y línea
+   * Avanza al siguiente paso (acorde)
    */
   function advanceToNextStep() {
     state.currentBeatInStep = 0;
 
-    const currentLine = state.timeline[state.currentLineIndex];
-    if (!currentLine) {
-      stop();
-      return;
-    }
-
-    // Avanzar al siguiente paso dentro de la misma línea
-    if (state.currentStepIndex + 1 < currentLine.steps.length) {
+    if (state.currentStepIndex + 1 < state.timeline.length) {
       state.currentStepIndex++;
-      highlightCurrentStep();
-      return;
-    }
-
-    // Si terminamos los pasos de la línea actual, pasar a la siguiente línea
-    if (state.currentLineIndex + 1 < state.timeline.length) {
-      state.currentLineIndex++;
-      state.currentStepIndex = 0;
-      highlightCurrentStep();
     } else {
       // Llegamos al final de la canción
       stop();
@@ -441,13 +432,12 @@ const TempoCompanion = (function () {
   }
 
   /**
-   * Salta a una línea y paso específicos (por ejemplo al hacer clic en el texto)
+   * Salta a un paso/acorde específico
    */
-  function seekTo(lineIdx, stepIdx = 0) {
-    if (lineIdx < 0 || lineIdx >= state.timeline.length) return;
+  function seekTo(stepIdx = 0) {
+    if (stepIdx < 0 || stepIdx >= state.timeline.length) return;
 
-    state.currentLineIndex = lineIdx;
-    state.currentStepIndex = Math.max(0, Math.min(stepIdx, state.timeline[lineIdx].steps.length - 1));
+    state.currentStepIndex = stepIdx;
     state.currentBeatInStep = 0;
     state.currentMeasureBeat = 1;
     state.isCountingIn = false;
@@ -461,67 +451,82 @@ const TempoCompanion = (function () {
   }
 
   /**
-   * Salta a la línea anterior
+   * Salta a la línea / sección anterior
    */
   function previousLine() {
-    if (state.currentLineIndex > 0) {
-      seekTo(state.currentLineIndex - 1, 0);
-    } else {
-      seekTo(0, 0);
+    if (state.currentStepIndex <= 0) {
+      seekTo(0);
+      return;
     }
+    const currentStep = state.timeline[state.currentStepIndex];
+    const currentLine = currentStep ? currentStep.primaryLineEl : null;
+    let targetIdx = state.currentStepIndex - 1;
+    while (targetIdx > 0 && state.timeline[targetIdx].primaryLineEl === currentLine) {
+      targetIdx--;
+    }
+    seekTo(targetIdx);
   }
 
   /**
-   * Salta a la siguiente línea
+   * Salta a la línea / sección siguiente
    */
   function nextLine() {
-    if (state.currentLineIndex + 1 < state.timeline.length) {
-      seekTo(state.currentLineIndex + 1, 0);
+    if (state.currentStepIndex >= state.timeline.length - 1) return;
+    const currentStep = state.timeline[state.currentStepIndex];
+    const currentLine = currentStep ? currentStep.primaryLineEl : null;
+    let targetIdx = state.currentStepIndex + 1;
+    while (targetIdx < state.timeline.length - 1 && state.timeline[targetIdx].primaryLineEl === currentLine) {
+      targetIdx++;
     }
+    seekTo(targetIdx);
   }
 
   /**
-   * Aplica los estilos visuales de resaltado activo y auto-scroll
+   * Aplica los estilos visuales de resaltado activo continuo y auto-scroll
    */
   function highlightCurrentStep() {
     clearAllHighlights();
 
-    if (state.currentLineIndex < 0 || state.currentLineIndex >= state.timeline.length) {
+    if (state.currentStepIndex < 0 || state.currentStepIndex >= state.timeline.length) {
       return;
     }
 
-    const currentLineObj = state.timeline[state.currentLineIndex];
-    if (!currentLineObj) return;
+    const currentStep = state.timeline[state.currentStepIndex];
+    if (!currentStep) return;
 
-    // Resaltar la línea completa
-    const lineEl = currentLineObj.lineEl;
-    if (lineEl) {
-      lineEl.classList.add('tempo-active-line');
+    // Marcar pares iniciales antes del primer acorde como ya leídos/pasados
+    if (state.introPairs && state.introPairs.length > 0) {
+      state.introPairs.forEach(p => {
+        p.classList.add('tempo-passed-segment');
+        const lyric = p.querySelector('.lyric-text');
+        if (lyric) lyric.classList.add('tempo-passed-lyric');
+      });
     }
 
-    // Resaltar los pasos pasados y el paso activo
-    currentLineObj.steps.forEach((step, idx) => {
-      const target = step.targetEl;
-      if (!target) return;
-
+    // Resaltar los pasos pasados y el paso activo continuo
+    state.timeline.forEach((step, idx) => {
       if (idx < state.currentStepIndex) {
-        target.classList.add('tempo-passed-segment');
+        step.pairEls.forEach(p => p.classList.add('tempo-passed-segment'));
         if (step.chordEl) step.chordEl.classList.add('tempo-passed-chord');
-        if (step.lyricEl) step.lyricEl.classList.add('tempo-passed-lyric');
+        step.lyricEls.forEach(l => l.classList.add('tempo-passed-lyric'));
       } else if (idx === state.currentStepIndex) {
-        target.classList.add('tempo-active-segment');
+        // Resaltar todos los elementos de este acorde (incluyendo los que cruzan de línea)
+        step.pairEls.forEach(p => p.classList.add('tempo-active-segment'));
         if (step.chordEl) {
           step.chordEl.classList.add('tempo-active-chord');
         } else if (step.type === 'chord-only') {
-          target.classList.add('tempo-active-chord');
+          if (step.chordEl) step.chordEl.classList.add('tempo-active-chord');
         }
-        if (step.lyricEl) step.lyricEl.classList.add('tempo-active-lyric');
+        step.lyricEls.forEach(l => l.classList.add('tempo-active-lyric'));
+
+        // Resaltar todas las líneas abarcadas por este paso
+        step.lineEls.forEach(l => l.classList.add('tempo-active-line'));
       }
     });
 
     // Auto-Scroll inteligente: mantener la línea activa en la zona óptima de lectura
-    if (state.autoScrollEnabled && ui.sheetWrapper && lineEl) {
-      scrollToActiveLine(lineEl);
+    if (state.autoScrollEnabled && ui.sheetWrapper && currentStep.primaryLineEl) {
+      scrollToActiveLine(currentStep.primaryLineEl);
     }
   }
 
@@ -675,15 +680,15 @@ const TempoCompanion = (function () {
     if (!ui.btnPlayPause) return;
 
     if (state.isPlaying) {
-      ui.btnPlayPause.innerHTML = '<span>⏸</span> <span>Pausar</span>';
+      ui.btnPlayPause.innerHTML = '<span>Pausar</span>';
       ui.btnPlayPause.classList.add('btn-playing');
       ui.btnPlayPause.title = 'Pausar acompañamiento (Espacio)';
     } else if (state.isPaused) {
-      ui.btnPlayPause.innerHTML = '<span>▶</span> <span>Continuar</span>';
+      ui.btnPlayPause.innerHTML = '<span>Continuar</span>';
       ui.btnPlayPause.classList.remove('btn-playing');
       ui.btnPlayPause.title = 'Reanudar acompañamiento (Espacio)';
     } else {
-      ui.btnPlayPause.innerHTML = '<span>▶</span> <span>Acompañar</span>';
+      ui.btnPlayPause.innerHTML = '<span>Acompañar</span>';
       ui.btnPlayPause.classList.remove('btn-playing');
       ui.btnPlayPause.title = 'Iniciar acompañamiento con tempo y metrónomo';
     }
@@ -763,7 +768,7 @@ const TempoCompanion = (function () {
       ui.btnToggleSound.addEventListener('click', () => {
         state.soundEnabled = !state.soundEnabled;
         ui.btnToggleSound.classList.toggle('active', state.soundEnabled);
-        ui.btnToggleSound.innerHTML = state.soundEnabled ? '<span>🔊</span> Sonido' : '<span>🔇</span> Mudo';
+        ui.btnToggleSound.innerHTML = state.soundEnabled ? '<span>Sonido</span>' : '<span>Mudo</span>';
         ui.btnToggleSound.title = state.soundEnabled ? 'Metrónomo con sonido activo' : 'Metrónomo en silencio (solo visual)';
         if (state.soundEnabled) getAudioContext();
       });
@@ -777,21 +782,18 @@ const TempoCompanion = (function () {
       });
     }
 
-    // Clic interactivo en la partitura para saltar inmediatamente a esa línea / acorde
+    // Clic interactivo en la partitura para saltar inmediatamente a ese acorde
     if (ui.sheetBody) {
       ui.sheetBody.addEventListener('click', (e) => {
         // Ignorar si el usuario está seleccionando texto
         const selection = window.getSelection();
         if (selection && selection.toString().length > 0) return;
 
-        const targetLine = e.target.closest('[data-tempo-line-idx]');
-        if (targetLine) {
-          const lineIdx = parseInt(targetLine.getAttribute('data-tempo-line-idx'), 10);
-          const targetStep = e.target.closest('[data-tempo-step-idx]');
-          const stepIdx = targetStep ? parseInt(targetStep.getAttribute('data-tempo-step-idx'), 10) : 0;
-
-          if (!isNaN(lineIdx)) {
-            seekTo(lineIdx, stepIdx);
+        const targetStep = e.target.closest('[data-tempo-step-idx]');
+        if (targetStep) {
+          const stepIdx = parseInt(targetStep.getAttribute('data-tempo-step-idx'), 10);
+          if (!isNaN(stepIdx) && stepIdx >= 0) {
+            seekTo(stepIdx);
             if (!state.isPlaying) {
               start();
             }
@@ -836,7 +838,12 @@ const TempoCompanion = (function () {
     setBeatsPerChord,
     buildTimeline,
     toggleCompanionBar,
-    getState: () => ({ ...state })
+    getState: () => ({
+      ...state,
+      currentLineIndex: (state.currentStepIndex >= 0 && state.timeline[state.currentStepIndex] && state.timeline[state.currentStepIndex].primaryLineEl)
+        ? parseInt(state.timeline[state.currentStepIndex].primaryLineEl.getAttribute('data-tempo-line-idx'), 10)
+        : -1
+    })
   };
 })();
 

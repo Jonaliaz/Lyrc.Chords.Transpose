@@ -205,6 +205,72 @@
       TempoCompanion.setBeatsPerChord('auto');
       assert("Paso por acorde ajustado a 'auto'", TempoCompanion.getState().beatsPerChord, 'auto');
 
+      // 16. Pruebas de construcción de línea de tiempo guiada por acordes (Continuidad entre líneas y omisión de secciones)
+      const mockSheetBody = document.createElement('div');
+      
+      // Línea 1 con acordes G y C
+      const line1 = document.createElement('div');
+      line1.className = 'song-line';
+      
+      // Par 1 (sin acorde al inicio: Intro)
+      const p1 = document.createElement('div');
+      p1.className = 'chord-lyric-pair';
+      p1.innerHTML = '<span class="chord-badge empty-chord"></span><span class="lyric-text">Intro </span>';
+      line1.appendChild(p1);
+
+      // Par 2 (con acorde G)
+      const p2 = document.createElement('div');
+      p2.className = 'chord-lyric-pair';
+      p2.innerHTML = '<span class="chord-badge">G</span><span class="lyric-text">quel amor de música li</span>';
+      line1.appendChild(p2);
+
+      // Par 3 (con acorde C al final de la línea 1)
+      const p3 = document.createElement('div');
+      p3.className = 'chord-lyric-pair';
+      p3.innerHTML = '<span class="chord-badge">C</span><span class="lyric-text">gera </span>';
+      line1.appendChild(p3);
+
+      mockSheetBody.appendChild(line1);
+
+      // Subtítulo de sección (debe ser ignorado por el tempo)
+      const secHeader = document.createElement('div');
+      secHeader.className = 'song-section-title';
+      secHeader.textContent = 'Coro';
+      mockSheetBody.appendChild(secHeader);
+
+      // Línea 2 con letra previa y luego acorde Em
+      const line2 = document.createElement('div');
+      line2.className = 'song-line';
+
+      // Par 4 (letra al inicio de línea 2 antes del acorde Em: debe asociarse al acorde C anterior)
+      const p4 = document.createElement('div');
+      p4.className = 'chord-lyric-pair';
+      p4.innerHTML = '<span class="chord-badge empty-chord"></span><span class="lyric-text">nada nos li</span>';
+      line2.appendChild(p4);
+
+      // Par 5 (con acorde Em en línea 2)
+      const p5 = document.createElement('div');
+      p5.className = 'chord-lyric-pair';
+      p5.innerHTML = '<span class="chord-badge">Em</span><span class="lyric-text">bra, nada más queda</span>';
+      line2.appendChild(p5);
+
+      mockSheetBody.appendChild(line2);
+
+      TempoCompanion.init({ sheetBody: mockSheetBody });
+      const timeline = TempoCompanion.buildTimeline();
+
+      assert("Línea de tiempo tiene exactamente 3 pasos de acordes (G, C, Em)", timeline.length, 3);
+      assert("Paso 1 es acorde G", timeline[0].chord, "G");
+      assert("Paso 1 resalta hasta antes de C ('quel amor de música li')", timeline[0].lyric, "quel amor de música li");
+      assert("Paso 1 dura 4 tiempos", timeline[0].beats, 4);
+
+      assert("Paso 2 es acorde C", timeline[1].chord, "C");
+      assert("Paso 2 abarca entre líneas desde C en línea 1 hasta antes de Em en línea 2 ('gera nada nos li')", timeline[1].lyric, "gera nada nos li");
+      assert("Paso 2 abarca 2 líneas DOM", timeline[1].lineEls.length, 2);
+
+      assert("Paso 3 es acorde Em", timeline[2].chord, "Em");
+      assert("Paso 3 resalta desde Em hasta el final de línea 2 ('bra, nada más queda')", timeline[2].lyric, "bra, nada más queda");
+
       // Estado de parada
       TempoCompanion.stop();
       assert("TempoCompanion en estado detenido tiene isPlaying false", TempoCompanion.getState().isPlaying, false);

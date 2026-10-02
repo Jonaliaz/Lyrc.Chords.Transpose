@@ -4,20 +4,20 @@
 
 :root {
   /* Paleta Galáctica Monocromática (Obsidiana, Titanio, Plata y Luz Estelar) */
-  --bg-primary: #07080c;
-  --bg-secondary: #0f1118;
-  --bg-tertiary: #171a24;
-  --bg-card: #131520;
-  --bg-glass: rgba(15, 17, 24, 0.88);
+  --bg-primary: #06080e;
+  --bg-secondary: #0c0e17;
+  --bg-tertiary: #131722;
+  --bg-card: rgba(15, 18, 28, 0.85);
+  --bg-glass: rgba(12, 15, 24, 0.82);
   
   /* Hoja de Canción Cósmica Monocromática */
-  --bg-sheet: #0b0d14;
+  --bg-sheet: rgba(10, 13, 22, 0.88);
   --text-sheet: #f8fafc;
-  --text-sheet-muted: #8b95a5;
-  --chord-color: #f1f5f9;
-  --chord-bg: rgba(255, 255, 255, 0.08);
-  --chord-border: rgba(255, 255, 255, 0.25);
-  --chord-glow: rgba(255, 255, 255, 0.2);
+  --text-sheet-muted: #94a3b8;
+  --chord-color: #f8fafc;
+  --chord-bg: rgba(255, 255, 255, 0.1);
+  --chord-border: rgba(255, 255, 255, 0.28);
+  --chord-glow: rgba(255, 255, 255, 0.25);
   
   /* Textos */
   --text-primary: #f8fafc;
@@ -25,9 +25,9 @@
   --text-muted: #64748b;
   
   /* Acentos Titanio / Plata Estelar */
-  --primary: #334155;
-  --primary-hover: #475569;
-  --primary-glow: rgba(255, 255, 255, 0.15);
+  --primary: #38bdf8;
+  --primary-hover: #0284c7;
+  --primary-glow: rgba(56, 189, 248, 0.25);
   --starlight-white: #ffffff;
   --silver-accent: #cbd5e1;
   
@@ -41,58 +41,49 @@
   --border-light: rgba(255, 255, 255, 0.06);
   --border-glow: rgba(255, 255, 255, 0.2);
   
-  --radius-xs: 4px;
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 16px;
+  --radius-xs: 6px;
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-xl: 32px;
   
-  --shadow-sm: 0 2px 5px rgba(0, 0, 0, 0.5);
-  --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.6), 0 0 1px rgba(255, 255, 255, 0.1);
-  --shadow-lg: 0 12px 36px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 0, 0, 0.5);
-  --shadow-stellar: 0 0 15px rgba(255, 255, 255, 0.1);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 6px 20px rgba(0, 0, 0, 0.5), 0 0 1px rgba(255, 255, 255, 0.1);
+  --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.7), 0 0 24px rgba(0, 0, 0, 0.4);
+  --shadow-stellar: 0 0 20px rgba(255, 255, 255, 0.12);
   
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-mono: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
   --font-sheet: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
-/* Modo claro: Plata Diurna & Titanio Grisáceo (Suave, Elegante y sin deslumbramiento) */
+/* Modo claro: Pastel Suave, Elegante y Cálido */
 body.light-theme {
-  --bg-primary: #e6ebf2;
-  --bg-secondary: #edf1f6;
-  --bg-tertiary: #dde3eb;
-  --bg-card: #f2f5f9;
-  --bg-glass: rgba(237, 241, 246, 0.94);
+  --bg-primary: #f5f0ea;
+  --bg-secondary: #ede6dc;
+  --bg-tertiary: #e3dbcf;
+  --bg-card: rgba(251, 248, 243, 0.9);
+  --bg-glass: rgba(245, 240, 234, 0.88);
   
-  /* Hoja de Canción en tono grisáceo suave, agradable a la vista */
-  --bg-sheet: #f7f9fb;
-  --text-sheet: #0f172a;
+  --bg-sheet: rgba(255, 253, 249, 0.92);
+  --text-sheet: #1e293b;
   --text-sheet-muted: #64748b;
   --chord-color: #0f172a;
-  --chord-bg: #e2e8f0;
-  --chord-border: #94a3b8;
+  --chord-bg: #e8e1d5;
+  --chord-border: #b8ad9e;
   --chord-glow: rgba(15, 23, 42, 0.08);
   
-  /* Textos nítidos de alto contraste */
-  --text-primary: #0f172a;
+  --text-primary: #1e293b;
   --text-secondary: #475569;
-  --text-muted: #64748b;
+  --text-muted: #788596;
   
-  /* Bordes y acentos titanio/plata diurna */
-  --border-color: #cbd5e1;
-  --border-light: #e2e8f0;
-  --border-glow: rgba(15, 23, 42, 0.1);
+  --border-color: rgba(30, 41, 59, 0.14);
+  --border-light: rgba(30, 41, 59, 0.08);
+  --border-glow: rgba(15, 23, 42, 0.08);
   
-  --primary: #1e293b;
-  --primary-hover: #0f172a;
-  --primary-glow: rgba(15, 23, 42, 0.12);
-  --starlight-white: #0f172a;
-  --silver-accent: #475569;
-  
-  --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.08);
-  --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.08), 0 0 1px rgba(15, 23, 42, 0.06);
-  --shadow-lg: 0 10px 25px rgba(15, 23, 42, 0.12);
-  --shadow-stellar: 0 0 10px rgba(15, 23, 42, 0.06);
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+  --primary-glow: rgba(37, 99, 235, 0.15);
 }
 
 * {
@@ -101,30 +92,31 @@ body.light-theme {
   padding: 0;
 }
 
-/* Fondo Estrellado Suave y Elegante */
+/* Fondo Estrellado Translúcido Universal */
 body {
   font-family: var(--font-sans);
-  background-color: var(--bg-primary);
+  background-color: #05070d;
   background-image:
-    /* Patrón de estrellas diminutas y nítidas */
-    radial-gradient(1px 1px at 25px 35px, #ffffff, rgba(0,0,0,0)),
-    radial-gradient(1px 1px at 55px 95px, rgba(255,255,255,0.7), rgba(0,0,0,0)),
-    radial-gradient(1px 1px at 70px 190px, #e2e8f0, rgba(0,0,0,0)),
-    radial-gradient(1.5px 1.5px at 120px 50px, #ffffff, rgba(0,0,0,0)),
-    radial-gradient(1px 1px at 170px 110px, rgba(255,255,255,0.65), rgba(0,0,0,0)),
-    radial-gradient(1.5px 1.5px at 210px 160px, #e2e8f0, rgba(0,0,0,0)),
-    radial-gradient(1px 1px at 270px 60px, rgba(255,255,255,0.8), rgba(0,0,0,0)),
-    radial-gradient(1.5px 1.5px at 340px 140px, #ffffff, rgba(0,0,0,0)),
-    radial-gradient(1px 1px at 400px 95px, rgba(255,255,255,0.6), rgba(0,0,0,0)),
-    radial-gradient(1.5px 1.5px at 460px 185px, #e2e8f0, rgba(0,0,0,0)),
-    radial-gradient(1px 1px at 520px 45px, #ffffff, rgba(0,0,0,0)),
-    radial-gradient(1px 1px at 580px 115px, rgba(255,255,255,0.7), rgba(0,0,0,0)),
-    radial-gradient(1.5px 1.5px at 630px 170px, #e2e8f0, rgba(0,0,0,0)),
-    radial-gradient(1px 1px at 680px 75px, #ffffff, rgba(0,0,0,0)),
-    /* Polvo cósmico monocromático muy tenue */
-    radial-gradient(ellipse 80% 50% at 50% 0%, rgba(255, 255, 255, 0.03), transparent 70%),
-    radial-gradient(ellipse 60% 40% at 85% 100%, rgba(255, 255, 255, 0.02), transparent 60%);
-  background-size: 700px 700px, 700px 700px, 700px 700px, 700px 700px, 700px 700px, 700px 700px, 700px 700px, 700px 700px, 700px 700px, 700px 700px, 700px 700px, 700px 700px, 700px 700px, 700px 700px, 100% 100%, 100% 100%;
+    /* Capa 1: Estrellas brillantes */
+    radial-gradient(1.5px 1.5px at 25px 35px, #ffffff, rgba(0,0,0,0)),
+    radial-gradient(1px 1px at 55px 95px, rgba(255,255,255,0.85), rgba(0,0,0,0)),
+    radial-gradient(2px 2px at 85px 45px, #93c5fd, rgba(0,0,0,0)),
+    radial-gradient(1px 1px at 120px 50px, #ffffff, rgba(0,0,0,0)),
+    radial-gradient(1.5px 1.5px at 170px 110px, rgba(255,255,255,0.9), rgba(0,0,0,0)),
+    radial-gradient(1px 1px at 210px 160px, #c084fc, rgba(0,0,0,0)),
+    radial-gradient(1.5px 1.5px at 270px 60px, #ffffff, rgba(0,0,0,0)),
+    radial-gradient(1px 1px at 340px 140px, rgba(255,255,255,0.75), rgba(0,0,0,0)),
+    radial-gradient(2px 2px at 400px 95px, #67e8f9, rgba(0,0,0,0)),
+    radial-gradient(1.5px 1.5px at 460px 185px, #ffffff, rgba(0,0,0,0)),
+    radial-gradient(1px 1px at 520px 45px, rgba(255,255,255,0.85), rgba(0,0,0,0)),
+    radial-gradient(1.5px 1.5px at 580px 115px, #a855f7, rgba(0,0,0,0)),
+    radial-gradient(2px 2px at 630px 170px, #ffffff, rgba(0,0,0,0)),
+    radial-gradient(1px 1px at 680px 75px, #93c5fd, rgba(0,0,0,0)),
+    /* Capa 2: Nebulosas cósmicas translúcidas */
+    radial-gradient(circle 750px at 10% 15%, rgba(56, 189, 248, 0.08), transparent 70%),
+    radial-gradient(circle 800px at 90% 85%, rgba(168, 85, 247, 0.07), transparent 70%),
+    radial-gradient(circle 650px at 50% 50%, rgba(99, 102, 241, 0.05), transparent 70%);
+  background-size: 700px 700px, 700px 700px, 700px 700px, 700px 700px, 700px 700px, 700px 700px, 700px 700px, 700px 700px, 700px 700px, 700px 700px, 700px 700px, 700px 700px, 700px 700px, 700px 700px, 100% 100%, 100% 100%, 100% 100%;
   background-attachment: fixed;
   color: var(--text-primary);
   line-height: 1.5;
@@ -133,6 +125,23 @@ body {
   flex-direction: column;
   overflow: hidden;
   -webkit-font-smoothing: antialiased;
+}
+
+body.light-theme {
+  background-color: #f3f0ea;
+  background-image:
+    radial-gradient(1.5px 1.5px at 25px 35px, rgba(30, 41, 59, 0.22), transparent),
+    radial-gradient(1px 1px at 55px 95px, rgba(30, 41, 59, 0.16), transparent),
+    radial-gradient(2px 2px at 85px 45px, rgba(59, 130, 246, 0.18), transparent),
+    radial-gradient(1px 1px at 120px 50px, rgba(30, 41, 59, 0.2), transparent),
+    radial-gradient(1.5px 1.5px at 170px 110px, rgba(147, 51, 234, 0.18), transparent),
+    radial-gradient(1px 1px at 210px 160px, rgba(30, 41, 59, 0.22), transparent),
+    radial-gradient(1.5px 1.5px at 270px 60px, rgba(30, 41, 59, 0.18), transparent),
+    radial-gradient(circle 750px at 10% 15%, rgba(56, 189, 248, 0.08), transparent 70%),
+    radial-gradient(circle 800px at 90% 85%, rgba(244, 114, 182, 0.06), transparent 70%);
+  background-size: 700px 700px, 700px 700px, 700px 700px, 700px 700px, 700px 700px, 700px 700px, 700px 700px, 100% 100%, 100% 100%;
+  background-attachment: fixed;
+  color: var(--text-primary);
 }
 
 /* --------------------------------------------------------------------------
@@ -1062,22 +1071,27 @@ body.is-resizing .workspace-resizer {
 /* --------------------------------------------------------------------------
    Modales Monocromáticos (HUD Titanio)
    -------------------------------------------------------------------------- */
-.modal-backdrop {
+.modal-backdrop,
+.modal {
   position: fixed;
   inset: 0;
-  background: rgba(4, 5, 8, 0.82);
+  background: rgba(4, 5, 8, 0.75);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 100;
+  z-index: 1000;
   backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   opacity: 0;
+  visibility: hidden;
   pointer-events: none;
-  transition: opacity 0.2s ease;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
 }
 
+.modal.open,
 .modal-backdrop.open {
   opacity: 1;
+  visibility: visible;
   pointer-events: auto;
 }
 
@@ -1599,23 +1613,24 @@ body.is-resizing .workspace-resizer {
 
 /* Barra HUD de Acompañamiento */
 .tempo-companion-bar {
-  display: none;
-  background: rgba(14, 16, 24, 0.96);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border-bottom: 1px solid var(--border-color);
-  padding: 0.35rem 1rem;
+  display: none !important;
+  background: rgba(14, 16, 24, 0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: var(--radius-md);
+  padding: 0.5rem 1rem;
   align-items: center;
   justify-content: space-between;
   gap: 0.75rem;
   flex-wrap: wrap;
   z-index: 60;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.05);
-  animation: slideDownTempo 0.18s ease-out;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  animation: slideDownTempo 0.2s ease-out;
 }
 
 .tempo-companion-bar.open {
-  display: flex;
+  display: flex !important;
 }
 
 @keyframes slideDownTempo {
@@ -1862,5 +1877,585 @@ body.light-theme .song-section-title.tempo-active-line {
   background: #0f172a !important;
   color: #ffffff !important;
   border-left-color: #0f172a;
+}
+
+/* ==========================================================================
+   Adaptación Completa y Exhaustiva de Capas para Modo Claro (Paleta Pastel Cálida)
+   ========================================================================== */
+
+/* Barra Superior & Marca */
+body.light-theme .app-topbar {
+  background: var(--bg-glass);
+  border-bottom-color: var(--border-color);
+  box-shadow: 0 2px 10px rgba(30, 41, 59, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+body.light-theme .brand-icon {
+  background: linear-gradient(135deg, #e3dbcf, #cbd5e1);
+  border-color: var(--border-color);
+  box-shadow: var(--shadow-sm);
+  color: #1e293b;
+}
+
+body.light-theme .brand-title {
+  background: linear-gradient(90deg, #0f172a 0%, #334155 60%, #475569 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Botones, Segmentos y Desplegables */
+body.light-theme .btn-group-segmented {
+  background: var(--bg-tertiary);
+  border-color: var(--border-color);
+}
+
+body.light-theme .btn-menu {
+  background: var(--bg-card);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+body.light-theme .dropdown-menu {
+  background: var(--bg-card);
+  border-color: var(--border-color);
+  box-shadow: 0 12px 30px rgba(30, 41, 59, 0.12), 0 0 0 1px rgba(0, 0, 0, 0.04);
+}
+
+body.light-theme .dropdown-header {
+  color: var(--text-muted);
+}
+
+body.light-theme .dropdown-item {
+  color: var(--text-primary);
+}
+
+body.light-theme .dropdown-item:hover {
+  background: var(--bg-tertiary);
+  color: #0f172a;
+}
+
+body.light-theme .dropdown-item .item-shortcut {
+  background: var(--bg-secondary);
+  border-color: var(--border-color);
+  color: var(--text-secondary);
+}
+
+body.light-theme .dropdown-divider {
+  background: var(--border-color);
+}
+
+/* Selectores y Etiquetas */
+body.light-theme .select-styled {
+  background: var(--bg-card);
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+
+body.light-theme .select-styled:hover {
+  border-color: var(--primary);
+  background: var(--bg-secondary);
+}
+
+body.light-theme .select-styled:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 1px var(--primary);
+}
+
+body.light-theme .label-inline,
+body.light-theme .toolbar-label {
+  color: var(--text-secondary);
+}
+
+/* Píldoras de Transposición y Botones */
+body.light-theme .btn-transpose-pill {
+  background: var(--bg-tertiary);
+  border-color: var(--border-color);
+  box-shadow: var(--shadow-sm);
+}
+
+body.light-theme .btn-transpose {
+  color: var(--text-primary);
+}
+
+body.light-theme .btn-transpose:hover {
+  background: #1e293b;
+  color: #ffffff;
+  box-shadow: 0 0 8px rgba(30, 41, 59, 0.25);
+}
+
+body.light-theme .transpose-badge {
+  color: var(--text-primary);
+}
+
+body.light-theme .transpose-badge.shifted {
+  color: var(--text-primary);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+}
+
+body.light-theme .btn {
+  background: var(--bg-card);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+body.light-theme .btn:hover {
+  background: var(--bg-tertiary);
+  border-color: var(--primary);
+  color: #0f172a;
+}
+
+body.light-theme .btn-primary {
+  background: #1e293b;
+  border-color: #1e293b;
+  color: #ffffff;
+}
+
+body.light-theme .btn-primary:hover {
+  background: #334155;
+  border-color: #334155;
+  color: #ffffff;
+  box-shadow: 0 0 8px rgba(30, 41, 59, 0.25);
+}
+
+body.light-theme .btn-highlight {
+  background: var(--bg-tertiary);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+body.light-theme .btn-highlight:hover {
+  background: #1e293b;
+  border-color: #1e293b;
+  color: #ffffff;
+}
+
+body.light-theme .btn-segmented {
+  color: var(--text-secondary);
+}
+
+body.light-theme .btn-segmented:hover {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+body.light-theme .font-size-badge {
+  color: var(--text-primary);
+}
+
+/* Interruptores y Toggles */
+body.light-theme .toggle-chip {
+  background: var(--bg-tertiary);
+  border-color: var(--border-color);
+}
+
+body.light-theme .toggle-chip button {
+  color: var(--text-secondary);
+}
+
+body.light-theme .toggle-chip button.active {
+  background: #1e293b;
+  color: #ffffff;
+  box-shadow: var(--shadow-sm);
+}
+
+/* Columna Editor */
+body.light-theme .editor-panel {
+  background: var(--bg-secondary);
+  border-right-color: var(--border-color);
+}
+
+body.light-theme .panel-header {
+  background: var(--bg-tertiary);
+  border-bottom-color: var(--border-color);
+}
+
+body.light-theme .panel-title {
+  color: var(--text-primary);
+}
+
+body.light-theme .chord-palette {
+  background: var(--bg-secondary);
+  border-bottom-color: var(--border-color);
+}
+
+body.light-theme .palette-label {
+  color: var(--text-secondary);
+}
+
+body.light-theme .btn-palette-chord {
+  background: var(--bg-card);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+body.light-theme .btn-palette-chord:hover {
+  background: #1e293b;
+  border-color: #1e293b;
+  color: #ffffff;
+  box-shadow: 0 0 6px rgba(30, 41, 59, 0.25);
+}
+
+body.light-theme .editor-textarea-wrapper {
+  background: #fbf8f3;
+}
+
+body.light-theme .song-editor {
+  color: #1e293b;
+}
+
+body.light-theme .song-editor::selection {
+  background: #dcd4c8;
+  color: #1e293b;
+}
+
+body.light-theme .editor-footer {
+  background: var(--bg-tertiary);
+  border-top-color: var(--border-color);
+  color: var(--text-muted);
+}
+
+/* Divisor interactivo */
+body.light-theme .workspace-resizer .resizer-handle {
+  background: var(--border-color);
+}
+
+body.light-theme .workspace-resizer:hover .resizer-handle,
+body.light-theme .workspace-resizer.active .resizer-handle {
+  background: #1e293b;
+  box-shadow: 0 0 6px rgba(30, 41, 59, 0.3);
+}
+
+/* Controles del Visor */
+body.light-theme .viewer-controls {
+  background: var(--bg-secondary);
+  border-bottom-color: var(--border-color);
+}
+
+body.light-theme .btn-show-editor {
+  background: var(--bg-card);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+body.light-theme .btn-show-editor:hover {
+  background: #1e293b;
+  color: #ffffff;
+}
+
+body.light-theme .autoscroll-control {
+  background: var(--bg-card);
+  border-color: var(--border-color);
+}
+
+body.light-theme .autoscroll-control input[type="range"] {
+  accent-color: #1e293b;
+}
+
+body.light-theme .btn-scenario {
+  background: var(--bg-card);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+body.light-theme .btn-scenario:hover {
+  background: #1e293b;
+  border-color: #1e293b;
+  color: #ffffff;
+  box-shadow: var(--shadow-sm);
+}
+
+/* Hoja de Canción */
+body.light-theme .song-sheet {
+  background: var(--bg-sheet);
+  color: var(--text-sheet);
+  border-color: var(--border-color);
+  box-shadow: 0 10px 30px rgba(30, 41, 59, 0.08), 0 0 1px rgba(30, 41, 59, 0.06);
+}
+
+body.light-theme .song-sheet-header {
+  border-bottom-color: var(--border-color);
+}
+
+body.light-theme .sheet-title {
+  color: var(--text-sheet);
+}
+
+body.light-theme .sheet-artist {
+  color: var(--text-sheet-muted);
+}
+
+body.light-theme .meta-chip {
+  background: var(--bg-tertiary);
+  border-color: var(--border-color);
+  color: var(--text-secondary);
+}
+
+body.light-theme .meta-chip.key-chip {
+  background: #1e293b;
+  color: #ffffff;
+  border-color: #1e293b;
+}
+
+body.light-theme .song-section-title {
+  color: #1e293b;
+  background: var(--bg-tertiary);
+  border-left: 3px solid #334155;
+}
+
+body.light-theme .chord-badge {
+  background: var(--chord-bg);
+  color: var(--chord-color);
+  border-color: var(--chord-border);
+}
+
+body.light-theme .chord-badge:hover {
+  background: #1e293b;
+  color: #ffffff;
+  border-color: #1e293b;
+  box-shadow: 0 0 8px rgba(30, 41, 59, 0.35);
+}
+
+body.light-theme .chord-only-line {
+  color: var(--chord-color);
+}
+
+body.light-theme .lyric-text {
+  color: var(--text-sheet);
+}
+
+/* Modales y Formularios */
+body.light-theme .modal-backdrop {
+  background: rgba(30, 41, 59, 0.45);
+}
+
+body.light-theme .modal-dialog {
+  background: var(--bg-card);
+  border-color: var(--border-color);
+  box-shadow: var(--shadow-lg);
+}
+
+body.light-theme .modal-header {
+  border-bottom-color: var(--border-color);
+}
+
+body.light-theme .modal-title {
+  color: var(--text-primary);
+}
+
+body.light-theme .btn-close {
+  color: var(--text-secondary);
+}
+
+body.light-theme .btn-close:hover {
+  color: #0f172a;
+}
+
+body.light-theme .form-label {
+  color: var(--text-secondary);
+}
+
+body.light-theme .input-styled {
+  background: var(--bg-sheet);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+body.light-theme .input-styled:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 1px var(--primary);
+}
+
+body.light-theme .modal-tabs {
+  border-bottom-color: var(--border-color);
+}
+
+body.light-theme .tab-btn {
+  color: var(--text-secondary);
+}
+
+body.light-theme .tab-btn:hover {
+  color: var(--text-primary);
+  background: var(--bg-tertiary);
+}
+
+body.light-theme .tab-btn.active {
+  color: #ffffff;
+  background: #1e293b;
+}
+
+body.light-theme .project-card {
+  background: var(--bg-card);
+  border-color: var(--border-color);
+}
+
+body.light-theme .project-card:hover {
+  border-color: var(--primary);
+  box-shadow: var(--shadow-md);
+}
+
+body.light-theme .project-card.active-project {
+  border-color: #1e293b;
+  background: var(--bg-tertiary);
+}
+
+body.light-theme .project-card-title {
+  color: var(--text-primary);
+}
+
+body.light-theme .project-card-artist {
+  color: var(--text-secondary);
+}
+
+body.light-theme .project-card-date {
+  color: var(--text-muted);
+}
+
+body.light-theme .project-card-preview {
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+}
+
+body.light-theme .project-card-actions {
+  border-top-color: var(--border-color);
+}
+
+body.light-theme .project-badge {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+
+body.light-theme .toast-notification {
+  background: #1e293b;
+  color: #f8fafc;
+  border-color: #334155;
+  box-shadow: var(--shadow-lg);
+}
+
+/* Barra de Acompañamiento por Tempo & Metrónomo */
+body.light-theme .btn-tempo {
+  background: var(--bg-card);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+body.light-theme .btn-tempo:hover,
+body.light-theme .btn-tempo.active {
+  background: #1e293b;
+  color: #ffffff;
+  border-color: #1e293b;
+  box-shadow: var(--shadow-sm);
+}
+
+body.light-theme .tempo-companion-bar {
+  background: var(--bg-secondary);
+  border-bottom-color: var(--border-color);
+  box-shadow: var(--shadow-md);
+}
+
+body.light-theme .btn-tempo-play {
+  background: #1e293b;
+  color: #ffffff;
+  border-color: #1e293b;
+}
+
+body.light-theme .btn-tempo-play:hover {
+  background: #334155;
+  border-color: #334155;
+  color: #ffffff;
+}
+
+body.light-theme .btn-tempo-play.btn-playing {
+  background: #16a34a;
+  border-color: #16a34a;
+  color: #ffffff;
+  box-shadow: 0 0 12px rgba(22, 163, 74, 0.4);
+}
+
+body.light-theme .beat-leds-container {
+  background: var(--bg-tertiary);
+  border-color: var(--border-color);
+}
+
+body.light-theme .beat-led {
+  color: var(--text-muted);
+  background: var(--bg-card);
+  border-color: var(--border-color);
+}
+
+body.light-theme .beat-led.flash {
+  background: #1e293b;
+  color: #ffffff;
+  border-color: #1e293b;
+  box-shadow: 0 0 10px rgba(30, 41, 59, 0.4);
+}
+
+body.light-theme .beat-led.accent {
+  border-color: #94a3b8;
+  color: #1e293b;
+}
+
+body.light-theme .beat-led.accent.flash {
+  background: #0284c7;
+  color: #ffffff;
+  border-color: #0284c7;
+  box-shadow: 0 0 12px rgba(2, 132, 199, 0.5);
+}
+
+body.light-theme .bpm-badge {
+  color: var(--text-primary);
+  background: var(--bg-card);
+  border-color: var(--border-color);
+}
+
+body.light-theme .tempo-slider {
+  accent-color: #1e293b;
+}
+
+body.light-theme .btn-tap {
+  background: var(--bg-card);
+  color: var(--text-primary);
+}
+
+body.light-theme .btn-tap:active {
+  background: #1e293b;
+  color: #ffffff;
+}
+
+body.light-theme .toggle-sound-btn.active,
+body.light-theme .toggle-countin-btn.active {
+  background: #1e293b;
+  color: #ffffff;
+  border-color: #1e293b;
+}
+
+body.light-theme .tempo-count-in-badge {
+  color: #0369a1;
+  background: #e0f2fe;
+  border-color: #38bdf8;
+}
+
+/* Modo Escenario Pantalla Completa */
+body.light-theme .viewer-panel.fullscreen-viewer {
+  background: var(--bg-primary);
+}
+
+body.light-theme .viewer-panel.fullscreen-viewer .viewer-controls {
+  background: var(--bg-secondary);
+  border-bottom-color: var(--border-color);
+}
+
+/* Barras de Desplazamiento */
+body.light-theme ::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+
+body.light-theme ::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+}
+
+body.light-theme ::-webkit-scrollbar-thumb:hover {
+  background: #b8ad9e;
 }
 

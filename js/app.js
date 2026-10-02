@@ -199,10 +199,18 @@
   function showToast(message, type = 'success', duration = 3000) {
     if (!elements.toastNotification) return;
     clearTimeout(toastTimeout);
-    elements.toastNotification.textContent = message;
-    elements.toastNotification.className = `toast-notification show ${type}`;
+
+    let alertClass = 'alert-info';
+    if (type === 'success') alertClass = 'alert-success';
+    if (type === 'warning') alertClass = 'alert-warning';
+    if (type === 'error') alertClass = 'alert-error';
+
+    elements.toastNotification.innerHTML = `<div class="alert ${alertClass} shadow-xl text-sm font-semibold py-2 px-4 border border-base-content/15"><span>${escapeHtml(message)}</span></div>`;
+    elements.toastNotification.style.display = 'block';
+
     toastTimeout = setTimeout(() => {
-      elements.toastNotification.className = 'toast-notification';
+      elements.toastNotification.innerHTML = '';
+      elements.toastNotification.style.display = 'none';
     }, duration);
   }
 
@@ -227,14 +235,14 @@
       if (state.currentProjectId) {
         const proj = ProjectsManager.getById(state.currentProjectId);
         if (proj) {
-          elements.activeProjectBadge.textContent = `📁 ${proj.title}`;
+          elements.activeProjectBadge.textContent = proj.title;
           elements.activeProjectBadge.title = `Proyecto guardado: ${proj.title} (ID: ${proj.id})`;
         } else {
-          elements.activeProjectBadge.textContent = '📄 Sin Guardar';
+          elements.activeProjectBadge.textContent = 'Sin Guardar';
           elements.activeProjectBadge.title = 'Canción no guardada como proyecto';
         }
       } else {
-        elements.activeProjectBadge.textContent = '📄 Sin Guardar';
+        elements.activeProjectBadge.textContent = 'Sin Guardar';
         elements.activeProjectBadge.title = 'Canción no guardada como proyecto';
       }
     }
@@ -251,6 +259,17 @@
     bindProjectEvents();
     initWorkspaceResizer();
     initTempoCompanion();
+
+    // Cargar tema guardado
+    try {
+      const savedTheme = localStorage.getItem('lyrchords_theme');
+      if (savedTheme === 'light') {
+        document.body.classList.add('light-theme');
+        document.documentElement.setAttribute('data-theme', 'light');
+      } else {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    } catch (e) {}
 
     // Cargar opciones guardadas
     const settings = ProjectsManager.getSettings();
@@ -406,11 +425,13 @@
       }
     });
 
-    // Selector de Cejilla / Capo
-    elements.capoSelect.addEventListener('change', (e) => {
-      state.capo = parseInt(e.target.value, 10) || 0;
-      updateCapoBadge();
-    });
+    // Selector de Cejilla / Capo (si está presente)
+    if (elements.capoSelect) {
+      elements.capoSelect.addEventListener('change', (e) => {
+        state.capo = parseInt(e.target.value, 10) || 0;
+        updateCapoBadge();
+      });
+    }
 
     // Notación (Inglés vs Latino)
     elements.btnNotationEnglish.addEventListener('click', () => {
@@ -476,6 +497,11 @@
     // Tema Claro / Oscuro
     elements.btnToggleTheme.addEventListener('click', () => {
       document.body.classList.toggle('light-theme');
+      const isLight = document.body.classList.contains('light-theme');
+      document.documentElement.setAttribute('data-theme', isLight ? 'light' : 'dark');
+      try {
+        localStorage.setItem('lyrchords_theme', isLight ? 'light' : 'dark');
+      } catch (e) {}
     });
 
     // Alternar vista del editor / maximizar letra
@@ -601,9 +627,13 @@
     tabButtons.forEach(btn => {
       btn.addEventListener('click', () => {
         const targetTab = btn.getAttribute('data-tab');
-        tabButtons.forEach(b => b.classList.remove('active'));
+        tabButtons.forEach(b => {
+          b.classList.remove('active');
+          b.classList.remove('tab-active');
+        });
         elements.projectsModal.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
         btn.classList.add('active');
+        btn.classList.add('tab-active');
         const content = document.getElementById(targetTab);
         if (content) content.classList.add('active');
       });
@@ -613,7 +643,7 @@
     if (elements.chkStartupModal) {
       elements.chkStartupModal.addEventListener('change', (e) => {
         ProjectsManager.saveSettings({ showStartupModal: e.target.checked });
-        showToast(e.target.checked ? '✓ Gestor activado al iniciar' : '✓ Gestor desactivado al iniciar', 'info');
+        showToast(e.target.checked ? 'Gestor activado al iniciar' : 'Gestor desactivado al iniciar', 'info');
       });
     }
 
@@ -621,7 +651,7 @@
     if (elements.btnExportAllBackup) {
       elements.btnExportAllBackup.addEventListener('click', () => {
         ProjectsManager.exportAllProjectsJson();
-        showToast('✓ Respaldo de canciones exportado');
+        showToast('Respaldo de canciones exportado');
       });
     }
 
@@ -640,7 +670,7 @@
             const content = evt.target.result;
             if (file.name.endsWith('.json')) {
               const res = ProjectsManager.importFromJson(content);
-              showToast(`✓ Se importaron ${res.imported} proyectos exitosamente`);
+              showToast(`Se importaron ${res.imported} proyectos exitosamente`);
             } else {
               // Archivo de texto/chordpro individual
               const meta = extractMetadata(content);
@@ -653,7 +683,7 @@
                 semitones: 0,
                 content: content
               });
-              showToast(`✓ Canción "${newProj.title}" importada`);
+              showToast(`Canción "${newProj.title}" importada`);
             }
             populateProjectSelector();
             renderProjectsList();
@@ -763,7 +793,7 @@
       state.currentProjectId = null;
       ProjectsManager.setCurrentProjectId(null);
       updateProjectStatusUI();
-      showToast('✨ Nueva canción en blanco lista para editar');
+      showToast('Nueva canción en blanco lista para editar');
     });
   }
 
@@ -790,7 +820,7 @@
       state.cleanSnapshot = currentText;
       updateProjectStatusUI();
       populateProjectSelector();
-      showToast(`💾 Proyecto "${saved.title}" guardado correctamente`);
+      showToast(`Proyecto "${saved.title}" guardado correctamente`);
       if (typeof onSuccess === 'function') onSuccess(saved);
     } else {
       // Canción nueva -> abrir modal para pedir título
@@ -828,7 +858,7 @@
     elements.saveProjKey.value = defaultKey;
     elements.saveProjCapo.value = defaultCapo.toString();
 
-    elements.saveProjectModalTitle.textContent = mode === 'saveAs' ? '💾 Guardar Como Nuevo Proyecto' : '💾 Guardar Proyecto';
+    elements.saveProjectModalTitle.textContent = mode === 'saveAs' ? 'Guardar Como Nuevo Proyecto' : 'Guardar Proyecto';
     elements.saveProjectModal.classList.add('open');
     elements.saveProjTitle.focus();
   }
@@ -873,7 +903,7 @@
     elements.songInput.value = content;
     state.originalKey = key;
     state.capo = capo;
-    elements.capoSelect.value = capo.toString();
+    if (elements.capoSelect) elements.capoSelect.value = capo.toString();
     updateCapoBadge();
 
     const projIdToUse = state.saveModalMode === 'saveAs' ? null : state.currentProjectId;
@@ -896,7 +926,7 @@
     populateProjectSelector();
     render();
 
-    showToast(`💾 Proyecto "${saved.title}" guardado exitosamente`);
+    showToast(`Proyecto "${saved.title}" guardado exitosamente`);
 
     if (typeof state.pendingSaveSuccess === 'function') {
       const cb = state.pendingSaveSuccess;
@@ -983,10 +1013,10 @@
           ${dateStr ? `<div class="project-card-date" style="margin-top:0.4rem;">Modificado: ${dateStr}</div>` : ''}
         </div>
         <div class="project-card-actions">
-          <button class="btn btn-sm btn-open-p" title="Abrir en el editor">📂 Abrir</button>
-          <button class="btn btn-sm btn-export-p" title="Descargar archivo .pro">⬇️</button>
-          <button class="btn btn-sm btn-dup-p" title="Duplicar">📋</button>
-          <button class="btn btn-sm btn-danger btn-del-p" title="Eliminar proyecto">🗑️</button>
+          <button class="btn btn-sm btn-open-p" title="Abrir en el editor">Abrir</button>
+          <button class="btn btn-sm btn-export-p" title="Descargar archivo .pro">Exportar</button>
+          <button class="btn btn-sm btn-dup-p" title="Duplicar">Duplicar</button>
+          <button class="btn btn-sm btn-danger btn-del-p" title="Eliminar proyecto">Eliminar</button>
         </div>
       `;
 
@@ -1004,7 +1034,7 @@
       card.querySelector('.btn-dup-p').addEventListener('click', () => {
         const copy = ProjectsManager.duplicate(p.id);
         if (copy) {
-          showToast(`✓ Copia creada: "${copy.title}"`);
+          showToast(`Copia creada: "${copy.title}"`);
           populateProjectSelector();
           renderProjectsList(elements.projectSearchInput.value);
         }
@@ -1019,7 +1049,7 @@
           }
           populateProjectSelector();
           renderProjectsList(elements.projectSearchInput.value);
-          showToast('🗑️ Proyecto eliminado', 'warning');
+          showToast('Proyecto eliminado', 'warning');
         }
       });
 
@@ -1051,7 +1081,7 @@
           <div class="project-card-preview" style="margin-top:0.5rem;">${escapeHtml(snippet)}...</div>
         </div>
         <div class="project-card-actions">
-          <button class="btn btn-sm btn-primary btn-load-ex">📂 Cargar Ejemplo</button>
+          <button class="btn btn-sm btn-primary btn-load-ex">Cargar Ejemplo</button>
         </div>
       `;
 
@@ -1082,7 +1112,7 @@
     state.semitones = p.semitones || 0;
     state.capo = p.capo || 0;
 
-    elements.capoSelect.value = state.capo.toString();
+    if (elements.capoSelect) elements.capoSelect.value = state.capo.toString();
     updateCapoBadge();
     updateTransposeUI();
     updateProjectStatusUI();
@@ -1090,7 +1120,7 @@
     render();
 
     if (!skipToast) {
-      showToast(`📂 Proyecto "${p.title}" abierto`);
+      showToast(`Proyecto "${p.title}" abierto`);
     }
   }
 
@@ -1110,7 +1140,7 @@
     state.originalKey = example.key || 'C';
     state.semitones = 0;
     state.capo = 0;
-    elements.capoSelect.value = '0';
+    if (elements.capoSelect) elements.capoSelect.value = '0';
     updateCapoBadge();
     updateTransposeUI();
     updateProjectStatusUI();
@@ -1118,7 +1148,7 @@
     render();
 
     if (!skipToast) {
-      showToast(`🎵 Ejemplo "${example.title}" cargado`);
+      showToast(`Ejemplo "${example.title}" cargado`);
     }
   }
 
@@ -1233,7 +1263,7 @@
     currentScrollPos = elements.sheetContainerWrapper.scrollTop;
     lastTimestamp = performance.now();
 
-    elements.btnAutoScroll.textContent = '⏸ Pausar';
+    elements.btnAutoScroll.textContent = 'Pausar';
     elements.btnAutoScroll.classList.add('btn-success');
 
     function scrollStep(timestamp) {
@@ -1274,7 +1304,7 @@
       cancelAnimationFrame(autoScrollAnimId);
       autoScrollAnimId = null;
     }
-    elements.btnAutoScroll.textContent = '▶ Auto-Scroll';
+    elements.btnAutoScroll.textContent = 'Auto-Scroll';
     elements.btnAutoScroll.classList.remove('btn-success');
   }
 
@@ -1284,7 +1314,7 @@
   function toggleFullscreen() {
     elements.viewerPanel.classList.toggle('fullscreen-viewer');
     const isFull = elements.viewerPanel.classList.contains('fullscreen-viewer');
-    elements.btnToggleFullscreen.textContent = isFull ? '✕ Salir de Escenario' : '⛶ Escenario';
+    elements.btnToggleFullscreen.textContent = isFull ? 'Salir de Escenario' : 'Escenario';
   }
 
   /**
@@ -1298,13 +1328,11 @@
 
     if (willCollapse) {
       ws.classList.add('editor-collapsed');
-      if (elements.toggleEditorIcon) elements.toggleEditorIcon.textContent = '✏️';
       if (elements.toggleEditorText) elements.toggleEditorText.textContent = 'Dividido';
       if (elements.btnToggleEditor) elements.btnToggleEditor.title = 'Mostrar editor y letra lado a lado';
-      showToast('👁️ Vista amplia de letra activada', 'info', 1800);
+      showToast('Vista amplia de letra activada', 'info', 1800);
     } else {
       ws.classList.remove('editor-collapsed');
-      if (elements.toggleEditorIcon) elements.toggleEditorIcon.textContent = '👁️';
       if (elements.toggleEditorText) elements.toggleEditorText.textContent = 'Solo Letra';
       if (elements.btnToggleEditor) elements.btnToggleEditor.title = 'Ver solo la letra a pantalla ancha';
     }
@@ -1695,7 +1723,7 @@
     const originalContent = btn ? btn.innerHTML : '';
     if (btn) {
       btn.disabled = true;
-      btn.innerHTML = '<span>⏳ Generando PDF...</span>';
+      btn.innerHTML = '<span>Generando PDF...</span>';
     }
 
     try {
@@ -1728,7 +1756,7 @@
       await html2pdf().set(opt).from(element).save();
       
       if (btn) {
-        btn.innerHTML = '<span>✔ ¡PDF Descargado!</span>';
+        btn.innerHTML = '<span>¡PDF Descargado!</span>';
         setTimeout(() => {
           btn.innerHTML = originalContent;
           btn.disabled = false;
