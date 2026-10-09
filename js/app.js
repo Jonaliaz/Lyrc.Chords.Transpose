@@ -140,6 +140,23 @@
     toggleEditorIcon: document.getElementById('toggleEditorIcon'),
     toggleEditorText: document.getElementById('toggleEditorText'),
 
+    // Acciones Móviles & Menú Adaptativo
+    btnMenuToggleTheme: document.getElementById('btnMenuToggleTheme'),
+    btnMenuNotation: document.getElementById('btnMenuNotation'),
+    menuNotationLabel: document.getElementById('menuNotationLabel'),
+    btnMenuAccidental: document.getElementById('btnMenuAccidental'),
+    menuAccidentalLabel: document.getElementById('menuAccidentalLabel'),
+    btnMenuWakeLock: document.getElementById('btnMenuWakeLock'),
+    menuWakeLockLabel: document.getElementById('menuWakeLockLabel'),
+
+    // Navegación Móvil Inferior (Android & Smartphones)
+    mobileNavBar: document.getElementById('mobileNavBar'),
+    btnMobileTabSheet: document.getElementById('btnMobileTabSheet'),
+    btnMobileTabEditor: document.getElementById('btnMobileTabEditor'),
+    btnMobileTabTempo: document.getElementById('btnMobileTabTempo'),
+    btnMobileTabFullscreen: document.getElementById('btnMobileTabFullscreen'),
+    themeColorMeta: document.getElementById('themeColorMeta'),
+
     // Toast
     toastNotification: document.getElementById('toastNotification')
   };
@@ -155,6 +172,7 @@
     autoScrollInterval: null,
     currentKey: 'C',
     originalKey: 'C',
+    mobileView: 'sheet', // 'sheet' | 'editor'
 
     // Estado de Proyectos
     currentProjectId: null,
@@ -306,6 +324,11 @@
         openProjectsModal('tab-user-projects');
       }, 150);
     }
+
+    // Inicializar iconos de Lucide
+    if (typeof lucide !== 'undefined') {
+      lucide.createIcons();
+    }
   }
 
   /**
@@ -434,36 +457,20 @@
     }
 
     // Notación (Inglés vs Latino)
-    elements.btnNotationEnglish.addEventListener('click', () => {
-      state.notation = 'english';
-      elements.btnNotationEnglish.classList.add('active');
-      elements.btnNotationLatin.classList.remove('active');
-      populateKeySelector();
-      render();
-    });
-
-    elements.btnNotationLatin.addEventListener('click', () => {
-      state.notation = 'latin';
-      elements.btnNotationLatin.classList.add('active');
-      elements.btnNotationEnglish.classList.remove('active');
-      populateKeySelector();
-      render();
-    });
+    if (elements.btnNotationEnglish) {
+      elements.btnNotationEnglish.addEventListener('click', () => setNotation('english'));
+    }
+    if (elements.btnNotationLatin) {
+      elements.btnNotationLatin.addEventListener('click', () => setNotation('latin'));
+    }
 
     // Alteraciones (# vs b)
-    elements.btnAccidentalSharp.addEventListener('click', () => {
-      state.preferSharps = true;
-      elements.btnAccidentalSharp.classList.add('active');
-      elements.btnAccidentalFlat.classList.remove('active');
-      render();
-    });
-
-    elements.btnAccidentalFlat.addEventListener('click', () => {
-      state.preferSharps = false;
-      elements.btnAccidentalFlat.classList.add('active');
-      elements.btnAccidentalSharp.classList.remove('active');
-      render();
-    });
+    if (elements.btnAccidentalSharp) {
+      elements.btnAccidentalSharp.addEventListener('click', () => setAccidental(true));
+    }
+    if (elements.btnAccidentalFlat) {
+      elements.btnAccidentalFlat.addEventListener('click', () => setAccidental(false));
+    }
 
     // Formatear dos líneas de acordes clásicos
     elements.btnFormatTwoLines.addEventListener('click', () => {
@@ -495,16 +502,11 @@
     elements.btnPrint.addEventListener('click', () => window.print());
 
     // Tema Claro / Oscuro
-    elements.btnToggleTheme.addEventListener('click', () => {
-      document.body.classList.toggle('light-theme');
-      const isLight = document.body.classList.contains('light-theme');
-      document.documentElement.setAttribute('data-theme', isLight ? 'light' : 'dark');
-      try {
-        localStorage.setItem('lyrchords_theme', isLight ? 'light' : 'dark');
-      } catch (e) {}
-    });
+    if (elements.btnToggleTheme) {
+      elements.btnToggleTheme.addEventListener('click', toggleTheme);
+    }
 
-    // Alternar vista del editor / maximizar letra
+    // Alternar vista del editor / maximizar letra (Desktop)
     if (elements.btnToggleEditor) {
       elements.btnToggleEditor.addEventListener('click', () => toggleEditorView());
     }
@@ -513,6 +515,54 @@
     }
     if (elements.btnShowEditor) {
       elements.btnShowEditor.addEventListener('click', () => toggleEditorView(false));
+    }
+
+    // Pestañas de Navegación Móvil Inferior (Android & Smartphones)
+    if (elements.btnMobileTabSheet) {
+      elements.btnMobileTabSheet.addEventListener('click', () => switchMobileView('sheet'));
+    }
+    if (elements.btnMobileTabEditor) {
+      elements.btnMobileTabEditor.addEventListener('click', () => switchMobileView('editor'));
+    }
+    if (elements.btnMobileTabTempo) {
+      elements.btnMobileTabTempo.addEventListener('click', () => {
+        switchMobileView('sheet');
+        if (typeof TempoCompanion !== 'undefined') {
+          TempoCompanion.toggleCompanionBar();
+        }
+      });
+    }
+    if (elements.btnMobileTabFullscreen) {
+      elements.btnMobileTabFullscreen.addEventListener('click', () => toggleFullscreen());
+    }
+
+    // Opciones del Menú Adaptativo (Móvil)
+    if (elements.btnMenuToggleTheme) {
+      elements.btnMenuToggleTheme.addEventListener('click', toggleTheme);
+    }
+    if (elements.btnMenuNotation) {
+      elements.btnMenuNotation.addEventListener('click', () => {
+        setNotation(state.notation === 'english' ? 'latin' : 'english');
+      });
+    }
+    if (elements.btnMenuAccidental) {
+      elements.btnMenuAccidental.addEventListener('click', () => {
+        setAccidental(!state.preferSharps);
+      });
+    }
+    if (elements.btnMenuWakeLock) {
+      elements.btnMenuWakeLock.addEventListener('click', async () => {
+        if (wakeLockSentinel !== null) {
+          isWakeLockManualOn = false;
+          releaseWakeLock();
+          showToast('Pantalla activa: Automática', 'info', 1500);
+        } else {
+          isWakeLockManualOn = true;
+          await requestWakeLock('manual');
+          showToast('Pantalla siempre encendida activada', 'success', 1500);
+        }
+        updateWakeLockUI();
+      });
     }
 
     // Botones de transposición rápida en el visor
@@ -729,9 +779,26 @@
       });
     });
 
+    // Cierre de modales por clic en fondo oscuro (backdrop)
+    [elements.saveProjectModal, elements.projectsModal, elements.chordModal, elements.confirmUnsavedModal].forEach(modalEl => {
+      if (!modalEl) return;
+      modalEl.addEventListener('click', (e) => {
+        if (e.target === modalEl) {
+          modalEl.classList.remove('open', 'modal-open');
+        }
+      });
+    });
+
     // Atajos de Teclado
     document.addEventListener('keydown', (e) => {
-      if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+      if (e.key === 'Escape') {
+        [elements.saveProjectModal, elements.projectsModal, elements.chordModal, elements.confirmUnsavedModal].forEach(modalEl => {
+          if (modalEl && modalEl.classList.contains('open')) {
+            modalEl.classList.remove('open', 'modal-open');
+          }
+        });
+        if (elements.projectDropdownMenu) elements.projectDropdownMenu.classList.remove('open');
+      } else if ((e.ctrlKey || e.metaKey) && e.key === 's') {
         e.preventDefault();
         quickSaveProject();
       } else if ((e.ctrlKey || e.metaKey) && e.key === 'o') {
@@ -774,14 +841,15 @@
       elements.unsavedProjectTitle.textContent = `"${title}"`;
     }
 
-    elements.confirmUnsavedModal.classList.add('open');
+    elements.confirmUnsavedModal.classList.add('open', 'modal-open');
+    if (typeof lucide !== 'undefined') lucide.createIcons();
   }
 
   /**
    * Cierra el modal de cambios sin guardar
    */
   function closeConfirmUnsavedModal() {
-    elements.confirmUnsavedModal.classList.remove('open');
+    elements.confirmUnsavedModal.classList.remove('open', 'modal-open');
   }
 
   /**
@@ -859,7 +927,8 @@
     elements.saveProjCapo.value = defaultCapo.toString();
 
     elements.saveProjectModalTitle.textContent = mode === 'saveAs' ? 'Guardar Como Nuevo Proyecto' : 'Guardar Proyecto';
-    elements.saveProjectModal.classList.add('open');
+    elements.saveProjectModal.classList.add('open', 'modal-open');
+    if (typeof lucide !== 'undefined') lucide.createIcons();
     elements.saveProjTitle.focus();
   }
 
@@ -867,7 +936,7 @@
    * Cierra el modal de guardar
    */
   function closeSaveModal() {
-    elements.saveProjectModal.classList.remove('open');
+    elements.saveProjectModal.classList.remove('open', 'modal-open');
   }
 
   /**
@@ -939,7 +1008,8 @@
    * Abre el modal del Gestor de Proyectos
    */
   function openProjectsModal(defaultTab = 'tab-user-projects') {
-    elements.projectsModal.classList.add('open');
+    elements.projectsModal.classList.add('open', 'modal-open');
+    if (typeof lucide !== 'undefined') lucide.createIcons();
     elements.projectSearchInput.value = '';
 
     // Activar pestaña solicitada
@@ -954,7 +1024,7 @@
    * Cierra el modal del Gestor de Proyectos
    */
   function closeProjectsModal() {
-    elements.projectsModal.classList.remove('open');
+    elements.projectsModal.classList.remove('open', 'modal-open');
   }
 
   /**
@@ -1013,10 +1083,22 @@
           ${dateStr ? `<div class="project-card-date" style="margin-top:0.4rem;">Modificado: ${dateStr}</div>` : ''}
         </div>
         <div class="project-card-actions">
-          <button class="btn btn-sm btn-open-p" title="Abrir en el editor">Abrir</button>
-          <button class="btn btn-sm btn-export-p" title="Descargar archivo .pro">Exportar</button>
-          <button class="btn btn-sm btn-dup-p" title="Duplicar">Duplicar</button>
-          <button class="btn btn-sm btn-danger btn-del-p" title="Eliminar proyecto">Eliminar</button>
+          <button class="btn btn-sm btn-open-p gap-1" title="Abrir en el editor">
+            <i data-lucide="folder-open" class="w-3.5 h-3.5"></i>
+            <span>Abrir</span>
+          </button>
+          <button class="btn btn-sm btn-export-p gap-1" title="Descargar archivo .pro">
+            <i data-lucide="download" class="w-3.5 h-3.5"></i>
+            <span>Exportar</span>
+          </button>
+          <button class="btn btn-sm btn-dup-p gap-1" title="Duplicar">
+            <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+            <span>Duplicar</span>
+          </button>
+          <button class="btn btn-sm btn-danger btn-del-p gap-1" title="Eliminar proyecto">
+            <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+            <span>Eliminar</span>
+          </button>
         </div>
       `;
 
@@ -1055,6 +1137,10 @@
 
       elements.userProjectsList.appendChild(card);
     });
+
+    if (typeof lucide !== 'undefined') {
+      lucide.createIcons();
+    }
   }
 
   /**
@@ -1081,7 +1167,10 @@
           <div class="project-card-preview" style="margin-top:0.5rem;">${escapeHtml(snippet)}...</div>
         </div>
         <div class="project-card-actions">
-          <button class="btn btn-sm btn-primary btn-load-ex">Cargar Ejemplo</button>
+          <button class="btn btn-sm btn-primary btn-load-ex gap-1">
+            <i data-lucide="play-circle" class="w-3.5 h-3.5"></i>
+            <span>Cargar Ejemplo</span>
+          </button>
         </div>
       `;
 
@@ -1094,6 +1183,10 @@
 
       elements.examplesList.appendChild(card);
     });
+
+    if (typeof lucide !== 'undefined') {
+      lucide.createIcons();
+    }
   }
 
   /**
@@ -1232,6 +1325,122 @@
   }
 
   /**
+   * Cambia el sistema de notación musical
+   */
+  function setNotation(type) {
+    state.notation = type;
+    if (elements.btnNotationEnglish) elements.btnNotationEnglish.classList.toggle('active', type === 'english');
+    if (elements.btnNotationLatin) elements.btnNotationLatin.classList.toggle('active', type === 'latin');
+    if (elements.menuNotationLabel) {
+      elements.menuNotationLabel.textContent = `Sistema: ${type === 'english' ? 'C D E (Inglés)' : 'Do Re Mi (Latino)'}`;
+    }
+    populateKeySelector();
+    render();
+  }
+
+  /**
+   * Cambia la preferencia de alteraciones (# vs b)
+   */
+  function setAccidental(preferSharps) {
+    state.preferSharps = preferSharps;
+    if (elements.btnAccidentalSharp) elements.btnAccidentalSharp.classList.toggle('active', preferSharps);
+    if (elements.btnAccidentalFlat) elements.btnAccidentalFlat.classList.toggle('active', !preferSharps);
+    if (elements.menuAccidentalLabel) {
+      elements.menuAccidentalLabel.textContent = `Alteraciones: ${preferSharps ? '♯ Sostenidos' : '♭ Bemoles'}`;
+    }
+    render();
+  }
+
+  /**
+   * Alterna entre tema claro y oscuro cósmico
+   */
+  function toggleTheme() {
+    document.body.classList.toggle('light-theme');
+    const isLight = document.body.classList.contains('light-theme');
+    document.documentElement.setAttribute('data-theme', isLight ? 'light' : 'dark');
+    if (elements.themeColorMeta) {
+      elements.themeColorMeta.setAttribute('content', isLight ? '#f5f0ea' : '#03050c');
+    }
+    try {
+      localStorage.setItem('lyrchords_theme', isLight ? 'light' : 'dark');
+    } catch (e) {}
+    showToast(`Tema ${isLight ? 'Claro' : 'Oscuro Cósmico'} activado`, 'info', 1500);
+  }
+
+  /**
+   * Administrador de Screen Wake Lock para mantener encendida la pantalla en Android/móvil
+   */
+  let wakeLockSentinel = null;
+  let isWakeLockManualOn = false;
+
+  async function requestWakeLock(reason = 'auto') {
+    if (!('wakeLock' in navigator)) return;
+    try {
+      if (wakeLockSentinel === null) {
+        wakeLockSentinel = await navigator.wakeLock.request('screen');
+        wakeLockSentinel.addEventListener('release', () => {
+          wakeLockSentinel = null;
+          updateWakeLockUI();
+        });
+        updateWakeLockUI();
+      }
+    } catch (err) {
+      console.warn('Wake Lock request failed:', err);
+    }
+  }
+
+  function releaseWakeLock() {
+    if (wakeLockSentinel !== null && !isWakeLockManualOn && !state.autoScrollRunning) {
+      const isTempoPlaying = typeof TempoCompanion !== 'undefined' && TempoCompanion.getState && TempoCompanion.getState().isPlaying;
+      const isFull = elements.viewerPanel && elements.viewerPanel.classList.contains('fullscreen-viewer');
+      if (!isTempoPlaying && !isFull) {
+        wakeLockSentinel.release().then(() => {
+          wakeLockSentinel = null;
+          updateWakeLockUI();
+        }).catch(() => {});
+      }
+    }
+  }
+
+  function updateWakeLockUI() {
+    if (elements.menuWakeLockLabel) {
+      const active = wakeLockSentinel !== null;
+      elements.menuWakeLockLabel.textContent = `Pantalla Activa: ${active ? 'Activa (On)' : 'Auto'}`;
+    }
+  }
+
+  document.addEventListener('visibilitychange', async () => {
+    if (document.visibilityState === 'visible' && (isWakeLockManualOn || state.autoScrollRunning || (elements.viewerPanel && elements.viewerPanel.classList.contains('fullscreen-viewer')))) {
+      await requestWakeLock();
+    }
+  });
+
+  window.addEventListener('tempoStateChange', (e) => {
+    if (e.detail && e.detail.isPlaying) {
+      requestWakeLock('tempo');
+    } else {
+      releaseWakeLock();
+    }
+  });
+
+  /**
+   * Cambia la vista activa en dispositivos móviles (Partitura / Editor)
+   */
+  function switchMobileView(viewName) {
+    if (!elements.workspaceContainer) return;
+    state.mobileView = viewName;
+    elements.workspaceContainer.setAttribute('data-mobile-view', viewName);
+
+    // Actualizar botones de navegación inferior
+    if (elements.btnMobileTabSheet) elements.btnMobileTabSheet.classList.toggle('active', viewName === 'sheet');
+    if (elements.btnMobileTabEditor) elements.btnMobileTabEditor.classList.toggle('active', viewName === 'editor');
+
+    if (viewName === 'sheet') {
+      render(); // Actualizar partitura con cambios hechos en el editor
+    }
+  }
+
+  /**
    * Ajusta el tamaño de fuente de la partitura
    */
   function adjustFontSize(delta) {
@@ -1260,6 +1469,7 @@
    */
   function startAutoScroll() {
     state.autoScrollRunning = true;
+    requestWakeLock('autoscroll');
     currentScrollPos = elements.sheetContainerWrapper.scrollTop;
     lastTimestamp = performance.now();
 
@@ -1306,6 +1516,7 @@
     }
     elements.btnAutoScroll.textContent = 'Auto-Scroll';
     elements.btnAutoScroll.classList.remove('btn-success');
+    releaseWakeLock();
   }
 
   /**
@@ -1315,6 +1526,23 @@
     elements.viewerPanel.classList.toggle('fullscreen-viewer');
     const isFull = elements.viewerPanel.classList.contains('fullscreen-viewer');
     elements.btnToggleFullscreen.textContent = isFull ? 'Salir de Escenario' : 'Escenario';
+
+    if (elements.btnMobileTabFullscreen) {
+      elements.btnMobileTabFullscreen.classList.toggle('active', isFull);
+    }
+
+    if (isFull) {
+      requestWakeLock('fullscreen');
+      if (document.documentElement.requestFullscreen && !document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {});
+      }
+      showToast('Modo Escenario activado', 'info', 1500);
+    } else {
+      if (document.exitFullscreen && document.fullscreenElement) {
+        document.exitFullscreen().catch(() => {});
+      }
+      releaseWakeLock();
+    }
   }
 
   /**
@@ -1673,7 +1901,8 @@
    * Abre el modal para construir e insertar un acorde
    */
   function openChordModal() {
-    elements.chordModal.classList.add('open');
+    elements.chordModal.classList.add('open', 'modal-open');
+    if (typeof lucide !== 'undefined') lucide.createIcons();
     updateModalPreview();
   }
 
@@ -1681,7 +1910,7 @@
    * Cierra el modal de inserción
    */
   function closeChordModal() {
-    elements.chordModal.classList.remove('open');
+    elements.chordModal.classList.remove('open', 'modal-open');
   }
 
   /**

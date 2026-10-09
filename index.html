@@ -2,9 +2,16 @@
 <html lang="es" data-theme="dark">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
+  <meta name="theme-color" content="#03050c" id="themeColorMeta">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <title>LyrChords Transposer - Editor y Transpositor de Acordes y Letras</title>
   
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
   <!-- Tailwind CSS & daisyUI -->
   <link href="https://cdn.jsdelivr.net/npm/daisyui@latest/dist/full.min.css" rel="stylesheet" type="text/css" />
   <script src="https://cdn.tailwindcss.com"></script>
@@ -30,47 +37,103 @@
 <body class="font-sans h-screen flex flex-col overflow-hidden select-none">
 
   <!-- Barra Superior Unificada con daisyUI & Tailwind (Redondeada y Flotante) -->
-  <header class="app-topbar navbar bg-base-200/80 backdrop-blur-xl border border-white/10 rounded-2xl mx-3 mt-2.5 mb-1 px-4 min-h-[48px] h-[48px] shadow-lg flex justify-between items-center z-50 sticky top-0" id="stickyTopBar">
+  <header class="app-topbar navbar bg-base-200/80 backdrop-blur-xl border border-white/10 rounded-2xl mx-2 md:mx-3 mt-1.5 md:mt-2.5 mb-1 px-2.5 md:px-4 min-h-[48px] h-[48px] shadow-lg flex justify-between items-center z-50 sticky top-0" id="stickyTopBar">
     <!-- Sección Izquierda: Marca, Menú Unificado y Selector de Proyectos -->
-    <div class="flex items-center gap-2">
-      <div class="brand cursor-default select-none" title="LyrChords Transposer">
-        <span class="font-extrabold text-base tracking-tight bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">LyrChords</span>
+    <div class="flex items-center gap-1.5 sm:gap-2">
+      <div class="brand cursor-default select-none flex items-center gap-1.5 shrink-0" title="LyrChords Transposer">
+        <span class="w-6 h-6 rounded-lg bg-gradient-to-br from-primary/30 to-accent/30 border border-white/20 flex items-center justify-center text-primary shadow-sm">
+          <i data-lucide="music-2" class="w-3.5 h-3.5"></i>
+        </span>
+        <span class="font-extrabold text-sm sm:text-base tracking-tight bg-gradient-to-r from-primary via-sky-200 to-accent bg-clip-text text-transparent hidden min-[380px]:inline-block">LyrChords</span>
       </div>
 
-      <div class="divider divider-horizontal mx-0 h-5 opacity-40"></div>
+      <div class="divider divider-horizontal mx-0 h-5 opacity-40 hidden min-[380px]:flex"></div>
 
       <!-- Menú de Acciones y Proyectos (Hamburguesa) -->
       <div class="dropdown-menu-wrapper relative" id="projectMenuWrapper">
-        <button id="btnProjectMenu" class="btn btn-sm btn-ghost border border-base-content/20 font-semibold gap-1 rounded-xl" title="Menú de opciones (Guardar, Proyectos, Copia, PDF...)">
-          <span>Menú</span>
+        <button id="btnProjectMenu" class="btn btn-sm btn-ghost border border-base-content/20 font-semibold gap-1 rounded-xl px-2 sm:px-3" title="Menú de opciones (Guardar, Proyectos, Copia, PDF, Configuración...)">
+          <i data-lucide="menu" class="w-4 h-4"></i>
+          <span class="hidden sm:inline">Menú</span>
         </button>
         <div class="dropdown-menu bg-base-200/95 backdrop-blur-xl border border-white/15 rounded-2xl shadow-2xl p-2 z-[9999]" id="projectDropdownMenu">
           <div class="text-[0.7rem] font-bold uppercase tracking-wider text-base-content/60 px-2.5 py-1">Proyectos y Archivo</div>
           <button id="btnSaveProject" class="dropdown-item flex items-center justify-between w-full px-2.5 py-1.5 rounded-lg text-sm hover:bg-base-300/80 transition" title="Guardar cambios (Ctrl+S)">
-            <span class="item-label">Guardar</span> <kbd class="kbd kbd-xs">Ctrl+S</kbd>
+            <span class="flex items-center gap-2">
+              <i data-lucide="save" class="w-4 h-4 text-emerald-400"></i>
+              <span class="item-label">Guardar</span>
+            </span>
+            <kbd class="kbd kbd-xs hidden sm:inline-flex">Ctrl+S</kbd>
           </button>
           <button id="btnSaveAsProject" class="dropdown-item flex items-center justify-between w-full px-2.5 py-1.5 rounded-lg text-sm hover:bg-base-300/80 transition" title="Guardar como nueva copia">
-            <span class="item-label">Guardar Copia...</span>
+            <span class="flex items-center gap-2">
+              <i data-lucide="copy" class="w-4 h-4 text-sky-400"></i>
+              <span class="item-label">Guardar Copia...</span>
+            </span>
           </button>
           <button id="btnOpenProjects" class="dropdown-item flex items-center justify-between w-full px-2.5 py-1.5 rounded-lg text-sm hover:bg-base-300/80 transition" title="Biblioteca de proyectos (Ctrl+O)">
-            <span class="item-label">Gestor de Proyectos</span> <kbd class="kbd kbd-xs">Ctrl+O</kbd>
+            <span class="flex items-center gap-2">
+              <i data-lucide="folder-open" class="w-4 h-4 text-indigo-400"></i>
+              <span class="item-label">Gestor de Proyectos</span>
+            </span>
+            <kbd class="kbd kbd-xs hidden sm:inline-flex">Ctrl+O</kbd>
           </button>
           <button id="btnNewSong" class="dropdown-item flex items-center justify-between w-full px-2.5 py-1.5 rounded-lg text-sm hover:bg-base-300/80 transition" title="Nueva canción en blanco (Ctrl+N)">
-            <span class="item-label">Nueva Canción</span> <kbd class="kbd kbd-xs">Ctrl+N</kbd>
+            <span class="flex items-center gap-2">
+              <i data-lucide="file-plus" class="w-4 h-4 text-amber-400"></i>
+              <span class="item-label">Nueva Canción</span>
+            </span>
+            <kbd class="kbd kbd-xs hidden sm:inline-flex">Ctrl+N</kbd>
           </button>
+          
           <div class="divider my-1 opacity-20"></div>
           <div class="text-[0.7rem] font-bold uppercase tracking-wider text-base-content/60 px-2.5 py-1">Exportar & Imprimir</div>
           <button id="btnExportPdf" class="dropdown-item flex items-center justify-between w-full px-2.5 py-1.5 rounded-lg text-sm hover:bg-base-300/80 transition" title="Descargar como PDF">
-            <span class="item-label">Descargar PDF</span>
+            <span class="flex items-center gap-2">
+              <i data-lucide="file-down" class="w-4 h-4 text-rose-400"></i>
+              <span class="item-label">Descargar PDF</span>
+            </span>
           </button>
           <button id="btnPrint" class="dropdown-item flex items-center justify-between w-full px-2.5 py-1.5 rounded-lg text-sm hover:bg-base-300/80 transition" title="Imprimir canción">
-            <span class="item-label">Imprimir</span>
+            <span class="flex items-center gap-2">
+              <i data-lucide="printer" class="w-4 h-4 text-slate-300"></i>
+              <span class="item-label">Imprimir</span>
+            </span>
           </button>
+
+          <!-- Opciones Móviles integradas en Menú -->
+          <div class="md:hidden">
+            <div class="divider my-1 opacity-20"></div>
+            <div class="text-[0.7rem] font-bold uppercase tracking-wider text-base-content/60 px-2.5 py-1">Ajustes & Sistema</div>
+            <button id="btnMenuToggleTheme" class="dropdown-item flex items-center justify-between w-full px-2.5 py-1.5 rounded-lg text-sm hover:bg-base-300/80 transition" title="Alternar tema claro/oscuro">
+              <span class="flex items-center gap-2">
+                <i data-lucide="sun-moon" class="w-4 h-4 text-amber-300"></i>
+                <span class="item-label">Cambiar Tema</span>
+              </span>
+            </button>
+            <button id="btnMenuNotation" class="dropdown-item flex items-center justify-between w-full px-2.5 py-1.5 rounded-lg text-sm hover:bg-base-300/80 transition" title="Cambiar sistema de notación (Inglés / Latino)">
+              <span class="flex items-center gap-2">
+                <i data-lucide="languages" class="w-4 h-4 text-cyan-400"></i>
+                <span class="item-label" id="menuNotationLabel">Sistema: C D E</span>
+              </span>
+            </button>
+            <button id="btnMenuAccidental" class="dropdown-item flex items-center justify-between w-full px-2.5 py-1.5 rounded-lg text-sm hover:bg-base-300/80 transition" title="Alternar Sostenidos y Bemoles">
+              <span class="flex items-center gap-2">
+                <i data-lucide="hash" class="w-4 h-4 text-emerald-400"></i>
+                <span class="item-label" id="menuAccidentalLabel">Alteraciones: ♯ Sostenidos</span>
+              </span>
+            </button>
+            <button id="btnMenuWakeLock" class="dropdown-item flex items-center justify-between w-full px-2.5 py-1.5 rounded-lg text-sm hover:bg-base-300/80 transition" title="Mantener pantalla encendida mientras tocas">
+              <span class="flex items-center gap-2">
+                <i data-lucide="smartphone" class="w-4 h-4 text-purple-400"></i>
+                <span class="item-label" id="menuWakeLockLabel">Pantalla Activa: Auto</span>
+              </span>
+            </button>
+          </div>
         </div>
       </div>
 
-      <!-- Selector de Proyectos -->
-      <select id="projectSelector" class="select select-bordered select-sm bg-base-100/80 rounded-xl font-medium text-xs max-w-[200px]" title="Cargar proyecto o canción de ejemplo">
+      <!-- Selector de Proyectos (Visible en pantallas medianas y grandes) -->
+      <select id="projectSelector" class="select select-bordered select-sm bg-base-100/80 rounded-xl font-medium text-xs max-w-[150px] lg:max-w-[200px] hidden sm:inline-flex" title="Cargar proyecto o canción de ejemplo">
         <option value="" disabled selected>Canciones...</option>
         <option value="__open_manager__">Gestor de Proyectos...</option>
         <optgroup label="Mis Canciones Guardadas" id="groupUserProjects"></optgroup>
@@ -82,54 +145,57 @@
     </div>
 
     <!-- Sección Central: Herramientas de Transposición y Armonía -->
-    <div class="flex items-center gap-2">
-      <div class="join shadow-sm rounded-xl overflow-hidden border border-white/10">
-        <button id="btnTransposeDown" class="btn btn-sm btn-neutral join-item font-bold" title="Bajar 1 semitono (-1)">
+    <div class="flex items-center gap-1 sm:gap-2">
+      <div class="join shadow-sm rounded-xl overflow-hidden border border-white/10 shrink-0">
+        <button id="btnTransposeDown" class="btn btn-xs sm:btn-sm btn-neutral join-item font-bold px-2 sm:px-3" title="Bajar 1 semitono (-1)">
           -1
         </button>
-        <span id="transposeDisplay" class="badge badge-neutral join-item h-auto py-1 px-3 font-mono text-xs font-bold flex items-center justify-center min-w-[28px]">0</span>
-        <button id="btnTransposeUp" class="btn btn-sm btn-neutral join-item font-bold" title="Subir 1 semitono (+1)">
+        <span id="transposeDisplay" class="badge badge-neutral join-item h-auto py-1 px-1.5 sm:px-3 font-mono text-xs font-bold flex items-center justify-center min-w-[24px] sm:min-w-[28px]">0</span>
+        <button id="btnTransposeUp" class="btn btn-xs sm:btn-sm btn-neutral join-item font-bold px-2 sm:px-3" title="Subir 1 semitono (+1)">
           +1
         </button>
       </div>
-      <button id="btnResetTranspose" class="btn btn-sm btn-ghost border border-base-content/20 rounded-xl text-xs" title="Volver al tono original (0)">
-        Restablecer
+      <button id="btnResetTranspose" class="btn btn-sm btn-ghost border border-base-content/20 rounded-xl text-xs gap-1 hidden md:inline-flex" title="Volver al tono original (0)">
+        <i data-lucide="rotate-ccw" class="w-3 h-3"></i>
+        <span>Restablecer</span>
       </button>
 
-      <div class="flex items-center gap-1.5">
-        <label for="targetKeySelect" class="text-xs font-semibold uppercase tracking-wider text-base-content/70">Tono:</label>
-        <select id="targetKeySelect" class="select select-bordered select-sm bg-base-100/80 rounded-xl text-xs font-bold" title="Tono directo">
+      <div class="flex items-center gap-1">
+        <label for="targetKeySelect" class="text-xs font-semibold uppercase tracking-wider text-base-content/70 hidden min-[420px]:inline">Tono:</label>
+        <select id="targetKeySelect" class="select select-bordered select-xs sm:select-sm bg-base-100/80 rounded-xl text-xs font-bold max-w-[70px] sm:max-w-none px-1 sm:px-2" title="Tono directo">
           <!-- Dinámico -->
         </select>
       </div>
 
-      <div class="join border border-base-content/20 rounded-xl p-0.5 bg-base-100/50">
+      <div class="join border border-base-content/20 rounded-xl p-0.5 bg-base-100/50 hidden xl:inline-flex">
         <button id="btnNotationEnglish" class="btn btn-xs join-item active font-semibold rounded-lg" title="Sistema inglés">C D E</button>
         <button id="btnNotationLatin" class="btn btn-xs join-item font-semibold rounded-lg" title="Sistema latino">Do Re Mi</button>
       </div>
 
-      <div class="join border border-base-content/20 rounded-xl p-0.5 bg-base-100/50">
+      <div class="join border border-base-content/20 rounded-xl p-0.5 bg-base-100/50 hidden xl:inline-flex">
         <button id="btnAccidentalSharp" class="btn btn-xs join-item active font-bold rounded-lg" title="Sostenidos">♯</button>
         <button id="btnAccidentalFlat" class="btn btn-xs join-item font-bold rounded-lg" title="Bemoles">♭</button>
       </div>
     </div>
 
     <!-- Sección Derecha: Vista y Tema -->
-    <div class="flex items-center gap-2">
-      <button id="btnToggleEditor" class="btn btn-sm btn-primary rounded-xl font-semibold shadow-md" title="Alternar entre ver solo la letra o ver editor y letra lado a lado">
+    <div class="flex items-center gap-1.5 sm:gap-2">
+      <button id="btnToggleEditor" class="btn btn-sm btn-primary rounded-xl font-semibold shadow-md gap-1.5 hidden md:inline-flex" title="Alternar entre ver solo la letra o ver editor y letra lado a lado">
+        <i data-lucide="columns-2" class="w-3.5 h-3.5"></i>
         <span id="toggleEditorText">Solo Letra</span>
       </button>
 
-      <div class="divider divider-horizontal mx-0 h-5 opacity-40"></div>
+      <div class="divider divider-horizontal mx-0 h-5 opacity-40 hidden md:flex"></div>
 
-      <button id="btnToggleTheme" class="btn btn-sm btn-outline border-base-content/25 rounded-xl font-semibold" title="Cambiar tema Claro / Oscuro">
-        Tema
+      <button id="btnToggleTheme" class="btn btn-xs sm:btn-sm btn-outline border-base-content/25 rounded-xl font-semibold gap-1 px-2 sm:px-3 hidden sm:inline-flex" title="Cambiar tema Claro / Oscuro">
+        <i data-lucide="sun-moon" class="w-3.5 h-3.5 text-amber-300"></i>
+        <span class="hidden md:inline">Tema</span>
       </button>
     </div>
   </header>
 
   <!-- Espacio de Trabajo Principal (Editor / Hoja de Canción con Bordes Redondeados) -->
-  <main class="workspace-container flex-1 flex overflow-hidden min-h-0 relative px-3 pb-3 pt-1 gap-2.5" id="workspaceContainer">
+  <main class="workspace-container flex-1 flex overflow-hidden min-h-0 relative px-2 md:px-3 pb-2 md:pb-3 pt-1 gap-2 md:gap-2.5" id="workspaceContainer">
     <!-- Panel Izquierdo: Editor -->
     <aside class="editor-panel bg-base-200/80 backdrop-blur-xl border border-white/10 rounded-2xl shadow-xl flex flex-col min-w-[280px] overflow-hidden" id="editorPanel">
       <div class="panel-header px-4 py-2 border-b border-base-content/10 flex justify-between items-center bg-base-200/80">
@@ -141,14 +207,17 @@
           </div>
         </div>
         <div class="flex items-center gap-1.5">
-          <button id="btnFormatTwoLines" class="btn btn-xs btn-ghost border border-base-content/20 rounded-lg font-medium" title="Detectar y alinear acordes que están en la línea de arriba">
-            Detectar arriba
+          <button id="btnFormatTwoLines" class="btn btn-xs btn-ghost border border-base-content/20 rounded-lg font-medium gap-1" title="Detectar y alinear acordes que están en la línea de arriba">
+            <i data-lucide="sparkles" class="w-3 h-3 text-amber-300"></i>
+            <span>Detectar arriba</span>
           </button>
-          <button id="btnOpenInsertModal" class="btn btn-xs btn-primary font-semibold rounded-lg" title="Construir e insertar acorde">
-            + Acorde
+          <button id="btnOpenInsertModal" class="btn btn-xs btn-primary font-semibold rounded-lg gap-1" title="Construir e insertar acorde">
+            <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+            <span>Acorde</span>
           </button>
-          <button id="btnHideEditor" class="btn btn-xs btn-ghost border border-base-content/20 rounded-lg" title="Ocultar editor para maximizar la letra">
-            Ocultar
+          <button id="btnHideEditor" class="btn btn-xs btn-ghost border border-base-content/20 rounded-lg gap-1" title="Ocultar editor para maximizar la letra">
+            <i data-lucide="panel-left-close" class="w-3.5 h-3.5"></i>
+            <span>Ocultar</span>
           </button>
         </div>
       </div>
@@ -187,8 +256,9 @@
       <!-- Barra de Herramientas del Visor -->
       <div class="viewer-controls bg-base-200/90 backdrop-blur-md border-b border-white/10 px-4 py-1.5 flex justify-between items-center gap-2 h-11 min-h-[44px]">
         <!-- Botón para mostrar el editor cuando está oculto -->
-        <button id="btnShowEditor" class="btn btn-sm btn-ghost border border-base-content/20 rounded-xl font-semibold" style="display:none;" title="Mostrar editor lateral">
-          Mostrar Editor
+        <button id="btnShowEditor" class="btn btn-sm btn-ghost border border-base-content/20 rounded-xl font-semibold gap-1.5" style="display:none;" title="Mostrar editor lateral">
+          <i data-lucide="panel-left-open" class="w-3.5 h-3.5"></i>
+          <span>Mostrar Editor</span>
         </button>
 
         <!-- Controles de Lectura: Fuente y Auto-Scroll -->
@@ -203,19 +273,22 @@
           </div>
 
           <!-- Opción APARTE: Acompañamiento con Tempo y Metrónomo -->
-          <button id="btnToggleTempoCompanion" class="btn btn-sm btn-accent btn-outline rounded-xl font-semibold shadow-sm" title="Acompañamiento con metrónomo y avance progresivo de acordes y letra">
-            Modo Tempo
+          <button id="btnToggleTempoCompanion" class="btn btn-sm btn-accent btn-outline rounded-xl font-semibold shadow-sm gap-1.5" title="Acompañamiento con metrónomo y avance progresivo de acordes y letra">
+            <i data-lucide="activity" class="w-3.5 h-3.5 text-cyan-400"></i>
+            <span>Modo Tempo</span>
           </button>
 
           <div class="autoscroll-control flex items-center gap-1.5 bg-base-100/80 border border-base-content/20 rounded-xl px-2.5 py-1 shadow-sm">
-            <button id="btnAutoScroll" class="btn btn-xs btn-ghost font-semibold rounded-lg" title="Iniciar o pausar desplazamiento automático">
-              Auto-Scroll
+            <button id="btnAutoScroll" class="btn btn-xs btn-ghost font-semibold rounded-lg gap-1" title="Iniciar o pausar desplazamiento automático">
+              <i data-lucide="chevrons-down" class="w-3 h-3"></i>
+              <span>Auto-Scroll</span>
             </button>
             <input type="range" id="scrollSpeedRange" min="0.00001" max="10" value="3" class="range range-xs range-primary w-16" title="Velocidad de desplazamiento">
           </div>
 
-          <button id="btnToggleFullscreen" class="btn btn-sm btn-ghost border border-base-content/20 rounded-xl font-semibold" title="Expandir para ver solo la canción en vivo">
-            Escenario
+          <button id="btnToggleFullscreen" class="btn btn-sm btn-ghost border border-base-content/20 rounded-xl font-semibold gap-1.5" title="Expandir para ver solo la canción en vivo">
+            <i data-lucide="maximize-2" class="w-3.5 h-3.5"></i>
+            <span>Escenario</span>
           </button>
         </div>
       </div>
@@ -223,18 +296,20 @@
       <!-- Barra HUD de Acompañamiento por Tempo & Metrónomo (Redondeada y Oculta por Defecto) -->
       <div class="tempo-companion-bar bg-base-200/95 backdrop-blur-2xl border border-white/15 rounded-2xl mx-4 my-2 p-3 shadow-2xl items-center justify-between gap-3 flex-wrap" id="tempoCompanionBar">
         <div class="tempo-bar-section tempo-bar-playback flex items-center gap-1.5">
-          <button id="btnTempoPlayPause" class="btn btn-sm btn-primary rounded-xl font-bold shadow-md" title="Iniciar/Pausar acompañamiento (Espacio)">
+          <button id="btnTempoPlayPause" class="btn btn-sm btn-primary rounded-xl font-bold shadow-md gap-1.5" title="Iniciar/Pausar acompañamiento (Espacio)">
+            <i data-lucide="play" class="w-3.5 h-3.5 fill-current"></i>
             <span>Acompañar</span>
           </button>
-          <button id="btnTempoStop" class="btn btn-sm btn-ghost border border-base-content/20 rounded-xl font-semibold" title="Detener y volver al inicio">
-            Detener
+          <button id="btnTempoStop" class="btn btn-sm btn-ghost border border-base-content/20 rounded-xl font-semibold gap-1" title="Detener y volver al inicio">
+            <i data-lucide="square" class="w-3 h-3 fill-current"></i>
+            <span>Detener</span>
           </button>
           <div class="divider divider-horizontal mx-0 h-4 opacity-40"></div>
-          <button id="btnTempoPrev" class="btn btn-sm btn-ghost border border-base-content/20 rounded-xl font-medium text-xs" title="Línea anterior">
-            Anterior
+          <button id="btnTempoPrev" class="btn btn-sm btn-ghost border border-base-content/20 rounded-xl font-medium text-xs px-2" title="Línea anterior">
+            <i data-lucide="chevron-left" class="w-3.5 h-3.5"></i>
           </button>
-          <button id="btnTempoNext" class="btn btn-sm btn-ghost border border-base-content/20 rounded-xl font-medium text-xs" title="Línea siguiente">
-            Siguiente
+          <button id="btnTempoNext" class="btn btn-sm btn-ghost border border-base-content/20 rounded-xl font-medium text-xs px-2" title="Línea siguiente">
+            <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
           </button>
         </div>
 
@@ -279,7 +354,8 @@
             </select>
           </div>
 
-          <button id="btnToggleSound" class="btn btn-xs btn-outline rounded-lg font-semibold" title="Sonido del metrónomo (On/Off)">
+          <button id="btnToggleSound" class="btn btn-xs btn-outline rounded-lg font-semibold gap-1" title="Sonido del metrónomo (On/Off)">
+            <i data-lucide="volume-2" class="w-3.5 h-3.5"></i>
             <span>Sonido</span>
           </button>
 
@@ -288,7 +364,7 @@
           </button>
 
           <button id="btnCloseTempoBar" class="btn btn-xs btn-ghost btn-circle" title="Cerrar barra de tempo">
-            &times;
+            <i data-lucide="x" class="w-3.5 h-3.5"></i>
           </button>
         </div>
       </div>
@@ -318,8 +394,11 @@
   <div id="chordModal" class="modal modal-bottom sm:modal-middle modal-backdrop">
     <div class="modal-dialog modal-box rounded-3xl bg-base-200 border border-base-content/15 shadow-2xl">
       <div class="modal-header flex justify-between items-center pb-3 border-b border-base-content/15 mb-4">
-        <h3 class="modal-title font-bold text-lg text-base-content">Insertar Acorde</h3>
-        <button id="btnCloseModal" class="btn btn-sm btn-circle btn-ghost">&times;</button>
+        <div class="flex items-center gap-2">
+          <i data-lucide="plus-circle" class="w-5 h-5 text-primary"></i>
+          <h3 class="modal-title font-bold text-lg text-base-content">Insertar Acorde</h3>
+        </div>
+        <button id="btnCloseModal" class="btn btn-sm btn-circle btn-ghost"><i data-lucide="x" class="w-4 h-4"></i></button>
       </div>
 
       <div class="flex flex-col gap-4">
@@ -393,7 +472,10 @@
 
         <div class="modal-action flex justify-end gap-2 mt-4 pt-2">
           <button id="btnCancelModal" class="btn btn-sm btn-ghost">Cancelar</button>
-          <button id="btnConfirmInsertChord" class="btn btn-sm btn-primary">Insertar en el Texto</button>
+          <button id="btnConfirmInsertChord" class="btn btn-sm btn-primary gap-1">
+            <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+            <span>Insertar en el Texto</span>
+          </button>
         </div>
       </div>
     </div>
@@ -404,21 +486,36 @@
     <div class="modal-dialog modal-box max-w-4xl rounded-3xl bg-base-200 border border-base-content/15 shadow-2xl">
       <div class="modal-header flex justify-between items-center pb-3 border-b border-base-content/15 mb-4">
         <div>
-          <h3 class="modal-title font-extrabold text-xl text-base-content">Gestor de Proyectos y Biblioteca</h3>
+          <div class="flex items-center gap-2">
+            <i data-lucide="folder-kanban" class="w-5 h-5 text-primary"></i>
+            <h3 class="modal-title font-extrabold text-xl text-base-content">Gestor de Proyectos y Biblioteca</h3>
+          </div>
           <p class="text-xs text-base-content/60 mt-0.5">Organiza, guarda y carga tus canciones con letras y acordes</p>
         </div>
-        <button id="btnCloseProjectsModal" class="btn btn-sm btn-circle btn-ghost">&times;</button>
+        <button id="btnCloseProjectsModal" class="btn btn-sm btn-circle btn-ghost"><i data-lucide="x" class="w-4 h-4"></i></button>
       </div>
 
       <!-- Buscador y Tabs -->
       <div class="projects-modal-toolbar flex flex-col md:flex-row gap-3 mb-4">
-        <div class="search-input-wrapper flex-1">
-          <input type="text" id="projectSearchInput" class="input input-bordered input-sm w-full bg-base-100 rounded-xl" placeholder="Buscar proyecto por título o artista...">
+        <div class="search-input-wrapper relative flex-1">
+          <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-base-content/50">
+            <i data-lucide="search" class="w-4 h-4"></i>
+          </span>
+          <input type="text" id="projectSearchInput" class="input input-bordered input-sm w-full pl-9 bg-base-100 rounded-xl" placeholder="Buscar proyecto por título o artista...">
         </div>
         <div class="modal-tabs tabs tabs-boxed bg-base-300 p-1 rounded-xl">
-          <button class="tab-btn tab tab-sm tab-active font-semibold rounded-lg" data-tab="tab-user-projects">Mis Proyectos (<span id="userProjectsCountBadge">0</span>)</button>
-          <button class="tab-btn tab tab-sm font-semibold rounded-lg" data-tab="tab-examples">Canciones de Ejemplo</button>
-          <button class="tab-btn tab tab-sm font-semibold rounded-lg" data-tab="tab-backup">Respaldo & Ajustes</button>
+          <button class="tab-btn tab tab-sm tab-active font-semibold rounded-lg gap-1.5" data-tab="tab-user-projects">
+            <i data-lucide="folder" class="w-3.5 h-3.5"></i>
+            <span>Mis Proyectos (<span id="userProjectsCountBadge">0</span>)</span>
+          </button>
+          <button class="tab-btn tab tab-sm font-semibold rounded-lg gap-1.5" data-tab="tab-examples">
+            <i data-lucide="library" class="w-3.5 h-3.5"></i>
+            <span>Canciones de Ejemplo</span>
+          </button>
+          <button class="tab-btn tab tab-sm font-semibold rounded-lg gap-1.5" data-tab="tab-backup">
+            <i data-lucide="settings-2" class="w-3.5 h-3.5"></i>
+            <span>Respaldo & Ajustes</span>
+          </button>
         </div>
       </div>
 
@@ -431,7 +528,10 @@
           <div id="emptyProjectsView" class="empty-state text-center py-12 px-4 bg-base-100/50 rounded-2xl border border-dashed border-base-content/20" style="display: none;">
             <h4 class="font-bold text-lg text-base-content">Aún no has guardado proyectos</h4>
             <p class="text-xs text-base-content/70 mt-1 max-w-md mx-auto">Guarda la canción que estás editando o crea un nuevo proyecto para tener tu repertorio disponible en cualquier momento.</p>
-            <button id="btnEmptyNewProject" class="btn btn-primary btn-sm mt-4 rounded-xl">Nueva Canción en Blanco</button>
+            <button id="btnEmptyNewProject" class="btn btn-primary btn-sm mt-4 rounded-xl gap-1.5">
+              <i data-lucide="file-plus" class="w-4 h-4"></i>
+              <span>Nueva Canción en Blanco</span>
+            </button>
           </div>
         </div>
 
@@ -450,10 +550,12 @@
               Puedes respaldar todo tu repertorio de canciones en un único archivo JSON o importar archivos individuales (.pro / .txt / .chordpro) y copias de seguridad previas.
             </p>
             <div class="flex gap-2 flex-wrap mb-6">
-              <button id="btnExportAllBackup" class="btn btn-sm btn-outline rounded-xl">
+              <button id="btnExportAllBackup" class="btn btn-sm btn-outline rounded-xl gap-1.5">
+                <i data-lucide="download" class="w-4 h-4 text-primary"></i>
                 <span>Descargar Copia de Seguridad (.json)</span>
               </button>
-              <button id="btnTriggerImportFile" class="btn btn-sm btn-primary rounded-xl">
+              <button id="btnTriggerImportFile" class="btn btn-sm btn-primary rounded-xl gap-1.5">
+                <i data-lucide="upload" class="w-4 h-4"></i>
                 <span>Importar Archivo (.json, .pro, .txt)</span>
               </button>
               <input type="file" id="importFileInput" accept=".json,.pro,.txt,.chordpro" style="display: none;">
@@ -471,8 +573,9 @@
       </div>
 
       <div class="modal-footer flex justify-between items-center border-t border-base-content/15 pt-3 mt-4">
-        <button id="btnModalNewSong" class="btn btn-sm btn-outline rounded-xl">
-          Nueva Canción en Blanco
+        <button id="btnModalNewSong" class="btn btn-sm btn-outline rounded-xl gap-1.5">
+          <i data-lucide="file-plus" class="w-4 h-4"></i>
+          <span>Nueva Canción en Blanco</span>
         </button>
         <div class="flex gap-2">
           <button id="btnModalCloseOnly" class="btn btn-sm btn-primary rounded-xl">
@@ -487,8 +590,11 @@
   <div id="saveProjectModal" class="modal modal-bottom sm:modal-middle modal-backdrop">
     <div class="modal-dialog modal-box rounded-3xl bg-base-200 border border-base-content/15 shadow-2xl">
       <div class="modal-header flex justify-between items-center pb-3 border-b border-base-content/15 mb-4">
-        <h3 class="modal-title font-bold text-lg text-base-content" id="saveProjectModalTitle">Guardar Proyecto</h3>
-        <button id="btnCloseSaveModal" class="btn btn-sm btn-circle btn-ghost">&times;</button>
+        <div class="flex items-center gap-2">
+          <i data-lucide="save" class="w-5 h-5 text-primary"></i>
+          <h3 class="modal-title font-bold text-lg text-base-content" id="saveProjectModalTitle">Guardar Proyecto</h3>
+        </div>
+        <button id="btnCloseSaveModal" class="btn btn-sm btn-circle btn-ghost"><i data-lucide="x" class="w-4 h-4"></i></button>
       </div>
       <form id="saveProjectForm">
         <div class="flex flex-col gap-3.5">
@@ -524,7 +630,10 @@
         </div>
         <div class="modal-action flex justify-end gap-2 mt-5 pt-2">
           <button type="button" id="btnCancelSaveModal" class="btn btn-sm btn-ghost rounded-xl">Cancelar</button>
-          <button type="submit" id="btnConfirmSaveProject" class="btn btn-sm btn-primary rounded-xl">Guardar Canción</button>
+          <button type="submit" id="btnConfirmSaveProject" class="btn btn-sm btn-primary rounded-xl gap-1.5">
+            <i data-lucide="check" class="w-4 h-4"></i>
+            <span>Guardar Canción</span>
+          </button>
         </div>
       </form>
     </div>
@@ -534,8 +643,11 @@
   <div id="confirmUnsavedModal" class="modal modal-bottom sm:modal-middle modal-backdrop">
     <div class="modal-dialog modal-box rounded-3xl bg-base-200 border border-base-content/15 shadow-2xl">
       <div class="modal-header flex justify-between items-center pb-3 border-b border-base-content/15 mb-3">
-        <h3 class="modal-title font-bold text-lg text-base-content">Cambios sin guardar</h3>
-        <button id="btnCloseUnsavedModal" class="btn btn-sm btn-circle btn-ghost">&times;</button>
+        <div class="flex items-center gap-2">
+          <i data-lucide="alert-triangle" class="w-5 h-5 text-amber-400"></i>
+          <h3 class="modal-title font-bold text-lg text-base-content">Cambios sin guardar</h3>
+        </div>
+        <button id="btnCloseUnsavedModal" class="btn btn-sm btn-circle btn-ghost"><i data-lucide="x" class="w-4 h-4"></i></button>
       </div>
       <div class="my-4">
         <p class="text-sm text-base-content mb-2">
@@ -547,11 +659,37 @@
       </div>
       <div class="modal-action flex justify-end gap-2 mt-4 pt-2">
         <button id="btnCancelUnsavedAction" class="btn btn-sm btn-ghost">Cancelar</button>
-        <button id="btnDiscardUnsavedAction" class="btn btn-sm btn-error btn-outline">No Guardar (Descartar)</button>
-        <button id="btnSaveUnsavedAction" class="btn btn-sm btn-primary">Guardar Cambios</button>
+        <button id="btnDiscardUnsavedAction" class="btn btn-sm btn-error btn-outline gap-1">
+          <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+          <span>No Guardar (Descartar)</span>
+        </button>
+        <button id="btnSaveUnsavedAction" class="btn btn-sm btn-primary gap-1">
+          <i data-lucide="save" class="w-3.5 h-3.5"></i>
+          <span>Guardar Cambios</span>
+        </button>
       </div>
     </div>
   </div>
+
+  <!-- Barra de Navegación Inferior Móvil (Android & Smartphones) -->
+  <nav class="mobile-nav-bar md:hidden fixed bottom-0 inset-x-0 z-40 bg-base-200/90 backdrop-blur-2xl border-t border-white/10 px-3 py-1.5 flex items-center justify-around shadow-2xl" id="mobileNavBar" aria-label="Navegación Móvil">
+    <button id="btnMobileTabSheet" class="mobile-nav-btn active flex flex-col items-center justify-center gap-0.5 py-1 px-3 rounded-xl transition font-medium text-xs text-primary" title="Ver Letra y Acordes">
+      <i data-lucide="music" class="w-5 h-5"></i>
+      <span class="text-[0.7rem] font-semibold">Letra</span>
+    </button>
+    <button id="btnMobileTabEditor" class="mobile-nav-btn flex flex-col items-center justify-center gap-0.5 py-1 px-3 rounded-xl transition font-medium text-xs text-base-content/60 hover:text-base-content" title="Editar Canción">
+      <i data-lucide="edit-3" class="w-5 h-5"></i>
+      <span class="text-[0.7rem] font-semibold">Editor</span>
+    </button>
+    <button id="btnMobileTabTempo" class="mobile-nav-btn flex flex-col items-center justify-center gap-0.5 py-1 px-3 rounded-xl transition font-medium text-xs text-base-content/60 hover:text-base-content" title="Acompañamiento y Metrónomo">
+      <i data-lucide="activity" class="w-5 h-5"></i>
+      <span class="text-[0.7rem] font-semibold">Tempo</span>
+    </button>
+    <button id="btnMobileTabFullscreen" class="mobile-nav-btn flex flex-col items-center justify-center gap-0.5 py-1 px-3 rounded-xl transition font-medium text-xs text-base-content/60 hover:text-base-content" title="Modo Escenario (Pantalla Completa)">
+      <i data-lucide="maximize-2" class="w-5 h-5"></i>
+      <span class="text-[0.7rem] font-semibold">Escenario</span>
+    </button>
+  </nav>
 
   <!-- Notificación Toast Flotante -->
   <div id="toastNotification" class="toast-notification toast toast-end toast-bottom z-[99999]"></div>

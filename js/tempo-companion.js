@@ -293,6 +293,7 @@ const TempoCompanion = (function () {
     updatePlayPauseUI();
     highlightCurrentStep();
     scheduleNextBeat();
+    window.dispatchEvent(new CustomEvent('tempoStateChange', { detail: { isPlaying: true } }));
   }
 
   /**
@@ -308,6 +309,7 @@ const TempoCompanion = (function () {
     updatePlayPauseUI();
     showCountInIndicator(true);
     scheduleNextBeat();
+    window.dispatchEvent(new CustomEvent('tempoStateChange', { detail: { isPlaying: true } }));
   }
 
   /**
@@ -319,6 +321,7 @@ const TempoCompanion = (function () {
     clearTimeout(state.timerId);
     state.timerId = null;
     updatePlayPauseUI();
+    window.dispatchEvent(new CustomEvent('tempoStateChange', { detail: { isPlaying: false } }));
   }
 
   /**
@@ -339,6 +342,7 @@ const TempoCompanion = (function () {
     showCountInIndicator(false);
     updatePlayPauseUI();
     updateBeatLeds(0);
+    window.dispatchEvent(new CustomEvent('tempoStateChange', { detail: { isPlaying: false } }));
 
     // Regresar scroll al inicio si está habilitado
     if (ui.sheetWrapper) {
@@ -680,17 +684,21 @@ const TempoCompanion = (function () {
     if (!ui.btnPlayPause) return;
 
     if (state.isPlaying) {
-      ui.btnPlayPause.innerHTML = '<span>Pausar</span>';
+      ui.btnPlayPause.innerHTML = '<i data-lucide="pause" class="w-3.5 h-3.5 fill-current"></i><span>Pausar</span>';
       ui.btnPlayPause.classList.add('btn-playing');
       ui.btnPlayPause.title = 'Pausar acompañamiento (Espacio)';
     } else if (state.isPaused) {
-      ui.btnPlayPause.innerHTML = '<span>Continuar</span>';
+      ui.btnPlayPause.innerHTML = '<i data-lucide="play" class="w-3.5 h-3.5 fill-current"></i><span>Continuar</span>';
       ui.btnPlayPause.classList.remove('btn-playing');
       ui.btnPlayPause.title = 'Reanudar acompañamiento (Espacio)';
     } else {
-      ui.btnPlayPause.innerHTML = '<span>Acompañar</span>';
+      ui.btnPlayPause.innerHTML = '<i data-lucide="play" class="w-3.5 h-3.5 fill-current"></i><span>Acompañar</span>';
       ui.btnPlayPause.classList.remove('btn-playing');
       ui.btnPlayPause.title = 'Iniciar acompañamiento con tempo y metrónomo';
+    }
+
+    if (typeof lucide !== 'undefined') {
+      lucide.createIcons();
     }
   }
 
@@ -707,6 +715,9 @@ const TempoCompanion = (function () {
       ui.companionBar.classList.add('open');
       if (ui.btnToggleCompanion) ui.btnToggleCompanion.classList.add('active');
       buildTimeline();
+      if (typeof lucide !== 'undefined') {
+        lucide.createIcons();
+      }
     } else {
       ui.companionBar.classList.remove('open');
       if (ui.btnToggleCompanion) ui.btnToggleCompanion.classList.remove('active');
@@ -750,7 +761,10 @@ const TempoCompanion = (function () {
       ui.bpmSlider.addEventListener('input', (e) => setBpm(e.target.value));
     }
     if (ui.btnTapTempo) {
-      ui.btnTapTempo.addEventListener('click', () => tapTempo());
+      ui.btnTapTempo.addEventListener('pointerdown', (e) => {
+        e.preventDefault();
+        tapTempo();
+      });
     }
 
     // Selector de Compás
@@ -768,9 +782,14 @@ const TempoCompanion = (function () {
       ui.btnToggleSound.addEventListener('click', () => {
         state.soundEnabled = !state.soundEnabled;
         ui.btnToggleSound.classList.toggle('active', state.soundEnabled);
-        ui.btnToggleSound.innerHTML = state.soundEnabled ? '<span>Sonido</span>' : '<span>Mudo</span>';
+        ui.btnToggleSound.innerHTML = state.soundEnabled ? 
+          '<i data-lucide="volume-2" class="w-3.5 h-3.5"></i><span>Sonido</span>' : 
+          '<i data-lucide="volume-x" class="w-3.5 h-3.5"></i><span>Mudo</span>';
         ui.btnToggleSound.title = state.soundEnabled ? 'Metrónomo con sonido activo' : 'Metrónomo en silencio (solo visual)';
         if (state.soundEnabled) getAudioContext();
+        if (typeof lucide !== 'undefined') {
+          lucide.createIcons();
+        }
       });
     }
 

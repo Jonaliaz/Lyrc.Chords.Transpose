@@ -1,45 +1,48 @@
 /* ==========================================================================
-   LyrChords Transposer - Tema Galáctico Monocromático (Starfield & Titanium HUD)
+   LyrChords Transposer - Tema Galáctico Profundo & Cristalino (Cosmic Starfield & Glass)
    ========================================================================== */
 
 :root {
-  /* Paleta Galáctica Monocromática (Obsidiana, Titanio, Plata y Luz Estelar) */
-  --bg-primary: #06080e;
-  --bg-secondary: #0c0e17;
-  --bg-tertiary: #131722;
-  --bg-card: rgba(15, 18, 28, 0.85);
-  --bg-glass: rgba(12, 15, 24, 0.82);
+  /* Paleta Galáctica Cósmica (Obsidiana Profunda, Nebulosa Índigo, Titanio y Luz Estelar) */
+  --bg-primary: #03050c;
+  --bg-secondary: #070b16;
+  --bg-tertiary: #0d1324;
+  --bg-card: rgba(10, 14, 28, 0.72);
+  --bg-glass: rgba(7, 10, 22, 0.74);
   
-  /* Hoja de Canción Cósmica Monocromática */
-  --bg-sheet: rgba(10, 13, 22, 0.88);
+  /* Hoja de Canción Cósmica Translúcida (Cristal Cósmico & Titanio) */
+  --bg-sheet: rgba(8, 12, 26, 0.78);
   --text-sheet: #f8fafc;
   --text-sheet-muted: #94a3b8;
   --chord-color: #f8fafc;
-  --chord-bg: rgba(255, 255, 255, 0.1);
-  --chord-border: rgba(255, 255, 255, 0.28);
-  --chord-glow: rgba(255, 255, 255, 0.25);
+  --chord-bg: rgba(255, 255, 255, 0.09);
+  --chord-border: rgba(255, 255, 255, 0.22);
+  --chord-glow: rgba(56, 189, 248, 0.28);
   
   /* Textos */
   --text-primary: #f8fafc;
   --text-secondary: #94a3b8;
   --text-muted: #64748b;
   
-  /* Acentos Titanio / Plata Estelar */
+  /* Acentos Cósmicos */
   --primary: #38bdf8;
-  --primary-hover: #0284c7;
-  --primary-glow: rgba(56, 189, 248, 0.25);
+  --primary-hover: #0ea5e9;
+  --primary-glow: rgba(56, 189, 248, 0.35);
   --starlight-white: #ffffff;
   --silver-accent: #cbd5e1;
+  --cosmic-purple: #c084fc;
+  --cosmic-indigo: #818cf8;
+  --cosmic-cyan: #38bdf8;
   
   --accent: #22c55e;
   --accent-hover: #16a34a;
   --danger: #ef4444;
   --warning: #eab308;
   
-  /* Bordes Cósmicos y Sombras */
+  /* Bordes Cósmicos y Sombras Galácticas */
   --border-color: rgba(255, 255, 255, 0.12);
   --border-light: rgba(255, 255, 255, 0.06);
-  --border-glow: rgba(255, 255, 255, 0.2);
+  --border-glow: rgba(56, 189, 248, 0.25);
   
   --radius-xs: 6px;
   --radius-sm: 10px;
@@ -47,10 +50,10 @@
   --radius-lg: 24px;
   --radius-xl: 32px;
   
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.4);
-  --shadow-md: 0 6px 20px rgba(0, 0, 0, 0.5), 0 0 1px rgba(255, 255, 255, 0.1);
-  --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.7), 0 0 24px rgba(0, 0, 0, 0.4);
-  --shadow-stellar: 0 0 20px rgba(255, 255, 255, 0.12);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.65), 0 0 1px rgba(255, 255, 255, 0.12);
+  --shadow-lg: 0 20px 50px rgba(0, 0, 0, 0.85), 0 0 30px rgba(56, 189, 248, 0.06);
+  --shadow-stellar: 0 0 25px rgba(56, 189, 248, 0.18);
   
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-mono: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
@@ -92,31 +95,41 @@ body.light-theme {
   padding: 0;
 }
 
-/* Fondo Estrellado Translúcido Universal */
+/* Fondo Galáctico Cósmico Universal & Sereno */
 body {
   font-family: var(--font-sans);
-  background-color: #05070d;
+  background-color: #03050c;
   background-image:
-    /* Capa 1: Estrellas brillantes */
-    radial-gradient(1.5px 1.5px at 25px 35px, #ffffff, rgba(0,0,0,0)),
-    radial-gradient(1px 1px at 55px 95px, rgba(255,255,255,0.85), rgba(0,0,0,0)),
-    radial-gradient(2px 2px at 85px 45px, #93c5fd, rgba(0,0,0,0)),
-    radial-gradient(1px 1px at 120px 50px, #ffffff, rgba(0,0,0,0)),
-    radial-gradient(1.5px 1.5px at 170px 110px, rgba(255,255,255,0.9), rgba(0,0,0,0)),
-    radial-gradient(1px 1px at 210px 160px, #c084fc, rgba(0,0,0,0)),
-    radial-gradient(1.5px 1.5px at 270px 60px, #ffffff, rgba(0,0,0,0)),
-    radial-gradient(1px 1px at 340px 140px, rgba(255,255,255,0.75), rgba(0,0,0,0)),
-    radial-gradient(2px 2px at 400px 95px, #67e8f9, rgba(0,0,0,0)),
-    radial-gradient(1.5px 1.5px at 460px 185px, #ffffff, rgba(0,0,0,0)),
-    radial-gradient(1px 1px at 520px 45px, rgba(255,255,255,0.85), rgba(0,0,0,0)),
-    radial-gradient(1.5px 1.5px at 580px 115px, #a855f7, rgba(0,0,0,0)),
-    radial-gradient(2px 2px at 630px 170px, #ffffff, rgba(0,0,0,0)),
-    radial-gradient(1px 1px at 680px 75px, #93c5fd, rgba(0,0,0,0)),
-    /* Capa 2: Nebulosas cósmicas translúcidas */
-    radial-gradient(circle 750px at 10% 15%, rgba(56, 189, 248, 0.08), transparent 70%),
-    radial-gradient(circle 800px at 90% 85%, rgba(168, 85, 247, 0.07), transparent 70%),
-    radial-gradient(circle 650px at 50% 50%, rgba(99, 102, 241, 0.05), transparent 70%);
-  background-size: 700px 700px, 700px 700px, 700px 700px, 700px 700px, 700px 700px, 700px 700px, 700px 700px, 700px 700px, 700px 700px, 700px 700px, 700px 700px, 700px 700px, 700px 700px, 700px 700px, 100% 100%, 100% 100%, 100% 100%;
+    /* Capa 1: Estrellas brillantes y centelleantes */
+    radial-gradient(1.5px 1.5px at 30px 40px, #ffffff, rgba(0,0,0,0)),
+    radial-gradient(1px 1px at 60px 105px, rgba(255,255,255,0.85), rgba(0,0,0,0)),
+    radial-gradient(2px 2px at 95px 50px, #93c5fd, rgba(0,0,0,0)),
+    radial-gradient(1px 1px at 135px 65px, #ffffff, rgba(0,0,0,0)),
+    radial-gradient(1.5px 1.5px at 180px 120px, rgba(255,255,255,0.9), rgba(0,0,0,0)),
+    radial-gradient(1px 1px at 225px 175px, #c084fc, rgba(0,0,0,0)),
+    radial-gradient(1.5px 1.5px at 290px 70px, #ffffff, rgba(0,0,0,0)),
+    radial-gradient(1px 1px at 355px 150px, rgba(255,255,255,0.75), rgba(0,0,0,0)),
+    radial-gradient(2.2px 2.2px at 420px 105px, #67e8f9, rgba(0,0,0,0)),
+    radial-gradient(1.5px 1.5px at 480px 195px, #ffffff, rgba(0,0,0,0)),
+    radial-gradient(1px 1px at 540px 55px, rgba(255,255,255,0.85), rgba(0,0,0,0)),
+    radial-gradient(1.5px 1.5px at 600px 125px, #d8b4fe, rgba(0,0,0,0)),
+    radial-gradient(2.5px 2.5px at 660px 180px, #ffffff, rgba(0,0,0,0)),
+    radial-gradient(1px 1px at 710px 85px, #93c5fd, rgba(0,0,0,0)),
+    radial-gradient(1.5px 1.5px at 780px 220px, rgba(254, 240, 138, 0.9), rgba(0,0,0,0)),
+    radial-gradient(1px 1px at 840px 130px, #ffffff, rgba(0,0,0,0)),
+    radial-gradient(2px 2px at 900px 40px, #38bdf8, rgba(0,0,0,0)),
+    /* Capa 2: Nebulosas cósmicas profundas, suaves y etéreas */
+    radial-gradient(circle 900px at 15% 15%, rgba(56, 189, 248, 0.12), transparent 70%),
+    radial-gradient(circle 950px at 85% 85%, rgba(168, 85, 247, 0.11), transparent 70%),
+    radial-gradient(circle 800px at 50% 45%, rgba(99, 102, 241, 0.08), transparent 75%),
+    radial-gradient(circle 700px at 80% 20%, rgba(14, 165, 233, 0.07), transparent 70%),
+    radial-gradient(circle 750px at 20% 80%, rgba(217, 70, 239, 0.06), transparent 70%),
+    linear-gradient(180deg, #03050c 0%, #060915 50%, #03050c 100%);
+  background-size: 
+    750px 750px, 750px 750px, 750px 750px, 750px 750px, 750px 750px, 750px 750px, 
+    750px 750px, 750px 750px, 750px 750px, 750px 750px, 750px 750px, 750px 750px, 
+    750px 750px, 750px 750px, 750px 750px, 750px 750px, 750px 750px,
+    100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%;
   background-attachment: fixed;
   color: var(--text-primary);
   line-height: 1.5;
@@ -125,6 +138,36 @@ body {
   flex-direction: column;
   overflow: hidden;
   -webkit-font-smoothing: antialiased;
+  position: relative;
+}
+
+/* Sutil respiración cósmica viva para atmósfera tranquila */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: 
+    radial-gradient(circle 800px at 25% 30%, rgba(56, 189, 248, 0.06), transparent 60%),
+    radial-gradient(circle 900px at 75% 70%, rgba(192, 132, 252, 0.07), transparent 65%),
+    radial-gradient(circle 600px at 50% 90%, rgba(99, 102, 241, 0.05), transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+  animation: galacticAmbiance 28s ease-in-out infinite alternate;
+}
+
+@keyframes galacticAmbiance {
+  0% {
+    opacity: 0.7;
+    transform: scale(1) translateY(0);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05) translateY(-8px);
+  }
+  100% {
+    opacity: 0.8;
+    transform: scale(1.02) translateY(6px);
+  }
 }
 
 body.light-theme {
@@ -144,28 +187,32 @@ body.light-theme {
   color: var(--text-primary);
 }
 
+body.light-theme::before {
+  display: none;
+}
+
 /* --------------------------------------------------------------------------
-   Barra Superior: UNA SOLA LÍNEA COMPACTA & ESTILO HUD TITANIO
+   Barra Superior: Cristal Galáctico Flotante & Estilo HUD Titanio
    -------------------------------------------------------------------------- */
 .app-topbar {
   position: sticky;
   top: 0;
   z-index: 100;
   background: var(--bg-glass);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border-bottom: 1px solid var(--border-color);
-  padding: 0 0.75rem;
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid var(--border-color);
+  padding: 0 0.85rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 0.5rem;
   flex-wrap: nowrap; /* Una sola línea garantizada */
   white-space: nowrap;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.7), 0 0 20px rgba(56, 189, 248, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.14);
   flex-shrink: 0;
-  height: 44px;
-  min-height: 44px;
+  height: 48px;
+  min-height: 48px;
   overflow: visible; /* Permite que los menús desplegables salgan al frente sin recortarse */
 }
 
@@ -241,7 +288,9 @@ body.light-theme {
 .btn-group-segmented {
   display: inline-flex;
   align-items: center;
-  background: rgba(23, 26, 36, 0.8);
+  background: rgba(18, 22, 36, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-sm);
   padding: 0.1rem;
@@ -258,8 +307,10 @@ body.light-theme {
 .btn-menu {
   gap: 0.35rem;
   font-weight: 700;
-  background: rgba(23, 26, 36, 0.95);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(18, 22, 36, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
 .btn-menu .menu-icon {
@@ -273,14 +324,13 @@ body.light-theme {
   left: 0;
   z-index: 9999;
   min-width: 230px;
-  background: #11141d;
-  background: rgba(17, 20, 29, 0.98);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: rgba(9, 13, 26, 0.94);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.18);
   border-radius: var(--radius-md);
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.95), 0 0 0 1px rgba(255, 255, 255, 0.15);
-  padding: 0.4rem;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.95), 0 0 25px rgba(56, 189, 248, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  padding: 0.45rem;
   display: flex;
   flex-direction: column;
   gap: 0.15rem;
@@ -301,7 +351,7 @@ body.light-theme {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: #8b95a5;
+  color: #94a3b8;
   padding: 0.35rem 0.6rem 0.2rem;
 }
 
@@ -632,21 +682,23 @@ body.is-resizing * {
   max-width: 75%;
   display: flex;
   flex-direction: column;
-  background: rgba(15, 17, 24, 0.85);
-  backdrop-filter: blur(12px);
-  border-right: 1px solid var(--border-color);
+  background: rgba(7, 10, 22, 0.65) !important;
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid var(--border-color) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
   position: relative;
 }
 
 .panel-header {
   padding: 0.45rem 0.85rem;
-  background: rgba(23, 26, 36, 0.6);
+  background: rgba(12, 16, 30, 0.55);
   border-bottom: 1px solid var(--border-color);
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 0.5rem;
-  min-height: 38px;
+  min-height: 40px;
 }
 
 .panel-title {
@@ -665,7 +717,7 @@ body.is-resizing * {
 /* Paleta Rápida de Acordes */
 .chord-palette {
   padding: 0.35rem 0.85rem;
-  background: rgba(10, 12, 18, 0.8);
+  background: rgba(8, 11, 24, 0.5);
   border-bottom: 1px solid var(--border-color);
   display: flex;
   align-items: center;
@@ -693,8 +745,8 @@ body.is-resizing * {
 }
 
 .btn-palette-chord {
-  background: rgba(23, 26, 36, 0.9);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(23, 26, 36, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.18);
   color: #f1f5f9;
   font-family: var(--font-mono);
   font-size: 0.74rem;
@@ -708,8 +760,8 @@ body.is-resizing * {
 
 .btn-palette-chord:hover {
   background: #ffffff;
-  color: #07080c;
-  box-shadow: 0 0 8px rgba(255, 255, 255, 0.4);
+  color: #03050c;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.5), 0 0 14px rgba(56, 189, 248, 0.3);
   transform: translateY(-1px);
 }
 
@@ -718,15 +770,17 @@ body.is-resizing * {
   display: flex;
   position: relative;
   overflow: hidden;
-  background: #06070a;
+  background: rgba(4, 6, 15, 0.45);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
 .song-editor {
   width: 100%;
   height: 100%;
   padding: 0.85rem 1rem;
-  background: transparent;
-  color: #f1f5f9;
+  background: transparent !important;
+  color: #f8fafc;
   border: none;
   outline: none;
   resize: none;
@@ -735,16 +789,17 @@ body.is-resizing * {
   line-height: 1.65;
   tab-size: 4;
   overflow-y: auto;
+  caret-color: var(--primary);
 }
 
 .song-editor::selection {
-  background: rgba(255, 255, 255, 0.25);
+  background: rgba(56, 189, 248, 0.3);
   color: #ffffff;
 }
 
 .editor-footer {
   padding: 0.3rem 0.85rem;
-  background: rgba(10, 12, 18, 0.9);
+  background: rgba(8, 11, 24, 0.6);
   border-top: 1px solid var(--border-color);
   font-size: 0.7rem;
   color: var(--text-muted);
@@ -772,20 +827,20 @@ body.is-resizing * {
 .workspace-resizer:hover,
 .workspace-resizer.active,
 body.is-resizing .workspace-resizer {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(56, 189, 248, 0.2);
 }
 
 .resizer-handle {
   width: 2px;
   height: 32px;
-  background: rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.3);
   border-radius: 999px;
   transition: all 0.15s ease;
 }
 
 .workspace-resizer:hover .resizer-handle {
-  background: #ffffff;
-  box-shadow: 0 0 6px rgba(255, 255, 255, 0.6);
+  background: #38bdf8;
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.8);
 }
 
 /* Columna Derecha: Hoja de Canción Renderizada */
@@ -793,7 +848,11 @@ body.is-resizing .workspace-resizer {
   flex: 1;
   display: flex;
   flex-direction: column;
-  background: var(--bg-primary);
+  background: rgba(5, 8, 18, 0.45) !important;
+  backdrop-filter: blur(16px) saturate(160%);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  border: 1px solid var(--border-color) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
   position: relative;
   overflow: hidden;
   min-width: 0;
@@ -801,16 +860,17 @@ body.is-resizing .workspace-resizer {
 
 .viewer-controls {
   padding: 0.3rem 1rem;
-  background: rgba(15, 17, 24, 0.88);
-  backdrop-filter: blur(12px);
+  background: rgba(8, 11, 24, 0.65) !important;
+  backdrop-filter: blur(18px) saturate(180%);
+  -webkit-backdrop-filter: blur(18px) saturate(180%);
   border-bottom: 1px solid var(--border-color);
   display: flex;
   justify-content: space-between;
   align-items: center;
   flex-wrap: nowrap;
   gap: 0.45rem;
-  min-height: 38px;
-  height: 38px;
+  min-height: 40px;
+  height: 40px;
 }
 
 .viewer-right-controls {
@@ -864,7 +924,7 @@ body.is-resizing .workspace-resizer {
   display: flex;
   align-items: center;
   gap: 0.35rem;
-  background: rgba(23, 26, 36, 0.9);
+  background: rgba(14, 18, 30, 0.85);
   padding: 0.1rem 0.45rem;
   border-radius: var(--radius-sm);
   border: 1px solid var(--border-color);
@@ -874,7 +934,7 @@ body.is-resizing .workspace-resizer {
 .autoscroll-control input[type="range"] {
   width: 65px;
   cursor: pointer;
-  accent-color: #ffffff;
+  accent-color: #38bdf8;
 }
 
 .btn-scenario {
@@ -886,7 +946,7 @@ body.is-resizing .workspace-resizer {
 .btn-scenario:hover {
   background: #ffffff;
   color: #07080c;
-  box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.4);
 }
 
 /* --------------------------------------------------------------------------
@@ -908,12 +968,14 @@ body.is-resizing .workspace-resizer {
   max-width: 940px;
   min-height: calc(100vh - 160px);
   box-sizing: border-box;
-  background: var(--bg-sheet);
+  background: var(--bg-sheet) !important;
+  backdrop-filter: blur(28px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(190%) !important;
   color: var(--text-sheet);
-  border-radius: var(--radius-md);
-  padding: 2rem 2.5rem 3.5rem;
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.8), 0 0 1px rgba(255, 255, 255, 0.15);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-lg);
+  padding: 2.2rem 2.75rem 3.5rem;
+  box-shadow: 0 24px 60px -10px rgba(0, 0, 0, 0.85), 0 0 35px rgba(56, 189, 248, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.14) !important;
+  border: 1px solid rgba(255, 255, 255, 0.13) !important;
   font-family: var(--font-sheet);
   font-size: 1.05rem;
   line-height: 2.1;
@@ -930,11 +992,14 @@ body.is-resizing .workspace-resizer {
 }
 
 .sheet-title {
-  font-size: 1.85rem;
+  font-size: 2rem;
   font-weight: 800;
   line-height: 1.2;
   letter-spacing: -0.02em;
-  color: var(--text-sheet);
+  background: linear-gradient(135deg, #ffffff 0%, #e2e8f0 55%, #93c5fd 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 30px rgba(147, 197, 253, 0.15);
 }
 
 .sheet-artist {
@@ -955,7 +1020,7 @@ body.is-resizing .workspace-resizer {
   font-size: 0.7rem;
   font-weight: 700;
   text-transform: uppercase;
-  background: rgba(23, 26, 36, 0.9);
+  background: rgba(18, 22, 36, 0.85);
   color: #94a3b8;
   padding: 0.15rem 0.5rem;
   border-radius: var(--radius-xs);
@@ -963,9 +1028,9 @@ body.is-resizing .workspace-resizer {
 }
 
 .meta-chip.key-chip {
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(56, 189, 248, 0.15);
   color: #ffffff;
-  border-color: rgba(255, 255, 255, 0.35);
+  border-color: rgba(56, 189, 248, 0.4);
 }
 
 /* Renderizado de Secciones ([Intro], [Coro], etc.) */
@@ -974,14 +1039,15 @@ body.is-resizing .workspace-resizer {
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: #f1f5f9;
+  color: #f8fafc;
   background: rgba(255, 255, 255, 0.07);
-  padding: 0.2rem 0.55rem;
+  padding: 0.22rem 0.65rem;
   border-radius: var(--radius-xs);
   display: inline-block;
   margin-top: 1.25rem;
   margin-bottom: 0.4rem;
-  border-left: 3px solid #cbd5e1;
+  border-left: 3px solid #38bdf8;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
   break-inside: avoid;
   page-break-inside: avoid;
 }
@@ -1019,8 +1085,8 @@ body.is-resizing .workspace-resizer {
   color: var(--chord-color);
   background: var(--chord-bg);
   border: 1px solid var(--chord-border);
-  padding: 0.05rem 0.35rem;
-  border-radius: 4px;
+  padding: 0.06rem 0.38rem;
+  border-radius: 5px;
   line-height: 1.1;
   white-space: pre;
   width: fit-content;
@@ -1028,13 +1094,14 @@ body.is-resizing .workspace-resizer {
   cursor: pointer;
   transition: all 0.12s ease;
   margin-bottom: 2px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35), 0 0 8px rgba(56, 189, 248, 0.12);
 }
 
 .chord-badge:hover {
   background: #ffffff;
-  color: #07080c;
+  color: #03050c;
   border-color: #ffffff;
-  box-shadow: 0 0 10px rgba(255, 255, 255, 0.6);
+  box-shadow: 0 0 16px rgba(255, 255, 255, 0.8), 0 0 24px rgba(56, 189, 248, 0.4);
   transform: scale(1.08);
   font-weight: 800;
 }
@@ -1069,19 +1136,19 @@ body.is-resizing .workspace-resizer {
 }
 
 /* --------------------------------------------------------------------------
-   Modales Monocromáticos (HUD Titanio)
+   Modales Galácticos (Cristal Cósmico & HUD Titanio)
    -------------------------------------------------------------------------- */
 .modal-backdrop,
 .modal {
   position: fixed;
   inset: 0;
-  background: rgba(4, 5, 8, 0.75);
-  display: flex;
+  background: rgba(2, 4, 10, 0.82) !important;
+  display: flex !important;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  z-index: 100000 !important;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
@@ -1089,21 +1156,24 @@ body.is-resizing .workspace-resizer {
 }
 
 .modal.open,
+.modal.modal-open,
 .modal-backdrop.open {
-  opacity: 1;
-  visibility: visible;
-  pointer-events: auto;
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
 }
 
-.modal-dialog {
-  background: rgba(18, 21, 30, 0.98);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+.modal-dialog,
+.modal-box {
+  background: rgba(9, 13, 26, 0.92) !important;
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
   border-radius: var(--radius-lg);
   padding: 1.5rem;
   width: 90%;
   max-width: 480px;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9), 0 0 1px rgba(255, 255, 255, 0.25);
-  backdrop-filter: blur(16px);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.92), 0 0 40px rgba(56, 189, 248, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
 }
 
 .modal-header {
@@ -1116,9 +1186,11 @@ body.is-resizing .workspace-resizer {
 }
 
 .modal-title {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: var(--text-primary, #ffffff);
+  font-size: 1.15rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #ffffff 0%, #e2e8f0 60%, #93c5fd 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .btn-close {
@@ -1134,42 +1206,230 @@ body.is-resizing .workspace-resizer {
   color: #ffffff;
 }
 
-/* Responsive */
-@media (max-width: 960px) {
+/* --------------------------------------------------------------------------
+   Diseño Responsivo & Adaptación para Android & Dispositivos Móviles
+   -------------------------------------------------------------------------- */
+
+/* Soporte de altura dinámica 100dvh para evitar saltos por la barra de Android */
+body {
+  height: 100vh;
+  height: 100dvh;
+  touch-action: manipulation; /* Elimina retraso de 300ms en pulsaciones móviles */
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Barra de Navegación Inferior Móvil (Android & Smartphones) */
+.mobile-nav-bar {
+  display: none;
+}
+
+@media (max-width: 767px) {
   body {
-    height: auto;
-    overflow-y: auto;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
   }
 
+  .mobile-nav-bar {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: calc(52px + env(safe-area-inset-bottom, 0px));
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    background: rgba(8, 12, 26, 0.94);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border-top: 1px solid rgba(255, 255, 255, 0.14);
+    z-index: 990;
+    align-items: center;
+    justify-content: space-around;
+    box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.6);
+  }
+
+  .mobile-nav-btn {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    height: 100%;
+    color: var(--text-secondary);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    user-select: none;
+  }
+
+  .mobile-nav-btn.active {
+    color: var(--primary) !important;
+  }
+
+  .mobile-nav-btn.active i,
+  .mobile-nav-btn.active svg {
+    transform: scale(1.15);
+    filter: drop-shadow(0 0 8px rgba(56, 189, 248, 0.5));
+  }
+
+  body.light-theme .mobile-nav-bar {
+    background: rgba(245, 240, 234, 0.96);
+    border-top-color: var(--border-color);
+    box-shadow: 0 -4px 16px rgba(30, 41, 59, 0.08);
+  }
+
+  body.light-theme .mobile-nav-btn.active {
+    color: var(--primary) !important;
+  }
+
+  /* Barra Superior en Móviles */
   .app-topbar {
     position: sticky;
     top: 0;
-    z-index: 60;
+    z-index: 100;
+    margin: 0.35rem 0.5rem 0.25rem !important;
+    padding: 0 0.5rem !important;
+    min-height: 44px !important;
+    height: 44px !important;
+    gap: 0.35rem;
   }
-  
+
+  .dropdown-menu {
+    max-width: calc(100vw - 1.25rem);
+    width: 270px;
+    z-index: 99999;
+  }
+
+  /* Espacio de trabajo móvil en modo pestañas (Letra vs Editor) */
   .workspace-container {
     flex-direction: column;
-    height: auto;
-    overflow: visible;
+    padding: 0 0.4rem calc(56px + env(safe-area-inset-bottom, 0px)) 0.4rem !important;
+    height: calc(100% - 50px);
+    overflow: hidden;
   }
-  
-  .editor-panel {
-    max-width: 100%;
-    min-height: 340px;
+
+  /* Ocultar divisor interactivo en móviles */
+  .workspace-resizer {
+    display: none !important;
   }
-  
-  .viewer-panel {
-    min-height: 500px;
-    overflow: visible;
+
+  /* Vista móvil: Por defecto muestra Partitura / Letra */
+  .workspace-container[data-mobile-view="sheet"] .editor-panel,
+  .workspace-container:not([data-mobile-view="editor"]) .editor-panel {
+    display: none !important;
   }
-  
+
+  .workspace-container[data-mobile-view="sheet"] .viewer-panel,
+  .workspace-container:not([data-mobile-view="editor"]) .viewer-panel {
+    display: flex !important;
+    flex: 1 1 100% !important;
+    width: 100% !important;
+    height: 100% !important;
+    min-width: 0 !important;
+  }
+
+  /* Vista móvil: Modo Editor activo */
+  .workspace-container[data-mobile-view="editor"] .viewer-panel {
+    display: none !important;
+  }
+
+  .workspace-container[data-mobile-view="editor"] .editor-panel {
+    display: flex !important;
+    flex: 1 1 100% !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 100% !important;
+    min-width: 0 !important;
+  }
+
+  /* Hoja de canción en pantallas pequeñas */
   .sheet-container-wrapper {
-    padding: 1rem 0.75rem 3rem;
-    overflow: visible;
+    padding: 0.6rem 0.35rem 4.5rem !important;
+    -webkit-overflow-scrolling: touch;
   }
 
   .song-sheet {
-    padding: 1.5rem 1.2rem 2.5rem;
+    padding: 1.1rem 0.85rem 3.5rem !important;
+    border-radius: 1.25rem !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6) !important;
+  }
+
+  .sheet-title {
+    font-size: 1.45rem !important;
+    line-height: 1.25 !important;
+  }
+
+  .sheet-artist {
+    font-size: 0.9rem !important;
+  }
+
+  .chord-badge {
+    font-size: 0.84em !important;
+    padding: 0.05rem 0.3rem !important;
+    margin-bottom: 2px !important;
+  }
+
+  .viewer-controls {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding: 0.35rem 0.5rem !important;
+    min-height: 40px !important;
+    height: 40px !important;
+  }
+
+  .viewer-controls::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Barra de Tempo en pantallas móviles */
+  .tempo-companion-bar {
+    padding: 0.55rem 0.65rem !important;
+    gap: 0.45rem !important;
+    margin: 0.25rem 0.4rem !important;
+  }
+
+  .tempo-bar-section {
+    flex-wrap: wrap;
+    gap: 0.35rem;
+  }
+
+  .tempo-bar-playback {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  /* Modales en móviles */
+  .modal-dialog,
+  .modal-box {
+    width: 95% !important;
+    max-width: 95vw !important;
+    max-height: 88dvh !important;
+    padding: 1rem !important;
+    border-radius: 1.25rem !important;
+  }
+
+  .projects-modal-toolbar {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .modal-tabs {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+  }
+
+  .modal-tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .projects-grid {
+    grid-template-columns: 1fr !important;
   }
 }
 
@@ -1177,7 +1437,7 @@ body.is-resizing .workspace-resizer {
 .viewer-panel.fullscreen-viewer {
   position: fixed;
   inset: 0;
-  z-index: 999;
+  z-index: 9999;
   display: flex;
   flex-direction: column;
   background: var(--bg-primary);
@@ -1187,20 +1447,20 @@ body.is-resizing .workspace-resizer {
   position: sticky;
   top: 0;
   z-index: 100;
-  padding: 0.5rem 2rem;
+  padding: 0.5rem 1.25rem;
   background: rgba(15, 17, 24, 0.95);
   border-bottom: 1px solid var(--border-color);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7);
 }
 
 .viewer-panel.fullscreen-viewer .sheet-container-wrapper {
-  padding: 1.5rem 2rem 0;
+  padding: 1rem 1rem 0;
 }
 
 .viewer-panel.fullscreen-viewer .song-sheet {
   max-width: 1050px;
   min-height: 100%;
-  padding: 3rem 4rem 75vh;
+  padding: 2rem 1.5rem 75vh;
 }
 
 /* --------------------------------------------------------------------------
@@ -1335,7 +1595,7 @@ body.is-resizing .workspace-resizer {
 }
 
 .input-styled {
-  background: rgba(10, 12, 18, 0.95);
+  background: rgba(8, 12, 24, 0.85);
   border: 1px solid var(--border-color);
   color: var(--text-primary);
   font-family: inherit;
@@ -1347,12 +1607,13 @@ body.is-resizing .workspace-resizer {
 }
 
 .input-styled:focus {
-  border-color: #ffffff;
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.4);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 1px var(--primary);
 }
 
-.modal-dialog.modal-lg {
-  max-width: 820px;
+.modal-dialog.modal-lg,
+.modal-box.max-w-4xl {
+  max-width: 840px;
   width: 95%;
   max-height: 85vh;
   display: flex;
@@ -1399,10 +1660,12 @@ body.is-resizing .workspace-resizer {
   background: rgba(255, 255, 255, 0.08);
 }
 
-.tab-btn.active {
-  color: #07080c;
-  background: #ffffff;
+.tab-btn.active,
+.tab-btn.tab-active {
+  color: #03050c !important;
+  background: #ffffff !important;
   font-weight: 700;
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.4);
 }
 
 .projects-modal-body {
@@ -1428,10 +1691,12 @@ body.is-resizing .workspace-resizer {
 }
 
 .project-card {
-  background: rgba(12, 14, 20, 0.9);
-  border: 1px solid var(--border-color);
+  background: rgba(11, 15, 28, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: var(--radius-md);
-  padding: 0.8rem;
+  padding: 0.85rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -1441,13 +1706,15 @@ body.is-resizing .workspace-resizer {
 
 .project-card:hover {
   transform: translateY(-2px);
-  border-color: rgba(255, 255, 255, 0.4);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.8);
+  border-color: rgba(56, 189, 248, 0.5);
+  background: rgba(15, 21, 38, 0.85);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.8), 0 0 15px rgba(56, 189, 248, 0.15);
 }
 
 .project-card.active-project {
-  border-color: #ffffff;
-  background: rgba(255, 255, 255, 0.08);
+  border-color: #38bdf8;
+  background: rgba(56, 189, 248, 0.1);
+  box-shadow: 0 0 16px rgba(56, 189, 248, 0.2);
 }
 
 .project-card-header {
@@ -1486,14 +1753,15 @@ body.is-resizing .workspace-resizer {
   font-family: var(--font-mono);
   font-size: 0.72rem;
   color: var(--text-secondary);
-  background: rgba(0, 0, 0, 0.4);
-  padding: 0.35rem;
+  background: rgba(0, 0, 0, 0.45);
+  padding: 0.35rem 0.5rem;
   border-radius: var(--radius-sm);
   white-space: pre-wrap;
   line-height: 1.3;
   max-height: 44px;
   overflow: hidden;
-  opacity: 0.85;
+  opacity: 0.9;
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .project-card-actions {
@@ -1534,15 +1802,15 @@ body.is-resizing .workspace-resizer {
   position: fixed;
   bottom: 1.5rem;
   right: 1.5rem;
-  background: rgba(18, 21, 30, 0.95);
+  background: rgba(9, 13, 26, 0.95);
   color: #f8fafc;
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.25);
   padding: 0.65rem 1.15rem;
   border-radius: var(--radius-md);
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.8);
+  box-shadow: 0 16px 35px rgba(0, 0, 0, 0.85), 0 0 20px rgba(56, 189, 248, 0.1);
   font-size: 0.85rem;
   font-weight: 600;
-  z-index: 9999;
+  z-index: 99999;
   transform: translateY(100px);
   opacity: 0;
   transition: transform 0.25s ease, opacity 0.25s ease;
@@ -1550,7 +1818,8 @@ body.is-resizing .workspace-resizer {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  backdrop-filter: blur(12px);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
 }
 
 .toast-notification.show {
@@ -1560,31 +1829,35 @@ body.is-resizing .workspace-resizer {
 
 .toast-notification.success {
   border-color: #10b981;
-  background: rgba(6, 78, 59, 0.95);
+  background: rgba(4, 40, 30, 0.95);
+  box-shadow: 0 0 25px rgba(16, 185, 129, 0.25);
 }
 
 .toast-notification.warning {
   border-color: #eab308;
-  background: rgba(113, 63, 18, 0.95);
+  background: rgba(55, 30, 8, 0.95);
+  box-shadow: 0 0 25px rgba(234, 179, 8, 0.25);
 }
 
-/* Scrollbars Monocromáticos Personalizados */
+/* Scrollbars Galácticos Personalizados */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(10, 12, 18, 0.6);
+  background: rgba(6, 9, 18, 0.6);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.22);
   border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.45);
+  background: rgba(56, 189, 248, 0.5);
+  box-shadow: 0 0 8px rgba(56, 189, 248, 0.5);
 }
 
 /* ==========================================================================
@@ -1606,26 +1879,26 @@ body.is-resizing .workspace-resizer {
 .btn-tempo:hover,
 .btn-tempo.active {
   background: #ffffff;
-  color: #07080c;
+  color: #03050c;
   border-color: #ffffff;
-  box-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+  box-shadow: 0 0 14px rgba(56, 189, 248, 0.5);
 }
 
 /* Barra HUD de Acompañamiento */
 .tempo-companion-bar {
   display: none !important;
-  background: rgba(14, 16, 24, 0.92);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: var(--radius-md);
-  padding: 0.5rem 1rem;
+  background: rgba(8, 12, 26, 0.88);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: var(--radius-lg);
+  padding: 0.6rem 1.1rem;
   align-items: center;
   justify-content: space-between;
   gap: 0.75rem;
   flex-wrap: wrap;
   z-index: 60;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.85), 0 0 30px rgba(56, 189, 248, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.12);
   animation: slideDownTempo 0.2s ease-out;
 }
 
@@ -1654,7 +1927,7 @@ body.is-resizing .workspace-resizer {
 /* Botón de reproducción del tempo */
 .btn-tempo-play {
   background: #ffffff;
-  color: #07080c;
+  color: #03050c;
   border-color: #ffffff;
   font-weight: 700;
   min-width: 96px;
@@ -1664,14 +1937,14 @@ body.is-resizing .workspace-resizer {
 .btn-tempo-play:hover {
   background: #e2e8f0;
   border-color: #e2e8f0;
-  box-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.5);
 }
 
 .btn-tempo-play.btn-playing {
   background: #22c55e;
   border-color: #22c55e;
-  color: #07080c;
-  box-shadow: 0 0 14px rgba(34, 197, 94, 0.5);
+  color: #03050c;
+  box-shadow: 0 0 18px rgba(34, 197, 94, 0.6);
   font-weight: 800;
 }
 
@@ -1865,9 +2138,9 @@ body.light-theme .lyric-text.tempo-active-lyric {
 /* Título de sección activo */
 .song-section-title.tempo-active-line {
   background: #ffffff !important;
-  color: #07080c !important;
+  color: #03050c !important;
   font-weight: 800;
-  box-shadow: 0 0 16px rgba(255, 255, 255, 0.7);
+  box-shadow: 0 0 18px rgba(255, 255, 255, 0.8), 0 0 24px rgba(56, 189, 248, 0.4);
   border-left-color: #38bdf8;
   transform: scale(1.03);
   transition: all 0.15s ease;
@@ -1877,6 +2150,65 @@ body.light-theme .song-section-title.tempo-active-line {
   background: #0f172a !important;
   color: #ffffff !important;
   border-left-color: #0f172a;
+}
+
+/* --------------------------------------------------------------------------
+   Integración Cósmica Universal para Capas DaisyUI & Tailwind (Modo Oscuro)
+   -------------------------------------------------------------------------- */
+body:not(.light-theme) .bg-base-100 {
+  background-color: rgba(5, 8, 18, 0.65) !important;
+}
+
+body:not(.light-theme) .bg-base-200 {
+  background-color: rgba(8, 12, 26, 0.72) !important;
+}
+
+body:not(.light-theme) .bg-base-300 {
+  background-color: rgba(13, 18, 36, 0.68) !important;
+}
+
+body:not(.light-theme) .card {
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+}
+
+body:not(.light-theme) .select {
+  background-color: rgba(10, 14, 28, 0.85) !important;
+  border-color: rgba(255, 255, 255, 0.14) !important;
+  color: #f8fafc !important;
+}
+
+body:not(.light-theme) .select:focus {
+  border-color: #38bdf8 !important;
+  box-shadow: 0 0 0 1px #38bdf8 !important;
+}
+
+body:not(.light-theme) .input {
+  background-color: rgba(10, 14, 28, 0.85) !important;
+  border-color: rgba(255, 255, 255, 0.14) !important;
+  color: #f8fafc !important;
+}
+
+body:not(.light-theme) .input:focus {
+  border-color: #38bdf8 !important;
+  box-shadow: 0 0 0 1px #38bdf8 !important;
+}
+
+body:not(.light-theme) .badge-neutral {
+  background-color: rgba(255, 255, 255, 0.08) !important;
+  color: #f1f5f9 !important;
+  border-color: rgba(255, 255, 255, 0.15) !important;
+}
+
+body:not(.light-theme) .join {
+  background-color: rgba(10, 14, 28, 0.7) !important;
+  border-color: rgba(255, 255, 255, 0.14) !important;
+}
+
+body:not(.light-theme) .kbd {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  border-color: rgba(255, 255, 255, 0.16) !important;
+  color: #cbd5e1 !important;
 }
 
 /* ==========================================================================

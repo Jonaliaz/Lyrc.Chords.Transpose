@@ -11,15 +11,53 @@ const ProjectsManager = (function () {
   const CURRENT_PROJ_KEY = 'lyrchords_current_project_id';
 
   /**
-   * Obtiene la lista completa de proyectos guardados
+   * Obtiene la lista completa de proyectos guardados con compatibilidad de índices y claves legacy
    * @returns {Array<Object>}
    */
   function getAll() {
     try {
       const data = localStorage.getItem(STORAGE_KEY);
-      if (!data) return [];
-      const parsed = JSON.parse(data);
-      return Array.isArray(parsed) ? parsed : [];
+      let list = [];
+      if (data) {
+        const parsed = JSON.parse(data);
+        list = Array.isArray(parsed) ? parsed : [];
+      }
+
+      // Recuperación y migración de claves de almacenamiento legacy o alternativas
+      if (list.length === 0) {
+        const legacyKeys = ['chords_projects', 'lyrchords_saved_songs', 'songs_library', 'lyrchords_songs', 'song_projects'];
+        for (const k of legacyKeys) {
+          const legData = localStorage.getItem(k);
+          if (legData) {
+            try {
+              const legParsed = JSON.parse(legData);
+              if (Array.isArray(legParsed) && legParsed.length > 0) {
+                list = legParsed;
+                saveAll(list);
+                break;
+              }
+            } catch (e) {}
+          }
+        }
+      }
+
+      // Garantizar que todos los proyectos tengan un ID válido y estructura compatible
+      let modified = false;
+      list.forEach((p, idx) => {
+        if (!p || typeof p !== 'object') return;
+        if (!p.id && p.id !== 0) {
+          p.id = 'proj_' + (Date.now() + idx) + '_' + Math.random().toString(36).substring(2, 7);
+          modified = true;
+        } else {
+          p.id = String(p.id);
+        }
+      });
+
+      if (modified) {
+        saveAll(list);
+      }
+
+      return list;
     } catch (e) {
       console.error('Error al leer proyectos de localStorage:', e);
       return [];
@@ -39,32 +77,36 @@ const ProjectsManager = (function () {
   }
 
   /**
-   * Obtiene un proyecto por su ID
-   * @param {string} id 
+   * Obtiene un proyecto por su ID o por su índice numérico
+   * @param {string|number} id 
    * @returns {Object|null}
    */
   function getById(id) {
-    if (!id) return null;
+    if (id === null || id === undefined || id === '') return null;
     const list = getAll();
-    return list.find(p => p.id === id) || null;
+    const strId = String(id);
+    return list.find((p, index) => p.id === strId || String(index) === strId || (p.id === id)) || null;
   }
 
   /**
-   * Guarda o actualiza un proyecto
+   * Guarda o actualiza un proyecto con compatibilidad de ID e índice
    * @param {Object} projectData 
    * @returns {Object} el proyecto guardado
    */
   function save(projectData) {
+    if (!projectData) return null;
     const list = getAll();
     const now = new Date().toISOString();
 
     let project = null;
-    if (projectData.id) {
-      const index = list.findIndex(p => p.id === projectData.id);
+    if (projectData.id !== undefined && projectData.id !== null && projectData.id !== '') {
+      const strId = String(projectData.id);
+      const index = list.findIndex((p, idx) => p.id === strId || String(idx) === strId || p.id === projectData.id);
       if (index !== -1) {
         project = {
           ...list[index],
           ...projectData,
+          id: list[index].id, // Preservar ID existente
           updatedAt: now
         };
         list[index] = project;
@@ -72,8 +114,9 @@ const ProjectsManager = (function () {
     }
 
     if (!project) {
+      const newId = projectData.id ? String(projectData.id) : ('proj_' + Date.now() + '_' + Math.random().toString(36).substring(2, 7));
       project = {
-        id: 'proj_' + Date.now() + '_' + Math.random().toString(36).substring(2, 7),
+        id: newId,
         title: projectData.title || 'Mi Canción',
         artist: projectData.artist || '',
         key: projectData.key || 'C',
@@ -92,17 +135,20 @@ const ProjectsManager = (function () {
   }
 
   /**
-   * Elimina un proyecto por ID
-   * @param {string} id 
+   * Elimina un proyecto por ID o índice
+   * @param {string|number} id 
    * @returns {boolean}
    */
   function deleteProject(id) {
+    if (id === null || id === undefined) return false;
     let list = getAll();
     const prevLen = list.length;
-    list = list.filter(p => p.id !== id);
+    const strId = String(id);
+    list = list.filter((p, idx) => p.id !== strId && String(idx) !== strId && p.id !== id);
     if (list.length !== prevLen) {
       saveAll(list);
-      if (getCurrentProjectId() === id) {
+      const cur = getCurrentProjectId();
+      if (cur === strId || cur === id) {
         setCurrentProjectId(null);
       }
       return true;
@@ -112,7 +158,7 @@ const ProjectsManager = (function () {
 
   /**
    * Duplica un proyecto existente
-   * @param {string} id 
+   * @param {string|number} id 
    * @returns {Object|null}
    */
   function duplicate(id) {
@@ -123,7 +169,7 @@ const ProjectsManager = (function () {
       ...original,
       id: null,
       title: `${original.title} (Copia)`,
-      content: original.content.replace(/^\{title:\s*(.*?)\s*\}/m, `{title: ${original.title} (Copia)}`)
+      content: original.content ? original.content.replace(/^\{title:\s*(.*?)\s*\}/m, `{title: ${original.title} (Copia)}`) : ''
     };
 
     return save(copy);
