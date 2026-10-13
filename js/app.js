@@ -325,6 +325,23 @@
       }, 150);
     }
 
+    // Inicialización adaptativa para pantallas móviles (Android / Smartphones)
+    if (window.innerWidth <= 640) {
+      state.fontSize = 15;
+      if (elements.fontSizeDisplay) elements.fontSizeDisplay.textContent = '15px';
+      if (elements.songSheet) elements.songSheet.style.fontSize = '15px';
+    }
+
+    // Manejo de teclado virtual en Android para evitar que la barra inferior tape el editor
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', () => {
+        const isKeyboardOpen = window.visualViewport.height < window.innerHeight * 0.75;
+        if (elements.mobileNavBar) {
+          elements.mobileNavBar.style.display = (isKeyboardOpen && state.mobileView === 'editor') ? 'none' : '';
+        }
+      });
+    }
+
     // Inicializar iconos de Lucide
     if (typeof lucide !== 'undefined') {
       lucide.createIcons();
@@ -1473,8 +1490,11 @@
     currentScrollPos = elements.sheetContainerWrapper.scrollTop;
     lastTimestamp = performance.now();
 
-    elements.btnAutoScroll.textContent = 'Pausar';
-    elements.btnAutoScroll.classList.add('btn-success');
+    if (elements.btnAutoScroll) {
+      elements.btnAutoScroll.innerHTML = '<i data-lucide="pause" class="w-3 h-3"></i><span>Pausar</span>';
+      elements.btnAutoScroll.classList.add('btn-success');
+      if (typeof lucide !== 'undefined') lucide.createIcons();
+    }
 
     function scrollStep(timestamp) {
       if (!state.autoScrollRunning) return;
@@ -1514,8 +1534,11 @@
       cancelAnimationFrame(autoScrollAnimId);
       autoScrollAnimId = null;
     }
-    elements.btnAutoScroll.textContent = 'Auto-Scroll';
-    elements.btnAutoScroll.classList.remove('btn-success');
+    if (elements.btnAutoScroll) {
+      elements.btnAutoScroll.innerHTML = '<i data-lucide="chevrons-down" class="w-3 h-3"></i><span>Auto-Scroll</span>';
+      elements.btnAutoScroll.classList.remove('btn-success');
+      if (typeof lucide !== 'undefined') lucide.createIcons();
+    }
     releaseWakeLock();
   }
 
@@ -1525,7 +1548,13 @@
   function toggleFullscreen() {
     elements.viewerPanel.classList.toggle('fullscreen-viewer');
     const isFull = elements.viewerPanel.classList.contains('fullscreen-viewer');
-    elements.btnToggleFullscreen.textContent = isFull ? 'Salir de Escenario' : 'Escenario';
+    
+    if (elements.btnToggleFullscreen) {
+      elements.btnToggleFullscreen.innerHTML = isFull 
+        ? '<i data-lucide="minimize-2" class="w-3.5 h-3.5"></i><span>Salir</span>'
+        : '<i data-lucide="maximize-2" class="w-3.5 h-3.5"></i><span>Escenario</span>';
+      if (typeof lucide !== 'undefined') lucide.createIcons();
+    }
 
     if (elements.btnMobileTabFullscreen) {
       elements.btnMobileTabFullscreen.classList.toggle('active', isFull);
